@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react";
+import { IoIosSearch } from "react-icons/io";
 
 export const SelectCubers = () => {
   const [competitors, setCompetitors] = useState([]);
@@ -13,7 +14,7 @@ export const SelectCubers = () => {
 
   return (
     <div className ="flex flex-col items-center">
-      <h1>Hello</h1>
+      <h1 className="text-2xl py-3">Add your competitors</h1>
       <SearchBar setCompetitors = {setCompetitors}/>
     </div>
   )
@@ -73,12 +74,16 @@ const SearchBar = ({setCompetitors}) => {
   }
   return (
     <div className = "">
-      <input onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
-             className = "bg-gray-400"/>
-      <div className = "flex flex-col bg-gray-100 w-50">
+      <div className = "flex flex-row w-2xs">
+        <input onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
+              className = "bg-gray-300 rounded-md text-xl p-2 w-2xs"/>
+        <IoIosSearch size={35} className = "absolute ml-62"/>
+      </div>
+      <div className = "flex flex-col bg-gray-100 my-2">
         {searchResults.map((cuber) => {
           return (
-            <div key = {cuber.id} className = "overflow-hidden truncate hover:bg-gray-200 cursor-pointer"
+            <div key = {cuber.id} className = "p-2 w-2xs truncate  cursor-pointer
+                                              text-xl hover:bg-gray-200"
                  onClick={() => addPlayer(cuber)}>
               {cuber.name}
             </div>
