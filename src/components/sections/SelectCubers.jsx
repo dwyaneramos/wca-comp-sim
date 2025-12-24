@@ -13,11 +13,38 @@ export const SelectCubers = () => {
 
 
   return (
-    <div className ="flex flex-col items-center">
-      <h1 className="text-2xl py-3">Add your competitors</h1>
-      <SearchBar setCompetitors = {setCompetitors}/>
+    <div className ="flex flex-row justify-center gap-5">
+      <div>
+        <h1 className="text-2xl py-3">Add your competitors</h1>
+        <SearchBar setCompetitors = {setCompetitors}/>
+      </div>
+      
+      <DisplayCompetitors competitors = {competitors}/>
+
     </div>
   )
+}
+
+const DisplayCompetitors = ({competitors}) => {
+  return (
+    <div>
+      <h1 className ="text-xl border-b-2 border-black">Added Competitors</h1>
+      <div className = "flex flex-col">
+        {competitors.map((cuber) => {
+          return (
+            <div key = {cuber.id} className = "bg-gray-100 px-2 hover:bg-gray-200 py-1 w-4xs flex place-content-between"> 
+              <span>{cuber.name}</span>
+              <span className="font-black cursor-pointer hover:scale-125 transition">x</span>
+            </div>
+          )
+        })} 
+      </div>
+    </div>
+
+
+  )
+
+
 }
 
 
