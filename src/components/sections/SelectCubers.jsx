@@ -4,10 +4,17 @@ export const SelectCubers = () => {
   const [competitors, setCompetitors] = useState([]);
 
 
+  useEffect(() => {
+    console.log(competitors)
+  }, [competitors])
+ 
+
+
+
   return (
-    <div>
+    <div className ="flex flex-col items-center">
       <h1>Hello</h1>
-      <SearchBar/>
+      <SearchBar setCompetitors = {setCompetitors}/>
     </div>
   )
 }
@@ -15,7 +22,7 @@ export const SelectCubers = () => {
 
 
 
-const SearchBar = () => {
+const SearchBar = ({setCompetitors}) => {
   const [input, setInput] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const dataURL = "../../../public/cubers.json"
@@ -58,10 +65,26 @@ const SearchBar = () => {
 
   }, [input])
 
+  const addPlayer = (newPlayer) => {
+    console.log("Added player successfully")
+    setInput("")
+    setSearchResults([])
+    setCompetitors((prev) => [...prev, newPlayer])
+  }
   return (
-    <div>
+    <div className = "">
       <input onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
              className = "bg-gray-400"/>
+      <div className = "flex flex-col bg-gray-100 w-50">
+        {searchResults.map((cuber) => {
+          return (
+            <div key = {cuber.id} className = "overflow-hidden truncate hover:bg-gray-200 cursor-pointer"
+                 onClick={() => addPlayer(cuber)}>
+              {cuber.name}
+            </div>
+          )
+        })} 
+      </div>
     </div>
   )
 }
