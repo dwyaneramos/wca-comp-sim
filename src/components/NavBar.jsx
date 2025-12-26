@@ -6,8 +6,8 @@ export const NavBar = () => {
       </div>
 
       <div className = "flex flex-row gap-2">
-        <a href="">Home</a>
-        <a href="">Stats</a>
+        <a href="" className="py-1">Home</a>
+        <a href="" className="py-1">Stats</a>
        <SelectEventDropdown/> 
       </div>
 
@@ -38,7 +38,7 @@ const SelectEventDropdown = () => {
     { name: "3x3x3 Multi-Blind", code: "333mbf" }
   ];
   return (
-    <select className = "border-2 border-gray-300 rounded-md p-1 text-center w-f">
+    <select className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-f">
       {wcaEvents.map((event) => {
         return (
           <option key={event.code} value={event.code}>{event.name}</option>
