@@ -1,16 +1,34 @@
-# React + Vite
+# WCA Competition Simulator (Website Ver.)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## To-Do List
 
-Currently, two official plugins are available:
+### Starting Page
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [ ] Start the competition
+- [ ] Do cuber validation (a cuber can't be simulated in an event they haven't competed in)
+- [ ] Ensure people can't enter the same cuber twice
+- [ ] Use keypresses to make entering cubers more convenient
 
-## React Compiler
+### Game Page
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [ ] Simulate a person's times
+- [ ] Take in user input
+- [ ] Rank cubers based on time
+- [ ] Calculate and display WPA/BPA
+- [ ] Generate a scramble and display it
+- [ ] Edit times
+- [ ] Toggle visibility of other cubers' times
 
-## Expanding the ESLint configuration
+### Stats Page
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [ ] Show how many rounds a user has competed in
+- [ ] Graph user's recent times
+- [ ] Be able to view stats for different events
+- [ ] Show mo10ao5
+- [ ] Show best averages
+- [ ] Show best times
+
+## Tech Stack
+
+- React / JavaScript
+- TailwindCSS

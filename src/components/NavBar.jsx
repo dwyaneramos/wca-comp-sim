@@ -1,13 +1,13 @@
 export const NavBar = () => {
   return (
-    <div className = "flex place-content-between bg-white drop-shadow-sm px-30 text-xl py-3 fixed top-0 w-screen">
+    <div className = "flex place-content-between bg-white drop-shadow-sm px-30 text-lg py-3 fixed top-0 w-screen">
       <div>
-        <h1>WCA Comp Sim</h1>
+        <h1 className = "text-xl py-2">WCA Comp Sim</h1>
       </div>
 
       <div className = "flex flex-row gap-2">
-        <a href="" className="py-1">Home</a>
-        <a href="" className="py-1">Stats</a>
+        <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
+        <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
        <SelectEventDropdown/> 
       </div>
 
