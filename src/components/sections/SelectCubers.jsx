@@ -1,5 +1,7 @@
 import {useState, useEffect} from "react";
 import { IoIosSearch } from "react-icons/io";
+import { IoPersonAddOutline } from "react-icons/io5";
+import {deleteCuber} from './selectCubers.js'
 
 export const SelectCubers = () => {
   const [competitors, setCompetitors] = useState([]);
@@ -13,32 +15,64 @@ export const SelectCubers = () => {
 
 
   return (
-    <div className ="flex flex-row justify-center gap-5">
-      <div>
-        <h1 className="text-2xl py-3">Add your competitors</h1>
-        <SearchBar setCompetitors = {setCompetitors}/>
-      </div>
+    <div className= "flex content-center h-screen justify-center items-center">
       
-      <DisplayCompetitors competitors = {competitors}/>
+      <div className ="flex flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200 w-3xl h-[80vh]">
+        <div>
+          <h1 className="text-2xl pb-3 pt-15">Add your competitors</h1>
+          <SearchBar setCompetitors = {setCompetitors}/>
+        </div>
+        
+      <DisplayCompetitors competitors = {competitors} setCompetitors = {setCompetitors}/>
 
+      </div>
     </div>
   )
 }
 
-const DisplayCompetitors = ({competitors}) => {
+const DisplayCompetitors = ({competitors, setCompetitors}) => {
+  
+  const removeCuber = (cuber) => {
+    let filteredCubers = competitors.filter((c) => c != cuber)
+    setCompetitors(filteredCubers)
+  }
+
+
   return (
-    <div>
-      <h1 className ="text-xl border-b-2 border-black">Added Competitors</h1>
-      <div className = "flex flex-col">
+    <div className = "z-0 mt-20 border-2 border-gray-200  py-5 min-w-2xl max-w-2xl">
+      <h1 className ="text-xl text-center ">Competitor List</h1>
+      <h2 className ="text-lg text-gray-500 text-center border-b-2 border-gray-300 pb-5 mb-5">{competitors.length} registered</h2>
+
+      {
+        competitors.length > 0 &&
+      <div className = "flex  gap-2 justify-center overflow-y-scroll content-start flex-wrap flex-row h-90">
+
         {competitors.map((cuber) => {
           return (
-            <div key = {cuber.id} className = "bg-gray-100 px-2 hover:bg-gray-200 py-1 w-4xs flex place-content-between"> 
-              <span>{cuber.name}</span>
-              <span className="font-black cursor-pointer hover:scale-125 transition">x</span>
+            <div key = {cuber.id} className = "flex flex-row h-15 bg-gray-100 w-2xs rounded-md px-1 hover:bg-gray-200 py-1   border-2 border-gray-300 "> 
+
+              <div className = "flex flex-col w-full">
+                
+                    <h1 className="truncate">{cuber.name}</h1>
+                    <h2 className = "text-gray-700">{cuber.id}</h2>
+              </div>
+              <div className="font-black cursor-pointer  transition p-3" onClick={() => removeCuber(cuber)}>x</div>
             </div>
           )
         })} 
       </div>
+      }
+
+      {
+        competitors.length == 0 && 
+          <div className = "flex items-center flex-col pt-10">
+            <IoPersonAddOutline size={50} color={"gray"}/>
+            <h1 className = "text-gray-500 text-2xl">No competitors added</h1>
+          </div>
+
+      }
+
+
     </div>
 
 
@@ -99,20 +133,27 @@ const SearchBar = ({setCompetitors}) => {
     setSearchResults([])
     setCompetitors((prev) => [...prev, newPlayer])
   }
+  const resultsBorder = searchResults.length > 0 ? "border-2 border-gray-200" : ""
   return (
-    <div className = "">
-      <div className = "flex flex-row w-2xs">
+    <div className = "absolute left-0 right-0 mx-auto w-sm z-1 ">
+      <div className = "flex flex-row">
         <input onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
-              className = "bg-gray-300 rounded-md text-xl p-2 w-2xs"/>
-        <IoIosSearch size={35} className = "absolute ml-62"/>
+              className = "bg-gray-100 border-2 border-gray-300 rounded-md text-xl p-2 w-sm"/>
+        <IoIosSearch size={35} className = "absolute ml-85 mt-1"/>
       </div>
-      <div className = "flex flex-col bg-gray-100 my-2">
+      <div className = {`flex flex-col bg-gray-100 my-2 ${resultsBorder}`}>
         {searchResults.map((cuber) => {
           return (
-            <div key = {cuber.id} className = "p-2 w-2xs truncate  cursor-pointer
-                                              text-xl hover:bg-gray-200"
-                 onClick={() => addPlayer(cuber)}>
-              {cuber.name}
+            <div  key = {cuber.id} className = "flex flex-row hover:bg-gray-300 p-2 bg-gray-100 cursor-pointer"
+                  onClick={() => addPlayer(cuber)}>
+              
+              <div className =  "w-3xs truncate text-xl pr-5 ">
+
+                {cuber.name}
+              </div>
+              <div className = "text-gray-700">
+                {cuber.id} 
+              </div>
             </div>
           )
         })} 
