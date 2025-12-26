@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoPersonAddOutline } from "react-icons/io5";
-import {deleteCuber} from './selectCubers.js'
 
 export const SelectCubers = () => {
   const [competitors, setCompetitors] = useState([]);
@@ -67,7 +66,7 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
         competitors.length == 0 && 
           <div className = "flex items-center flex-col pt-10">
             <IoPersonAddOutline size={50} color={"gray"}/>
-            <h1 className = "text-gray-500 text-2xl">No competitors added</h1>
+            <h1 className = "text-gray-500 text-lg pt-3">No competitors added</h1>
           </div>
 
       }
