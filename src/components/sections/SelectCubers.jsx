@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoPersonAddOutline } from "react-icons/io5";
+import {searchCubers} from "../services/searchCubers.js"
 
 export const SelectCubers = () => {
   const [competitors, setCompetitors] = useState([]);
@@ -85,29 +86,11 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
 const SearchBar = ({setCompetitors}) => {
   const [input, setInput] = useState("")
   const [searchResults, setSearchResults] = useState([])
-  const dataURL = "../../../public/cubers.json"
-
-
-  useEffect(() => {
-    console.log(searchResults)
-  }, [searchResults])
 
   const Search = async (searchInput) => {
-    let results = [] 
-    const data = await fetch(dataURL)
-    const dataJSON = await data.json()
-
-    for (let cuber of dataJSON.cubers) {
-      if (cuber.name.toLowerCase().includes(searchInput.toLowerCase())) {
-        results.push(cuber)
-        if (results.length >= 10) {
-          break
-        }
-      }
-    }
+    const results = await searchCubers(input)
     setSearchResults(results)
   }
-
 
   useEffect(() => {
     const t = setTimeout(() => {
