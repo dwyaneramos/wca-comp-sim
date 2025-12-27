@@ -2,24 +2,17 @@ import {useState, useEffect} from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoPersonAddOutline } from "react-icons/io5";
 import {searchCubers} from "../services/searchCubers.js"
+import {addCompetitor} from "../utils/competitors.js"
 
 export const SelectCubers = () => {
   const [competitors, setCompetitors] = useState([]);
-
-
-  useEffect(() => {
-    console.log(competitors)
-  }, [competitors])
- 
-
-
 
   return (
     <div className= "flex content-center h-screen justify-center items-center mt-5">
       
       <div className ="flex items-center flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200 w-3xl h-[85vh]">
           <h1 className="text-2xl pb-3 pt-15">Add your competitors</h1>
-          <SearchBar setCompetitors = {setCompetitors}/>
+          <SearchBar setCompetitors = {setCompetitors} competitors = {competitors}/>
           <button type="" className=" bg-green-500 py-2 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
         
       <DisplayCompetitors competitors = {competitors} setCompetitors = {setCompetitors}/>
@@ -70,11 +63,7 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
           </div>
 
       }
-
-
     </div>
-
-
   )
 
 
@@ -83,12 +72,12 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
 
 
 
-const SearchBar = ({setCompetitors}) => {
+const SearchBar = ({setCompetitors, competitors}) => {
   const [input, setInput] = useState("")
   const [searchResults, setSearchResults] = useState([])
 
   const Search = async (searchInput) => {
-    const results = await searchCubers(input)
+    const results = await searchCubers(input, competitors)
     setSearchResults(results)
   }
 
@@ -109,11 +98,11 @@ const SearchBar = ({setCompetitors}) => {
   }, [input])
 
   const addPlayer = (newPlayer) => {
-    console.log("Added player successfully")
     setInput("")
     setSearchResults([])
-    setCompetitors((prev) => [...prev, newPlayer])
+    setCompetitors((prev) => addCompetitor(prev, newPlayer))
   }
+
   const resultsBorder = searchResults.length > 0 ? "border-2 border-gray-200" : ""
   return (
     <div className = "relative w-sm z-1 ">
