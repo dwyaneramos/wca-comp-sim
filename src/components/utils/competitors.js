@@ -7,7 +7,7 @@ export const addCompetitor = (competitorList, c) => {
   } else {
     console.log("Cuber added succesfully")
     const c_obj = new Cuber(c.name, c.id)
-    c_obj.genTimes("333");
+    c_obj.fetchTimes("333");
     return [...competitorList, c_obj];
   }
 

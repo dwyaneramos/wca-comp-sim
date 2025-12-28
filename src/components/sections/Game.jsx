@@ -1,5 +1,8 @@
+import {useState} from "react";
+
 export const Game = (props) => {
-  const competitors = props.competitors
+  const competitors = props.competitors;
+  const [solveNum, setSolveNum] = useState(1)
   console.log(competitors)
   return (
     <section className = "flex pt-20 justify-center w-screen h-screen bg-white">
@@ -9,7 +12,7 @@ export const Game = (props) => {
         {competitors.map((cuber) => {
           return (
             <div key = {cuber.id}>
-              <PlayerRow cuber = {cuber}/> 
+              <PlayerRow cuber = {cuber} solveNum = {solveNum}/> 
             </div>
           )
         })}
@@ -19,18 +22,20 @@ export const Game = (props) => {
   )
 }
 
-const PlayerRow = ({cuber}) => {
+const PlayerRow = ({cuber, solveNum}) => {
   return (
     <div className = "flex flex-row w-3xl p-4 items-center rounded-md border-2 border-gray-200 gap-5">
       <div className = "flex flex-col gap-1">
         <h1 className = "w-40 truncate text-xl">{cuber.name}</h1>
         <h2 className = "text-gray-500">{cuber.id}</h2>
       </div>
-      <div>Time</div>
-      <div>Time</div>
-      <div>Time</div>
-      <div>Time</div>
-      <div>Time</div>
+      {cuber.times.map((time, idx) => {
+        return (
+          <div key = {idx}>
+            {time}
+          </div>
+        )
+      })}
     </div>
   )
 }

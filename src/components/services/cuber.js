@@ -7,22 +7,34 @@ export class Cuber  {
     this.officialTimes = [1,2,3];
     this.sd = -1;
     this.mean = -1;
+    this.times = [];
   }
+
 
   
   calcSDandMean() {
-    this.mean = this.officialTimes.reduce((acc, curr) => acc + curr, 0) / this.officialTimes.length;
+    if (this.officialTimes.length > 0 ) {
+      this.mean = this.officialTimes.reduce((acc, curr) => acc + curr, 0) / this.officialTimes.length;
 
-    const arr = this.officialTimes.map((k) => {
-      return (k - this.mean) ** 2
-    })
+      const arr = this.officialTimes.map((k) => {
+        return (k - this.mean) ** 2
+      })
 
-    let sum = arr.reduce((acc, curr) => acc + curr, 0);
-    this.sd = Math.sqrt((sum / this.officialTimes.length))
-
-    for (let i = 0; i < 5; i ++) {
-      this.genRandomTime()
+      let sum = arr.reduce((acc, curr) => acc + curr, 0);
+      this.sd = Math.sqrt((sum / this.officialTimes.length));
+      this.genTimes() 
+      
     }
+
+  }
+
+  genTimes() {
+    let times = []
+    for (let i = 0; i < 5; i++) {
+      const time = this.genRandomTime();
+      times.push(time)
+    }
+    this.times = times;
   }
 
   genRandomTime() {
@@ -34,11 +46,11 @@ export class Cuber  {
 
     const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
     const time = z * this.sd + this.mean;
-    console.log(time)
+    return time
   }
   
 
-  async genTimes(event) {
+  async fetchTimes(event) {
     const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/" + this.id + ".json"
     const res = await fetch(apiLink)
     const json = await res.json()
