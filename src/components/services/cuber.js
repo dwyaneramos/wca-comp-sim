@@ -20,8 +20,21 @@ export class Cuber  {
     let sum = arr.reduce((acc, curr) => acc + curr, 0);
     this.sd = Math.sqrt((sum / this.officialTimes.length))
 
-    console.log(this.mean)
-    console.log(this.sd)
+    for (let i = 0; i < 5; i ++) {
+      this.genRandomTime()
+    }
+  }
+
+  genRandomTime() {
+    let u = 0;
+    let v = 0;
+
+    while (u === 0) u = Math.random()
+    while (v === 0) v = Math.random()
+
+    const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    const time = z * this.sd + this.mean;
+    console.log(time)
   }
   
 
@@ -35,7 +48,7 @@ export class Cuber  {
       if (eventResults) {
         for (const [roundKey, round] of Object.entries(eventResults)) {
           for (const solve of round.solves) {
-            if (!(solve in invalidTimes)) {
+            if (!(invalidTimes.includes(solve))) {
               recentTimes.push(solve/100)
             }
 
