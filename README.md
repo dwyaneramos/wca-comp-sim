@@ -6,7 +6,7 @@
 
 - [ ] Start the competition
 - [ ] Do cuber validation (a cuber can't be simulated in an event they haven't competed in)
-- [ ] Ensure people can't enter the same cuber twice
+- [x] Ensure people can't enter the same cuber twice
 - [ ] Use keypresses to make entering cubers more convenient
 
 ### Game Page

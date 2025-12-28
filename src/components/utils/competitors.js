@@ -1,20 +1,21 @@
-export const addCompetitor = (competitorList, cuber) => {
-  console.log(competitorList)
-  console.log(cuber)
-  console.log(cuber in competitorList)
-  if (isCuberInList(competitorList, cuber)) {
+import {Cuber} from '../services/cuber.js'
+
+export const addCompetitor = (competitorList, c) => {
+  if (isCuberInList(competitorList, c)) {
     console.log("Cuber already registered")
     return competitorList;
   } else {
     console.log("Cuber added succesfully")
-    return [...competitorList, cuber];
+    const c_obj = new Cuber(c.name, c.id)
+    c_obj.genTimes("333");
+    return [...competitorList, c_obj];
   }
 
 }
 
-export const isCuberInList = (competitorList, cuber) => {
+export const isCuberInList = (competitorList, c) => {
   for (let other of competitorList) {
-    if (other.id == cuber.id && other.name == cuber.name) {
+    if (other.id == c.id && other.name == c.name) {
       return true;
     }
   }
