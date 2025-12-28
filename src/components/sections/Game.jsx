@@ -4,10 +4,11 @@ export const Game = (props) => {
   const competitors = props.competitors;
   const [solveNum, setSolveNum] = useState(1)
   console.log(competitors)
+  console.log(solveNum)
   return (
     <section className = "flex pt-20 justify-center w-screen h-screen bg-white">
       <h1 className="text-3xl">hello</h1> 
-      <button type="" className = "bg-green-500 h-10 p-3 rounded-xl cursor-pointer">gen times</button>
+      <button type="" onClick={() => setSolveNum(solveNum + 1)} className = "bg-green-500 h-10 p-3 rounded-xl cursor-pointer">gen times</button>
       <div className="flex flex-col gap-2 bg-red-200 overflow-y-scroll">
         {competitors.map((cuber) => {
           return (
@@ -30,9 +31,10 @@ const PlayerRow = ({cuber, solveNum}) => {
         <h2 className = "text-gray-500">{cuber.id}</h2>
       </div>
       {cuber.times.map((time, idx) => {
+        const timeToDisplay = idx + 1 <= solveNum ? time.toFixed(2) : "#####"
         return (
           <div key = {idx}>
-            {time}
+            {timeToDisplay}
           </div>
         )
       })}
