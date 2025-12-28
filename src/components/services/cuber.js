@@ -4,8 +4,27 @@ export class Cuber  {
   constructor(name, id) {
     this.name = name;
     this.id = id;
-    this.times = [1,2,3];
+    this.officialTimes = [1,2,3];
+    this.sd = -1;
+    this.mean = -1;
   }
+
+  
+  calcSDandMean() {
+    this.mean = this.officialTimes.reduce((acc, curr) => acc + curr, 0) / this.officialTimes.length;
+
+    const arr = this.officialTimes.map((k) => {
+      return (k - this.mean) ** 2
+    })
+
+    let sum = arr.reduce((acc, curr) => acc + curr, 0);
+    this.sd = Math.sqrt((sum / this.officialTimes.length))
+
+    console.log(this.mean)
+    console.log(this.sd)
+  }
+  
+
   async genTimes(event) {
     const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/" + this.id + ".json"
     const res = await fetch(apiLink)
@@ -21,18 +40,18 @@ export class Cuber  {
             }
 
             if (recentTimes.length >= 50) {
-              this.times = recentTimes;
-              console.log(this.times)
+              this.officialTimes = recentTimes;
+              this.calcSDandMean();
+              console.log(this.officialTimes)
               return
             }
           }
         }
       }
     }
-    this.times = recentTimes;
-    console.log(this.times)
-
-
+    this.officialTimes = recentTimes;
+    this.calcSDandMean();
   } 
+
   
 }
