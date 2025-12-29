@@ -1,4 +1,4 @@
-export const NavBar = () => {
+export const NavBar = ({setPage}) => {
   return (
     <div className = "flex place-content-between bg-white drop-shadow-sm px-30 text-lg py-3 fixed top-0 w-screen">
       <div>

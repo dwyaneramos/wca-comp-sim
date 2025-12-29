@@ -7,6 +7,9 @@ export class Cuber  {
     this.officialTimes = [1,2,3];
     this.sd = -1;
     this.mean = -1;
+    this.avg = -1;
+    this.bpa = -1;
+    this.wpa = -1;
     this.times = [];
   }
 
@@ -18,7 +21,7 @@ export class Cuber  {
 
       const arr = this.officialTimes.map((k) => {
         return (k - this.mean) ** 2
-      })
+      }) 
 
       let sum = arr.reduce((acc, curr) => acc + curr, 0);
       this.sd = Math.sqrt((sum / this.officialTimes.length));
@@ -35,6 +38,10 @@ export class Cuber  {
       times.push(time)
     }
     this.times = times;
+    this.avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
+    const timesWOLastSolve = times.slice(0, -1);
+    this.bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
+    this.wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
   }
 
   genRandomTime() {
@@ -67,7 +74,6 @@ export class Cuber  {
             if (recentTimes.length >= 50) {
               this.officialTimes = recentTimes;
               this.calcSDandMean();
-              console.log(this.officialTimes)
               return
             }
           }

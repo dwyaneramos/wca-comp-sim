@@ -82,7 +82,6 @@ const SearchBar = ({setCompetitors, competitors}) => {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      console.log(input)
       if (input) {
         Search(input)
       } else {
