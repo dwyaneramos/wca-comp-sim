@@ -11,13 +11,13 @@
 
 ### Game Page
 
-- [ ] Simulate a person's times
+- [X] Simulate a person's times
 - [ ] Take in user input
-- [ ] Rank cubers based on time
-- [ ] Calculate and display WPA/BPA
+- [X] Rank cubers based on time
+- [X] Calculate and display WPA/BPA
 - [ ] Generate a scramble and display it
 - [ ] Edit times
-- [ ] Toggle visibility of other cubers' times
+- [X] Toggle visibility of other cubers' times
 
 ### Stats Page
 

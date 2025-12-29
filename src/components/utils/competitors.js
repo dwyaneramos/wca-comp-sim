@@ -1,4 +1,4 @@
-import {Cuber} from '../services/cuber.js'
+import {createCuber, genTimes} from '../services/cuber.js'
 
 export const addCompetitor = (competitorList, c) => {
   if (isCuberInList(competitorList, c)) {
@@ -6,8 +6,8 @@ export const addCompetitor = (competitorList, c) => {
     return competitorList;
   } else {
     console.log("Cuber added succesfully")
-    const c_obj = new Cuber(c.name, c.id)
-    c_obj.fetchTimes("333");
+    const c_obj = createCuber(c.id, c.name)
+    genTimes(c_obj, "333");
     return [...competitorList, c_obj];
   }
 

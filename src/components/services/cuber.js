@@ -1,88 +1,83 @@
 const invalidTimes = [-1, -2, 0]
 
-export class Cuber  {
-  constructor(name, id) {
-    this.name = name;
-    this.id = id;
-    this.officialTimes = [1,2,3];
-    this.sd = -1;
-    this.mean = -1;
-    this.avg = -1;
-    this.bpa = -1;
-    this.wpa = -1;
-    this.times = [];
+
+export const createCuber = (id, name, times = [], avg = null, bpa = null, wpa = null) => {
+  return {
+    id: id,
+    name: name,
+    times: times,
+    avg: avg,
+    bpa: bpa,
+    wpa: wpa,
   }
+}
 
+export const createPlayer = (times = []) => {
+  return createCuber("Player", "Player")
+              
 
-  
-  calcSDandMean() {
-    if (this.officialTimes.length > 0 ) {
-      this.mean = this.officialTimes.reduce((acc, curr) => acc + curr, 0) / this.officialTimes.length;
+}
 
-      const arr = this.officialTimes.map((k) => {
-        return (k - this.mean) ** 2
-      }) 
+export const genTimes = async (cuber, event) => {
+  const officialTimes = await fetchTimes(cuber, event)
+  const mean = officialTimes.reduce((acc, curr) => acc + curr, 0) / officialTimes.length;
 
-      let sum = arr.reduce((acc, curr) => acc + curr, 0);
-      this.sd = Math.sqrt((sum / this.officialTimes.length));
-      this.genTimes() 
-      
-    }
-
+  let times = []
+  for (let i = 0; i < 5; i++) {
+    const time = genRandomTime(mean);
+    times.push(time)
   }
+  cuber.times = times;
+  cuber.avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
+  const timesWOLastSolve = times.slice(0, -1);
+  cuber.bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
+  cuber.wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+}
 
-  genTimes() {
-    let times = []
-    for (let i = 0; i < 5; i++) {
-      const time = this.genRandomTime();
-      times.push(time)
-    }
-    this.times = times;
-    this.avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
-    const timesWOLastSolve = times.slice(0, -1);
-    this.bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
-    this.wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
-  }
+export const genRandomTime = (mean) => {
+  let u = 0;
+  let v = 0;
 
-  genRandomTime() {
-    let u = 0;
-    let v = 0;
+  while (u === 0) u = Math.random()
+  while (v === 0) v = Math.random()
 
-    while (u === 0) u = Math.random()
-    while (v === 0) v = Math.random()
+  const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  const stdDev = 0.2
+  const time = z * stdDev + mean;
+  return time
+}
 
-    const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-    const time = z * this.sd + this.mean;
-    return time
-  }
-  
+export const fetchTimes = async (cuber, event) => {
+  const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/" + cuber.id + ".json"
+  const res = await fetch(apiLink)
+  const json = await res.json()
+  let recentTimes = []
+  for (const [compKey, comp] of Object.entries(json.results)) {
+    const eventResults = comp[event]
+    if (eventResults) {
+      for (const [roundKey, round] of Object.entries(eventResults)) {
+        for (const solve of round.solves) {
+          if (!(invalidTimes.includes(solve))) {
+            recentTimes.push(solve/100)
+          }
 
-  async fetchTimes(event) {
-    const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/" + this.id + ".json"
-    const res = await fetch(apiLink)
-    const json = await res.json()
-    let recentTimes = []
-    for (const [compKey, comp] of Object.entries(json.results)) {
-      const eventResults = comp[event]
-      if (eventResults) {
-        for (const [roundKey, round] of Object.entries(eventResults)) {
-          for (const solve of round.solves) {
-            if (!(invalidTimes.includes(solve))) {
-              recentTimes.push(solve/100)
-            }
-
-            if (recentTimes.length >= 50) {
-              this.officialTimes = recentTimes;
-              this.calcSDandMean();
-              return
-            }
+          if (recentTimes.length >= 50) {
+            return recentTimes
           }
         }
       }
     }
-    this.officialTimes = recentTimes;
-    this.calcSDandMean();
-  } 
+  }
+  return recentTimes
+} 
+
+
+
 
   
-}
+
+  
+
+
+  
+
