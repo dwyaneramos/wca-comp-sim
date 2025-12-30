@@ -4,7 +4,7 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import {searchCubers} from "../services/searchCubers.js"
 import {addCompetitor} from "../utils/competitors.js"
 
-export const SelectCubers = ({setPage, setCompetitors, competitors}) => {
+export const SelectCubers = ({changePage, setCompetitors, competitors}) => {
 
   return (
     <div className= "flex content-center h-screen justify-center items-center mt-5">
@@ -12,7 +12,7 @@ export const SelectCubers = ({setPage, setCompetitors, competitors}) => {
       <div className ="flex items-center flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200 w-3xl h-[85vh]">
           <h1 className="text-2xl pb-3 pt-15">Add your competitors</h1>
           <SearchBar setCompetitors = {setCompetitors} competitors = {competitors}/>
-          <button onClick={() => setPage("Game")} type="" className=" bg-green-500 py-2 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
+          <button onClick={() => changePage("Game")} type="" className=" bg-green-500 py-2 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
         
       <DisplayCompetitors competitors = {competitors} setCompetitors = {setCompetitors}/>
 

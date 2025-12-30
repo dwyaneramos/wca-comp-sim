@@ -1,4 +1,19 @@
-import {createCuber, genTimes} from '../services/cuber.js'
+import {createSimCuber} from '../services/cuber.js'
+
+export const simulateAllCompetitors = async (competitorList) => {
+  //TODO: not hardcode 333
+   const simmedCompetitors = await Promise.all (
+    competitorList.map((c) => {
+    if (c.id !== "Player") {
+      return createSimCuber(c, "333")
+    } else {
+      return createPlayer() 
+    }
+    
+  })
+  ) 
+  return simmedCompetitors
+}
 
 export const addCompetitor = (competitorList, c) => {
   if (isCuberInList(competitorList, c)) {
@@ -6,9 +21,12 @@ export const addCompetitor = (competitorList, c) => {
     return competitorList;
   } else {
     console.log("Cuber added succesfully")
-    const c_obj = createCuber(c.id, c.name)
-    genTimes(c_obj, "333");
-    return [...competitorList, c_obj];
+  {/*
+
+    const c_obj = createSimCuber(c, "333")
+  */}
+    
+    return [...competitorList, c];
   }
 
 }

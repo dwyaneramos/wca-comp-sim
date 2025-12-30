@@ -9,9 +9,10 @@ export const Game = (props) => {
   const setCompetitors = props.setCompetitors;
   const [solveNum, setSolveNum] = useState(0)
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
-  const numSolvesInRound = competitors[0].times.length
+  const numSolvesInRound = 5
   const [ toggleButtonDisabled, setToggleDisability] = useState(false);
   const [timeInput, setTime] = useState("")
+  console.log("RAHH", competitors)
 
   useEffect(() => {
     if (solveNum == numSolvesInRound) {
@@ -20,6 +21,7 @@ export const Game = (props) => {
 
     }
   }, [solveNum])
+
 
   let sortedCompetitors = [...competitors];
   if (solveNum >= 1 && solveNum <= numSolvesInRound - 1) {
@@ -33,8 +35,8 @@ export const Game = (props) => {
       <button type="" onClick={() => setSolveNum(solveNum + 1)} className = "bg-green-500 h-10 p-3 rounded-xl cursor-pointer">gen times</button>
       <ToggleShowOtherTimes disabled = {toggleButtonDisabled} canViewOtherTimes = {canViewOtherTimes} setViewOtherTimes = {setViewOtherTimes}/>
       <div className = "flex flex-row gap-2">
-        <input type="text" className ="border-2 border-black w-md h-10 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
-        <button onClick={() => submitTime(timeInput, setCompetitors, solveNum)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
+        <input type="number" step="0.01" className ="border-2 border-black w-md h-10 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
+        <button onClick={() => submitTime(timeInput, setCompetitors, solveNum, competitors, setSolveNum, setTime)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
           <FaArrowRight/>
         </button>
       </div>
@@ -44,23 +46,22 @@ export const Game = (props) => {
   )
 }
 
-function submitTime (time, setCompetitors, solveNum) {
-  console.log(time)
-
-  {/*
-
+function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, setTime) {
+  
   setCompetitors(prev => 
     prev.map(c => {
-      if (!(c.id == "Player")) {
+      if (c.id !== "Player") {
         return c 
       }
       
-      let newTimes = c.times;
-      newTimes[solveNum - 1] = time
-      const updatedPlayer = new Player(newTimes)
+      let newTimes = [...c.times];
+      newTimes.push(parseFloat(time));
+      const updatedPlayer = createPlayer(newTimes)
       return updatedPlayer;
     }))
-  */}
+  setSolveNum(solveNum + 1)
+  setTime("")
+
 }
 
 const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors}) => {
@@ -121,6 +122,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes}) => {
         <h1 className = "w-40 truncate text-xl">{cuber.name}</h1>
         <h2 className = "text-gray-500">{cuber.id}</h2>
       </div>
+
       {cuber.times.map((time, idx) => {
         const timeToDisplay = idx + 1 <= solveNum && canViewOtherTimes ? time.toFixed(2) : "#####"
         return (
@@ -132,12 +134,13 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes}) => {
 
       })}
 
-
       {
         <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"}`}>
           {canViewOtherTimes ? avgToDisplay : "#####"}
         </h1>
       }
+
+
     
     </div>
   )

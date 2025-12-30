@@ -13,26 +13,36 @@ export const createCuber = (id, name, times = [], avg = null, bpa = null, wpa = 
 }
 
 export const createPlayer = (times = []) => {
-  return createCuber("Player", "Player")
-              
+  return createCuber("Player", "Player", times)
 
 }
 
-export const genTimes = async (cuber, event) => {
+export const genPlayerWPABPA = (player) => {
+  const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
+  const wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+  return [bpa, wpa]
+}
+
+export const createSimCuber = async (cuber, event) => {
   const officialTimes = await fetchTimes(cuber, event)
   const mean = officialTimes.reduce((acc, curr) => acc + curr, 0) / officialTimes.length;
+
 
   let times = []
   for (let i = 0; i < 5; i++) {
     const time = genRandomTime(mean);
     times.push(time)
   }
-  cuber.times = times;
-  cuber.avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
+  times = times;
+  const avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
   const timesWOLastSolve = times.slice(0, -1);
-  cuber.bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
-  cuber.wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+  const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
+  const wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+
+  return createCuber(cuber.id, cuber.name, times, avg, bpa, wpa)
+
 }
+
 
 export const genRandomTime = (mean) => {
   let u = 0;
