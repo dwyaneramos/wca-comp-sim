@@ -6,7 +6,7 @@ import {SelectCubers} from './components/sections/SelectCubers'
 import {Game} from './components/sections/Game'
 import {NavBar} from './components/NavBar'
 import {createPlayer} from './components/services/cuber.js'
-import {simulateAllCompetitors} from './components/utils/competitors.js'
+import {simulateAllCompetitors, addUser} from './components/utils/competitors.js'
 
 function App() {
   const [page, setPage] = useState("Home")
@@ -16,12 +16,15 @@ function App() {
 
   const Simulate = async () => {
     const simmedCompetitors = await simulateAllCompetitors(competitors)
+    console.log(simmedCompetitors, "AYeeeE")
     setCompetitors(simmedCompetitors)
+    return simmedCompetitors
   }
 
   const changePage = async (page) => {
     if (page === "Game") {
-      await Simulate()
+      const simmedCompetitors = await Simulate()
+      setCompetitors(addUser(simmedCompetitors))
       setPage("Game")
     } else {
       setPage(page)

@@ -1,4 +1,4 @@
-import {createSimCuber} from '../services/cuber.js'
+import {createSimCuber, createPlayer} from '../services/cuber.js'
 
 export const simulateAllCompetitors = async (competitorList) => {
   //TODO: not hardcode 333
@@ -13,6 +13,11 @@ export const simulateAllCompetitors = async (competitorList) => {
   })
   ) 
   return simmedCompetitors
+}
+
+export const addUser = (competitorList) => {
+  const user = createPlayer();
+  return [...competitorList, user]
 }
 
 export const addCompetitor = (competitorList, c) => {
@@ -33,7 +38,7 @@ export const addCompetitor = (competitorList, c) => {
 
 export const isCuberInList = (competitorList, c) => {
   for (let other of competitorList) {
-    if (other.id == c.id && other.name == c.name) {
+    if (other.id === c.id && other.name === c.name) {
       return true;
     }
   }

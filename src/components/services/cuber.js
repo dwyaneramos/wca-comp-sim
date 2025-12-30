@@ -1,7 +1,7 @@
 const invalidTimes = [-1, -2, 0]
 
 
-export const createCuber = (id, name, times = [], avg = null, bpa = null, wpa = null) => {
+export const createCuber = (id, name, times = [-1,-1,-1,-1,-1], avg = null, bpa = null, wpa = null) => {
   return {
     id: id,
     name: name,
@@ -12,7 +12,7 @@ export const createCuber = (id, name, times = [], avg = null, bpa = null, wpa = 
   }
 }
 
-export const createPlayer = (times = []) => {
+export const createPlayer = (times = [-1,-1,-1,-1,-1]) => {
   return createCuber("Player", "Player", times)
 
 }
