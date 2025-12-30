@@ -1,7 +1,7 @@
 const invalidTimes = [-1, -2, 0]
 
 
-export const createCuber = (id, name, times = [-1,-1,-1,-1,-1], avg = null, bpa = null, wpa = null) => {
+export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null) => {
   return {
     id: id,
     name: name,
@@ -12,15 +12,21 @@ export const createCuber = (id, name, times = [-1,-1,-1,-1,-1], avg = null, bpa 
   }
 }
 
-export const createPlayer = (times = [-1,-1,-1,-1,-1]) => {
-  return createCuber("Player", "Player", times)
+export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, avg = null) => {
+  return createCuber("Player", "Player", times, bpa, wpa, avg)
 
 }
 
-export const genPlayerWPABPA = (player) => {
+export const genPlayerWPABPA = (timesWOLastSolve) => {
   const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
   const wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
-  return [bpa, wpa]
+  console.log("WASSUP", bpa, wpa)
+  return {bpa, wpa}
+}
+
+export const genPlayerAvg = (times) => {
+  const avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
+  return avg
 }
 
 export const createSimCuber = async (cuber, event) => {
@@ -34,10 +40,9 @@ export const createSimCuber = async (cuber, event) => {
     times.push(time)
   }
   times = times;
-  const avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
   const timesWOLastSolve = times.slice(0, -1);
-  const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
-  const wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+  const avg = genPlayerAvg(times);
+  const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve);
 
   return createCuber(cuber.id, cuber.name, times, avg, bpa, wpa)
 

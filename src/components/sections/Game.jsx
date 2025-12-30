@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
+import {createPlayerWithNewTime} from "../utils/competitors.js"
 
 
 
@@ -47,19 +48,17 @@ export const Game = (props) => {
 }
 
 function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, setTime) {
-  
+  const nextSolveNum = solveNum + 1 
+  setSolveNum(nextSolveNum)
   setCompetitors(prev => 
     prev.map(c => {
       if (c.id !== "Player") {
         return c 
       }
+
+      return createPlayerWithNewTime(c, nextSolveNum, time)
       
-      let newTimes = [...c.times];
-      newTimes.push(parseFloat(time));
-      const updatedPlayer = createPlayer(newTimes)
-      return updatedPlayer;
     }))
-  setSolveNum(solveNum + 1)
   setTime("")
 
 }

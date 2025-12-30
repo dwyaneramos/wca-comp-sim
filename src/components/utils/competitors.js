@@ -1,4 +1,4 @@
-import {createSimCuber, createPlayer} from '../services/cuber.js'
+import {createSimCuber, createPlayer, genPlayerWPABPA, genPlayerAvg} from '../services/cuber.js'
 
 export const simulateAllCompetitors = async (competitorList) => {
   //TODO: not hardcode 333
@@ -18,6 +18,28 @@ export const simulateAllCompetitors = async (competitorList) => {
 export const addUser = (competitorList) => {
   const user = createPlayer();
   return [...competitorList, user]
+}
+
+export const createPlayerWithNewTime = (c, solveNum, time) => {
+  let newTimes = [...c.times];
+  newTimes[solveNum - 1] = (parseFloat(time));
+
+  let updatedPlayer = null
+  if (solveNum == 4) {
+    const timesWOLastSolve = newTimes.slice(0, -1)
+    const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve)
+    updatedPlayer = createPlayer(newTimes, bpa, wpa);
+    
+  } else if (solveNum == 5) {
+    const avg = genPlayerAvg(newTimes);
+    updatedPlayer = createPlayer(newTimes, null, null, avg);
+  }
+
+  else {
+    updatedPlayer = createPlayer(newTimes)
+  }
+
+  return updatedPlayer;
 }
 
 export const addCompetitor = (competitorList, c) => {
