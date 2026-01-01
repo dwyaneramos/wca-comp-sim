@@ -44,7 +44,7 @@ export const createSimCuber = async (cuber, event) => {
   const avg = genPlayerAvg(times);
   const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve);
 
-  return createCuber(cuber.id, cuber.name, times, avg, bpa, wpa)
+  return createCuber(cuber.id, cuber.name, times, bpa, wpa, avg)
 
 }
 

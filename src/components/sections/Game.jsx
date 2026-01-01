@@ -10,6 +10,7 @@ export const Game = (props) => {
   const setCompetitors = props.setCompetitors;
   const [solveNum, setSolveNum] = useState(0)
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
+  const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
   const numSolvesInRound = 5
   const [ toggleButtonDisabled, setToggleDisability] = useState(false);
   const [timeInput, setTime] = useState("")
@@ -33,16 +34,22 @@ export const Game = (props) => {
   return (
     <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
       <h1 className="text-3xl">hello</h1> 
-      <button type="" onClick={() => setSolveNum(solveNum + 1)} className = "bg-green-500 h-10 p-3 rounded-xl cursor-pointer">gen times</button>
-      <ToggleShowOtherTimes disabled = {toggleButtonDisabled} canViewOtherTimes = {canViewOtherTimes} setViewOtherTimes = {setViewOtherTimes}/>
+      <div className = "flex flex-row text-lg justify-center items-center gap-3">
+        <Toggle disabled = {toggleButtonDisabled} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes}/>
+        <h1>Show other times</h1>
+      </div>
+      <div className = "flex flex-row text-lg justify-center items-center gap-3">
+        <Toggle disabled = {toggleButtonDisabled} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
+        <h1>Show BPAs/WPAs</h1>
+      </div>
       <div className = "flex flex-row gap-2">
-        <input type="number" step="0.01" className ="border-2 border-black w-md h-10 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
+        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10 px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button onClick={() => submitTime(timeInput, setCompetitors, solveNum, competitors, setSolveNum, setTime)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
           <FaArrowRight/>
         </button>
       </div>
       <TimeHeaders/>
-      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} competitors = {sortedCompetitors}/>
+      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg}/>
     </section>
   )
 }
@@ -63,14 +70,14 @@ function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, s
 
 }
 
-const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors}) => {
+const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg}) => {
   return (
     <div className="flex flex-col gap-2  overflow-y-scroll">
       {competitors.map((cuber) => {
 
         return (
           <div key = {cuber.id}>
-            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}/> 
+            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} canViewPotentialAvg = {canViewPotentialAvg}/> 
           </div>
         )
       })}
@@ -95,17 +102,22 @@ const TimeHeaders = () => {
 
 const ToggleShowOtherTimes = ({disabled, canViewOtherTimes, setViewOtherTimes}) =>  {
   return (
-    <button type="" disabled = {disabled} className={` ${canViewOtherTimes ? "bg-gray-300 " : "bg-green-300"} relative  w-20 rounded-3xl h-10`} onClick = {() => setViewOtherTimes(!canViewOtherTimes)}>
-      <div className = {`${canViewOtherTimes ? "left-1" : "left-[50%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-8 h-8  bg-white`}>
-        
-      </div>
-
+    <button type="" disabled = {disabled} className={` ${canViewOtherTimes ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setViewOtherTimes(!canViewOtherTimes)}>
+      <div className = {`${canViewOtherTimes ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
     </button>
   )
 
 }
 
-const PlayerRow = ({cuber, solveNum, canViewOtherTimes}) => {
+const Toggle = ({disabled, variable, setterFunc}) => {
+  return (
+    <button type="" disabled = {disabled} className={` ${variable ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setterFunc(!variable)}>
+      <div className = {`${variable ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
+    </button>
+  )
+}
+
+const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg}) => {
   let avgToDisplay = "";
   if (solveNum == 4) {
       avgToDisplay = cuber.bpa.toFixed(2) + "/" + cuber.wpa.toFixed(2)
@@ -122,8 +134,10 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes}) => {
         <h2 className = "text-gray-500">{cuber.id}</h2>
       </div>
 
+      {/* Display Times */}
+
       {cuber.times.map((time, idx) => {
-        const timeToDisplay = idx + 1 <= solveNum && canViewOtherTimes ? time.toFixed(2) : "#####"
+        const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === "Player") ? time.toFixed(2) : "#####"
         return (
           <div key = {idx}>
             {timeToDisplay}
@@ -133,9 +147,11 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes}) => {
 
       })}
 
+      {/* Display BPA/WPA */}
+
       {
         <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"}`}>
-          {canViewOtherTimes ? avgToDisplay : "#####"}
+          {((canViewOtherTimes || cuber.id === "Player") && canViewPotentialAvg) ? avgToDisplay : "#####"}
         </h1>
       }
 
