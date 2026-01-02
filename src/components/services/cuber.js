@@ -57,7 +57,7 @@ export const genRandomTime = (mean) => {
   while (v === 0) v = Math.random()
 
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  const stdDev = 0.2
+  const stdDev = 0.8
   const time = z * stdDev + mean;
   return time
 }

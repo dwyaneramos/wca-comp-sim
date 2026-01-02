@@ -12,7 +12,8 @@ export const Game = (props) => {
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
   const numSolvesInRound = 5
-  const [ toggleButtonDisabled, setToggleDisability] = useState(false);
+  const [toggleButtonDisabled, setToggleDisability] = useState(false);
+  const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
   console.log("RAHH", competitors)
 
@@ -25,6 +26,21 @@ export const Game = (props) => {
   }, [solveNum])
 
 
+  function editTime (time, idx) {
+    console.log("PASSED DOWN", idx)
+    setCompetitors(prev => 
+      prev.map(c => {
+        if (c.id !== "Player") {
+          return c 
+        }
+
+        return createPlayerWithNewTime(c, idx + 1, time)
+        
+      }))
+    setShowPopup({cuber : null, solveIdx : null})
+  }
+
+
   let sortedCompetitors = [...competitors];
   if (solveNum >= 1 && solveNum <= numSolvesInRound - 1) {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return Math.min(...c1.times.slice(0,solveNum)) - Math.min(...c2.times.slice(0,solveNum))} )
@@ -34,50 +50,41 @@ export const Game = (props) => {
   return (
     <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
       <h1 className="text-3xl">hello</h1> 
-      <div className = "flex flex-row text-lg justify-center items-center gap-3">
-        <Toggle disabled = {toggleButtonDisabled} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes}/>
-        <h1>Show other times</h1>
-      </div>
-      <div className = "flex flex-row text-lg justify-center items-center gap-3">
-        <Toggle disabled = {toggleButtonDisabled} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
-        <h1>Show BPAs/WPAs</h1>
-      </div>
       <div className = "flex flex-row gap-2">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10 px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button onClick={() => submitTime(timeInput, setCompetitors, solveNum, competitors, setSolveNum, setTime)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
           <FaArrowRight/>
         </button>
       </div>
+
+      <div className = "flex flex-row gap-5">
+        <div className = "flex flex-row text-lg justify-center items-center gap-3">
+          <Toggle disabled = {toggleButtonDisabled} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes}/>
+          <h1>Hide other times</h1>
+        </div>
+        <div className = "flex flex-row text-lg justify-center items-center gap-3">
+          <Toggle disabled = {toggleButtonDisabled} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
+          <h1>Hide BPAs/WPAs</h1>
+        </div>
+      </div>
+
       <TimeHeaders/>
-      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg}/>
+      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup}/>
+      {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
     </section>
   )
 }
 
-function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, setTime) {
-  const nextSolveNum = solveNum + 1 
-  setSolveNum(nextSolveNum)
-  setCompetitors(prev => 
-    prev.map(c => {
-      if (c.id !== "Player") {
-        return c 
-      }
 
-      return createPlayerWithNewTime(c, nextSolveNum, time)
-      
-    }))
-  setTime("")
 
-}
-
-const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg}) => {
+const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup}) => {
   return (
     <div className="flex flex-col gap-2  overflow-y-scroll">
       {competitors.map((cuber) => {
 
         return (
           <div key = {cuber.id}>
-            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} canViewPotentialAvg = {canViewPotentialAvg}/> 
+            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup}/> 
           </div>
         )
       })}
@@ -99,16 +106,6 @@ const TimeHeaders = () => {
     </div>
   )
 }
-
-const ToggleShowOtherTimes = ({disabled, canViewOtherTimes, setViewOtherTimes}) =>  {
-  return (
-    <button type="" disabled = {disabled} className={` ${canViewOtherTimes ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setViewOtherTimes(!canViewOtherTimes)}>
-      <div className = {`${canViewOtherTimes ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
-    </button>
-  )
-
-}
-
 const Toggle = ({disabled, variable, setterFunc}) => {
   return (
     <button type="" disabled = {disabled} className={` ${variable ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setterFunc(!variable)}>
@@ -116,8 +113,36 @@ const Toggle = ({disabled, variable, setterFunc}) => {
     </button>
   )
 }
+function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, setTime) {
+  const nextSolveNum = solveNum + 1 
+  setSolveNum(nextSolveNum)
+  setCompetitors(prev => 
+    prev.map(c => {
+      if (c.id !== "Player") {
+        return c 
+      }
 
-const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg}) => {
+      return createPlayerWithNewTime(c, nextSolveNum, time)
+      
+    }))
+  setTime("")
+}
+
+
+const EditTimePopup = ({cuber, idx, onClick}) => {
+  const [newTime, setNewTime] = useState(cuber.times[idx].toFixed(2))
+  console.log("INDEX", idx)
+  return (
+    <div className = "bg-green-200 flex justify-center items-center flex-col w-200 h-100 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
+      <h1>Edit Time</h1>
+      <input className="bg-white w-md" type="" name="edit time input" value={newTime} onChange={(e)=>setNewTime(e.target.value)}/>
+      <button type="" onClick={()=>onClick(newTime, idx)} className ="bg-green-500 p-2 rounded-md text-white cursor-pointer">Confirm</button>
+      
+    </div>
+  )
+}
+
+const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup}) => {
   let avgToDisplay = "";
   if (solveNum == 4) {
       avgToDisplay = cuber.bpa.toFixed(2) + "/" + cuber.wpa.toFixed(2)
@@ -136,16 +161,30 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg}) =>
 
       {/* Display Times */}
 
-      {cuber.times.map((time, idx) => {
-        const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === "Player") ? time.toFixed(2) : "#####"
-        return (
-          <div key = {idx}>
-            {timeToDisplay}
-          </div>
-        )
+      {cuber.id === "Player" &&
+
+        cuber.times.map((time, idx) => {
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === "Player") ? time.toFixed(2) : "#####"
+          return (
+            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} className = {`${cuber.id == "Player" && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
+              {timeToDisplay}
+            </button>
+          )
 
 
-      })}
+        })
+      }
+
+      {cuber.id !== "Player" && 
+        cuber.times.map((time, idx) => {
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === "Player") ? time.toFixed(2) : "#####"
+          return (
+            <div key = {idx}>
+              {timeToDisplay}
+            </div>
+          )
+        })
+      }
 
       {/* Display BPA/WPA */}
 
