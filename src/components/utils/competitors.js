@@ -25,7 +25,7 @@ export const createPlayerWithNewTime = (c, solveNum, time) => {
   newTimes[solveNum - 1] = (parseFloat(time));
 
   let updatedPlayer = null
-  if (solveNum == 4) {
+  if (solveNum == 4 || c.times[-2] != -1) {
     const timesWOLastSolve = newTimes.slice(0, -1)
     const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve)
     updatedPlayer = createPlayer(newTimes, bpa, wpa);

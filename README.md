@@ -16,7 +16,7 @@
 - [X] Rank cubers based on time
 - [X] Calculate and display WPA/BPA
 - [ ] Generate a scramble and display it
-- [ ] Edit times
+- [X] Edit times
 - [X] Toggle visibility of other cubers' times
 - [ ] Polish formatting
 
