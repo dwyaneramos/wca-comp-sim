@@ -18,7 +18,7 @@
 - [ ] Generate a scramble and display it
 - [X] Edit times
 - [X] Toggle visibility of other cubers' times
-- [ ] Polish formatting
+- [X] Polish formatting
 
 ### Stats Page
 

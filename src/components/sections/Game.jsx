@@ -2,7 +2,14 @@ import {useState, useEffect} from "react";
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime} from "../utils/competitors.js"
+import { randomScrambleForEvent } from "cubing/scramble";
+const PLAYER_ID = "Player"
 
+
+const genScramble = async (event) => {
+  const scramble = await randomScrambleForEvent(event);
+  return scramble.toString()
+}
 
 
 export const Game = (props) => {
@@ -15,22 +22,24 @@ export const Game = (props) => {
   const [toggleButtonDisabled, setToggleDisability] = useState(false);
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
-  console.log("RAHH", competitors)
+  const [scramble, setScramble] = useState("Loading scramble...")
 
   useEffect(() => {
     if (solveNum == numSolvesInRound) {
       setViewOtherTimes(true);
       setToggleDisability(true);
 
+    } else {
+      setScramble(genScramble("333"));
     }
+
   }, [solveNum])
 
 
   function editTime (time, idx) {
-    console.log("PASSED DOWN", idx)
     setCompetitors(prev => 
       prev.map(c => {
-        if (c.id !== "Player") {
+        if (c.id !== PLAYER_ID) {
           return c 
         }
 
@@ -49,9 +58,9 @@ export const Game = (props) => {
   }
   return (
     <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
-      <h1 className="text-3xl">hello</h1> 
-      <div className = "flex flex-row gap-2">
-        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10 px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
+      <h1 className="text-3xl pt-20">{scramble}</h1> 
+      <div className = "flex flex-row gap-2 mt-10 mb-4">
+        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button onClick={() => submitTime(timeInput, setCompetitors, solveNum, competitors, setSolveNum, setTime)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
           <FaArrowRight/>
         </button>
@@ -80,11 +89,11 @@ export const Game = (props) => {
 const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup}) => {
   return (
     <div className="flex flex-col gap-2  overflow-y-scroll">
-      {competitors.map((cuber) => {
+      {competitors.map((cuber, idx) => {
 
         return (
           <div key = {cuber.id}>
-            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup}/> 
+            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup} rank = {idx}/> 
           </div>
         )
       })}
@@ -96,7 +105,10 @@ const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPot
 const TimeHeaders = () => {
   const solves = [1,2,3,4,5]
   return (
-    <div className = "flex flex-row w-3xl pl-50 py-2 items-center rounded-md border-2 border-gray-200 gap-5">
+     <div className = "grid w-3xl text-center grid-cols-9 border-2 border-gray-200 rounded-md p-2 items-center">
+      <h1>Rank</h1>
+      <h1 className="col-span-2">Competitor</h1>
+
       {solves.map((s) => {
         return (
           <h1 key ={s}>Solve {s}</h1>
@@ -118,7 +130,7 @@ function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, s
   setSolveNum(nextSolveNum)
   setCompetitors(prev => 
     prev.map(c => {
-      if (c.id !== "Player") {
+      if (c.id !== PLAYER_ID) {
         return c 
       }
 
@@ -131,7 +143,6 @@ function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, s
 
 const EditTimePopup = ({cuber, idx, onClick}) => {
   const [newTime, setNewTime] = useState(cuber.times[idx].toFixed(2))
-  console.log("INDEX", idx)
   return (
     <div className = "bg-green-200 flex justify-center items-center flex-col w-200 h-100 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
       <h1>Edit Time</h1>
@@ -142,7 +153,7 @@ const EditTimePopup = ({cuber, idx, onClick}) => {
   )
 }
 
-const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup}) => {
+const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup, rank}) => {
   let avgToDisplay = "";
   if (solveNum == 4) {
       avgToDisplay = cuber.bpa.toFixed(2) + "/" + cuber.wpa.toFixed(2)
@@ -153,20 +164,25 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   }
 
   return (
-    <div className = "flex flex-row w-3xl p-4 items-center rounded-md border-2 border-gray-200 gap-10">
-      <div className = "flex flex-col gap-1">
+    <div className = "grid w-3xl grid-cols-9 border-2 border-gray-200 rounded-md items-center">
+
+      <h1 className = "text-xl text-center">{rank + 1}</h1>
+
+      <div className = "col-span-2 flex flex-col gap-1 py-1">
         <h1 className = "w-40 truncate text-xl">{cuber.name}</h1>
         <h2 className = "text-gray-500">{cuber.id}</h2>
       </div>
 
+
+
       {/* Display Times */}
 
-      {cuber.id === "Player" &&
+      {cuber.id === PLAYER_ID &&
 
         cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === "Player") ? time.toFixed(2) : "#####"
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? time.toFixed(2) : "#####"
           return (
-            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} className = {`${cuber.id == "Player" && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
+            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} className = {`text-center ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
               {timeToDisplay}
             </button>
           )
@@ -175,11 +191,11 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
         })
       }
 
-      {cuber.id !== "Player" && 
+      {cuber.id !== PLAYER_ID && 
         cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === "Player") ? time.toFixed(2) : "#####"
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? time.toFixed(2) : "#####"
           return (
-            <div key = {idx}>
+            <div key = {idx} className = "text-center">
               {timeToDisplay}
             </div>
           )
@@ -189,13 +205,15 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {/* Display BPA/WPA */}
 
       {
-        <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"}`}>
-          {((canViewOtherTimes || cuber.id === "Player") && canViewPotentialAvg) ? avgToDisplay : "#####"}
+        <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"} text-center`}>
+          {((canViewOtherTimes || cuber.id === PLAYER_ID) && canViewPotentialAvg) ? avgToDisplay : "#####"}
         </h1>
       }
 
 
-    
+
+      
     </div>
+
   )
 }

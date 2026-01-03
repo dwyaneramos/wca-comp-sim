@@ -23,7 +23,6 @@ export const addUser = (competitorList) => {
 export const createPlayerWithNewTime = (c, solveNum, time) => {
   let newTimes = [...c.times];
   newTimes[solveNum - 1] = (parseFloat(time));
-  console.log("Solve nummmmm", solveNum)
 
   let updatedPlayer = null
   if (solveNum >= 4  || newTimes[-2] !== -1) {

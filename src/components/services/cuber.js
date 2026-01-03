@@ -20,7 +20,6 @@ export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, a
 export const genPlayerWPABPA = (timesWOLastSolve) => {
   const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
   const wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
-  console.log("WASSUP", bpa, wpa)
   return {bpa, wpa}
 }
 
