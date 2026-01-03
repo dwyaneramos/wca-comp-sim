@@ -15,6 +15,7 @@ const genScramble = async (event) => {
 export const Game = (props) => {
   const competitors = props.competitors;
   const setCompetitors = props.setCompetitors;
+  const event = props.event
   const [solveNum, setSolveNum] = useState(0)
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
@@ -30,7 +31,7 @@ export const Game = (props) => {
       setToggleDisability(true);
 
     } else {
-      setScramble(genScramble("333"));
+      setScramble(genScramble(event));
     }
 
   }, [solveNum])

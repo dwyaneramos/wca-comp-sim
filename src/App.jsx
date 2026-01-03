@@ -10,12 +10,14 @@ import {simulateAllCompetitors, addUser} from './components/utils/competitors.js
 
 function App() {
   const [page, setPage] = useState("Home")
+  const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
   const [competitors, setCompetitors] = useState([]);
+  const [event, setEvent] = useState("333")
   const lookup = {"Home" : SelectCubers,
             "Game" : Game}
 
   const Simulate = async () => {
-    const simmedCompetitors = await simulateAllCompetitors(competitors)
+    const simmedCompetitors = await simulateAllCompetitors(competitors, event)
     console.log(simmedCompetitors, "AYeeeE")
     setCompetitors(simmedCompetitors)
     return simmedCompetitors
@@ -25,8 +27,10 @@ function App() {
     if (page === "Game") {
       const simmedCompetitors = await Simulate()
       setCompetitors(addUser(simmedCompetitors))
+      setDisabledEventDropdown(true)
       setPage("Game")
     } else {
+      setDisabledEventDropdown(false)
       setPage(page)
     }
   }
@@ -38,8 +42,8 @@ function App() {
 
   return (
     <>
-      <NavBar setPage = {setPage}/>
-      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors}/>
+      <NavBar setPage = {setPage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}/>
+      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors} event={event}/>
     </>
   )
 

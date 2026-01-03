@@ -1,11 +1,11 @@
 import {createSimCuber, createPlayer, genPlayerWPABPA, genPlayerAvg} from '../services/cuber.js'
 
-export const simulateAllCompetitors = async (competitorList) => {
+export const simulateAllCompetitors = async (competitorList, event) => {
   //TODO: not hardcode 333
    const simmedCompetitors = await Promise.all (
     competitorList.map((c) => {
     if (c.id !== "Player") {
-      return createSimCuber(c, "333")
+      return createSimCuber(c, event)
     } else {
       return createPlayer() 
     }
