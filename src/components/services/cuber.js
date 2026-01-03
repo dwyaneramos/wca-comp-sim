@@ -30,6 +30,11 @@ export const genPlayerAvg = (times) => {
 
 export const createSimCuber = async (cuber, event) => {
   const officialTimes = await fetchTimes(cuber, event)
+  if (officialTimes.length <= 5) {
+    throw new Error(`Insufficient official results to do simulations for ${cuber.name}`)
+
+  }
+
   const mean = officialTimes.reduce((acc, curr) => acc + curr, 0) / officialTimes.length;
 
 

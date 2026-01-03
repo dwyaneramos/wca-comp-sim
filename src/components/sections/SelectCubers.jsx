@@ -4,6 +4,8 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import {searchCubers} from "../services/searchCubers.js"
 import {addCompetitor} from "../utils/competitors.js"
 
+const PLAYER_ID = "Player"
+
 export const SelectCubers = ({changePage, setCompetitors, competitors}) => {
 
   return (
@@ -33,24 +35,28 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
   return (
     <div className = "z-0  border-2 border-gray-200  py-5 sm:min-w-2xl sm:max-w-2xl w-full">
       <h1 className ="text-xl text-center ">Competitor List</h1>
-      <h2 className ="text-lg text-gray-500 text-center border-b-2 border-gray-300 pb-5 mb-5">{competitors.length} registered</h2>
+      <h2 className ="text-lg text-gray-500 text-center border-b-2 border-gray-300 pb-5 mb-5">{competitors.length - 1} registered</h2>
 
       {
         competitors.length > 0 &&
       <div className = "flex  gap-2 justify-center overflow-y-scroll content-start flex-wrap flex-row h-90">
 
         {competitors.map((cuber) => {
-          return (
-            <div key = {cuber.id} className = "flex flex-row h-15 bg-gray-100 w-2xs rounded-md px-1 hover:bg-gray-200 py-1   border-2 border-gray-300 "> 
+          if (cuber.id !== PLAYER_ID) {
+              return (
+                <div key = {cuber.id} className = "flex flex-row h-15 bg-gray-100 w-2xs rounded-md px-1 hover:bg-gray-200 py-1   border-2 border-gray-300 "> 
 
-              <div className = "flex flex-col w-full">
-                
-                    <h1 className="truncate">{cuber.name}</h1>
-                    <h2 className = "text-gray-700">{cuber.id}</h2>
-              </div>
-              <div className="font-black cursor-pointer  transition p-3" onClick={() => removeCuber(cuber)}>x</div>
-            </div>
-          )
+                  <div className = "flex flex-col w-full">
+                    
+                        <h1 className="truncate">{cuber.name}</h1>
+                        <h2 className = "text-gray-700">{cuber.id}</h2>
+                  </div>
+                  <div className="font-black cursor-pointer  transition p-3" onClick={() => removeCuber(cuber)}>x</div>
+                </div>
+              )
+            } else {
+                return
+              }
         })} 
       </div>
       }

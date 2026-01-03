@@ -5,7 +5,11 @@ export const simulateAllCompetitors = async (competitorList, event) => {
    const simmedCompetitors = await Promise.all (
     competitorList.map((c) => {
     if (c.id !== "Player") {
-      return createSimCuber(c, event)
+      try {
+        return createSimCuber(c, event)
+        } catch (err) {
+          throw err;
+        }
     } else {
       return createPlayer() 
     }
@@ -16,7 +20,11 @@ export const simulateAllCompetitors = async (competitorList, event) => {
 }
 
 export const addUser = (competitorList) => {
+  
   const user = createPlayer();
+  if (isCuberInList(competitorList, user)) {
+    return competitorList
+  }
   return [...competitorList, user]
 }
 
