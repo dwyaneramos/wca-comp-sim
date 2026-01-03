@@ -23,19 +23,17 @@ export const addUser = (competitorList) => {
 export const createPlayerWithNewTime = (c, solveNum, time) => {
   let newTimes = [...c.times];
   newTimes[solveNum - 1] = (parseFloat(time));
+  console.log("Solve nummmmm", solveNum)
 
   let updatedPlayer = null
-  if (solveNum == 4 || c.times[-2] != -1) {
+  if (solveNum >= 4  || newTimes[-2] !== -1) {
     const timesWOLastSolve = newTimes.slice(0, -1)
-    const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve)
-    updatedPlayer = createPlayer(newTimes, bpa, wpa);
-    
-  } else if (solveNum == 5) {
+    const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve);
     const avg = genPlayerAvg(newTimes);
-    updatedPlayer = createPlayer(newTimes, null, null, avg);
-  }
-
-  else {
+    console.log(avg)
+    updatedPlayer = createPlayer(newTimes, bpa, wpa, avg);
+    
+  } else {
     updatedPlayer = createPlayer(newTimes)
   }
 
