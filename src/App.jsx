@@ -11,10 +11,16 @@ import {simulateAllCompetitors, addUser} from './components/utils/competitors.js
 function App() {
   const [page, setPage] = useState("Home")
   const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
-  const [competitors, setCompetitors] = useState([]);
+  const [competitors, setCompetitors] = useState(() => {
+    return JSON.parse(localStorage.getItem("competitors")) ?? []
+  });
   const [event, setEvent] = useState("333")
   const lookup = {"Home" : SelectCubers,
             "Game" : Game}
+
+  useEffect(() => {
+    localStorage.setItem("competitors", JSON.stringify(competitors))
+  }, [competitors])
 
   const Simulate = async () => {
     const simmedCompetitors = await simulateAllCompetitors(competitors, event)

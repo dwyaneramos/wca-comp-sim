@@ -6,22 +6,48 @@ export const NavBar = ({setPage, disabledEventDropdown, setEvent}) => {
     setEvent(newEvent.target.value)
   }
 
-  return (
-    <div className = "flex place-content-between bg-white drop-shadow-sm px-30 text-lg py-3 fixed top-0 w-screen">
-      <div>
-        <h1 className = "text-xl py-2">WCA Comp Sim</h1>
-      </div>
+  const isSmall = window.innerWidth < 500
 
-      <div className = "flex flex-row gap-2">
-        <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
-        <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
-       <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
-      </div>
+  return (
+    <div className = "flex flex-col sm:place-content-between bg-white drop-shadow-sm sm:px-30 text-lg py-3 fixed top-0 w-screen">
+
+      {isSmall && 
+        <div className="flex flex-col justify-center items-center gap-2">
+
+            <div className="flex flex-row gap-2">
+              
+              <h1 className = "text-lg py-2 font-bold">WCA Comp Sim</h1>
+              <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
+              <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
+            </div>
+              
+              <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
+        </div>
+
+
+      }
+
+      {!isSmall && 
+        <div className = "flex place-content-between">
+          <div>
+            <h1 className = "text-xl py-2 ">WCA Comp Sim</h1>
+          </div>
+
+          <div className = "flex flex-row gap-2">
+            <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
+            <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
+          <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
+          </div>
+        </div>
+
+
+      }
 
     </div>
 
   )
 }
+
 
 
 const SelectEventDropdown = ({ disabled, onChange }) => {
@@ -45,7 +71,7 @@ const SelectEventDropdown = ({ disabled, onChange }) => {
     { name: "3x3x3 Multi-Blind", code: "333mbf" }
   ];
   return (
-    <select disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-f" onChange={onChange}>
+    <select disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
       {wcaEvents.map((event) => {
         return (
           <option key={event.code} value={event.code}>{event.name}</option>
