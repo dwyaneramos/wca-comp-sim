@@ -58,8 +58,10 @@ export const Game = (props) => {
   }
 
   function saveTimes() {
-    const player = competitors.find(c => c.id === PLAYER_ID)
-    setStats(prev => savePlayerTimes(player, event, prev))
+    const playerRank = sortedCompetitors.findIndex((c) => c.id == PLAYER_ID) + 1
+    const player = sortedCompetitors[playerRank - 1]
+    setStats(prev => savePlayerTimes(player, event, prev, playerRank, competitors.length))
+    console.log(playerRank, "ASDHSJDAHa")
 
   }
 

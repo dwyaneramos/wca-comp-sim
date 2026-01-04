@@ -72,7 +72,7 @@ export const isCuberInList = (competitorList, c) => {
   return false;
 }
 
-export const savePlayerTimes = (player, event, prevStats) => {
+export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRound) => {
   function compareNumbers(a, b) {
     return a - b
   }
@@ -88,13 +88,19 @@ export const savePlayerTimes = (player, event, prevStats) => {
     newBestAvgs.sort(compareNumbers)
     newBestAvgs = newBestAvgs.slice(0, 5)
 
+    const newNumRoundsDone = eventStats.numRoundsDone + 1
+    const newAvgRank = (eventStats.avgPlacing * eventStats.numRoundsDone + rank) / newNumRoundsDone
+    const newNumCompetitors = (eventStats.avgCompetitorsInRound * eventStats.numRoundsDone + competitorsInRound) / newNumRoundsDone
 
     return {
       ...prevStats,
       [event] : {
         bestTimes : newBestTimes,
         bestAvgs: newBestAvgs,
-        solves: newSolves
+        solves: newSolves,
+        numRoundsDone : newNumRoundsDone,
+        avgPlacing : newAvgRank,
+        avgCompetitorsInRound : newNumCompetitors
       }
     }
   

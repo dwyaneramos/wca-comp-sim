@@ -52,23 +52,23 @@ function App() {
 
 
 const startingStats = {
-  "333":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "222":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "444":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "555":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "666":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "777":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "333bf":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "333fm":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "333oh":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "333ft":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "clock":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "minx":      { bestTimes: [], bestAvgs: [], solves: [] },
-  "pyram":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "skewb":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "sq1":       { bestTimes: [], bestAvgs: [], solves: [] },
-  "444bf":     { bestTimes: [], bestAvgs: [], solves: [] },
-  "555bf":     { bestTimes: [], bestAvgs: [], solves: [] }
+  "333":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "222":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "444":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "555":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "666":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "777":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "333bf":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "333fm":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "333oh":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "333ft":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "clock":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "minx":      { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "pyram":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "skewb":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "sq1":       { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "444bf":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 },
+  "555bf":     { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0 }
 };
 
   const [stats, setStats] = useLocalStorage("stats", startingStats)
