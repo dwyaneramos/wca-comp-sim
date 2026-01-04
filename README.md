@@ -5,7 +5,7 @@
 ### Starting Page
 
 - [X] Start the competition
-- [ ] Do cuber validation (a cuber can't be simulated in an event they haven't competed in)
+- [X] Do cuber validation (a cuber can't be simulated in an event they haven't competed in)
 - [x] Ensure people can't enter the same cuber twice
 - [ ] Use keypresses to make entering cubers more convenient
 
@@ -15,10 +15,11 @@
 - [X] Take in user input
 - [X] Rank cubers based on time
 - [X] Calculate and display WPA/BPA
-- [ ] Generate a scramble and display it
+- [X] Generate a scramble and display it
 - [X] Edit times
 - [X] Toggle visibility of other cubers' times
 - [X] Polish formatting
+- [ ] Display times properly in MM:SS:ms format
 
 ### Stats Page
 

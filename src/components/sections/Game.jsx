@@ -1,8 +1,9 @@
 import {useState, useEffect} from "react";
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
-import {createPlayerWithNewTime} from "../utils/competitors.js"
+import {createPlayerWithNewTime, savePlayerTimes} from "../utils/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
+
 const PLAYER_ID = "Player"
 
 
@@ -12,10 +13,19 @@ const genScramble = async (event) => {
 }
 
 
+function saveTimes(setStats, event, competitors) {
+  const player = competitors.find(c => c.id === PLAYER_ID)
+  setStats(prev => savePlayerTimes(player, event, prev))
+
+}
+
 export const Game = (props) => {
   const competitors = props.competitors;
   const setCompetitors = props.setCompetitors;
   const event = props.event
+  const setStats = props.setStats
+  const stats = props.stats
+
   const [solveNum, setSolveNum] = useState(0)
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
@@ -24,6 +34,15 @@ export const Game = (props) => {
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
+  
+
+  function saveTimeFunction() {
+    ;
+  }
+
+  useEffect(() => {
+    console.log(stats)
+  }, [stats])
 
   useEffect(() => {
     if (solveNum == numSolvesInRound) {
@@ -59,7 +78,7 @@ export const Game = (props) => {
   }
   return (
     <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
-      <h1 className="text-3xl pt-20">{scramble}</h1> 
+      <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-4">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button onClick={() => submitTime(timeInput, setCompetitors, solveNum, competitors, setSolveNum, setTime)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
@@ -76,6 +95,7 @@ export const Game = (props) => {
           <Toggle disabled = {toggleButtonDisabled} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
           <h1>Hide BPAs/WPAs</h1>
         </div>
+        <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
       </div>
 
       <TimeHeaders/>
@@ -126,6 +146,7 @@ const Toggle = ({disabled, variable, setterFunc}) => {
     </button>
   )
 }
+
 function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, setTime) {
   const nextSolveNum = solveNum + 1 
   setSolveNum(nextSolveNum)

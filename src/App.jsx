@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './index.css'
 import {SelectCubers} from './components/sections/SelectCubers'
 import {Game} from './components/sections/Game'
+import {Stats} from './components/sections/Stats'
 import {NavBar} from './components/NavBar'
 import {createPlayer} from './components/services/cuber.js'
 import {simulateAllCompetitors, addUser} from './components/utils/competitors.js'
@@ -45,7 +46,32 @@ function App() {
   const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
   const [event, setEvent] = useState("333")
   const lookup = {"Home" : SelectCubers,
-            "Game" : Game}
+            "Game" : Game,
+            "Stats" : Stats}
+
+
+
+const startingStats = {
+  "333":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "222":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "444":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "555":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "666":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "777":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "333bf":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "333fm":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "333oh":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "333ft":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "clock":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "minx":      { bestTimes: [], bestAvgs: [], solves: [] },
+  "pyram":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "skewb":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "sq1":       { bestTimes: [], bestAvgs: [], solves: [] },
+  "444bf":     { bestTimes: [], bestAvgs: [], solves: [] },
+  "555bf":     { bestTimes: [], bestAvgs: [], solves: [] }
+};
+
+  const [stats, setStats] = useLocalStorage("stats", startingStats)
 
   const Simulate = async () => {
     const simmedCompetitors = await simulateAllCompetitors(competitors, event)
@@ -56,13 +82,13 @@ function App() {
 
   const changePage = async (page) => {
     if (page === "Game") {
-      try {
-        const simmedCompetitors = await Simulate()
-        setDisabledEventDropdown(true)
-        setPage("Game")
-      } catch (err) {
-        setError(err.message)
-      }
+        try {
+          const simmedCompetitors = await Simulate()
+          setDisabledEventDropdown(true)
+          setPage("Game")
+        } catch (err) {
+          setError(err.message)
+        }
     } else {
       setDisabledEventDropdown(false)
       setPage(page)
@@ -72,13 +98,15 @@ function App() {
 
 
   const CurrentPage = lookup[page]
+  console.log(stats)
+
 
 
   return (
     <>
-      <NavBar setPage = {setPage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}/>
+      <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}/>
       {error && <Popup errMsg={error} setError={setError}/>}
-      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors} event={event}/>
+      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats}/>
     </>
   )
 

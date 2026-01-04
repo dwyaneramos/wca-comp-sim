@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 
 
-export const NavBar = ({setPage, disabledEventDropdown, setEvent}) => {
+export const NavBar = ({changePage, disabledEventDropdown, setEvent}) => {
   const selectEventCallback = (newEvent) => {
     setEvent(newEvent.target.value)
   }
@@ -18,7 +18,7 @@ export const NavBar = ({setPage, disabledEventDropdown, setEvent}) => {
               
               <h1 className = "text-lg py-2 font-bold">WCA Comp Sim</h1>
               <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
-              <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
+              <a href="" onClick={()=>changePage("")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
             </div>
               
               <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
@@ -34,8 +34,8 @@ export const NavBar = ({setPage, disabledEventDropdown, setEvent}) => {
           </div>
 
           <div className = "flex flex-row gap-2">
-            <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
-            <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
+            <a href="#" onClick={()=>changePage("Home")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
+            <a href="#" onClick={()=>changePage("Stats")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
           <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
           </div>
         </div>
