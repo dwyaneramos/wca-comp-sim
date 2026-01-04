@@ -75,7 +75,6 @@ const startingStats = {
 
   const Simulate = async () => {
     const simmedCompetitors = await simulateAllCompetitors(competitors, event)
-    console.log(simmedCompetitors, "AYeeeE")
     setCompetitors(simmedCompetitors)
     return simmedCompetitors
   }
@@ -106,7 +105,7 @@ const startingStats = {
     <>
       <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}/>
       {error && <Popup errMsg={error} setError={setError}/>}
-      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats}/>
+      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}/>
     </>
   )
 

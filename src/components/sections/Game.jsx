@@ -13,11 +13,6 @@ const genScramble = async (event) => {
 }
 
 
-function saveTimes(setStats, event, competitors) {
-  const player = competitors.find(c => c.id === PLAYER_ID)
-  setStats(prev => savePlayerTimes(player, event, prev))
-
-}
 
 export const Game = (props) => {
   const competitors = props.competitors;
@@ -25,6 +20,7 @@ export const Game = (props) => {
   const event = props.event
   const setStats = props.setStats
   const stats = props.stats
+  const resetCompetitors = props.resetCompetitors
 
   const [solveNum, setSolveNum] = useState(0)
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
@@ -35,14 +31,6 @@ export const Game = (props) => {
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
   
-
-  function saveTimeFunction() {
-    ;
-  }
-
-  useEffect(() => {
-    console.log(stats)
-  }, [stats])
 
   useEffect(() => {
     if (solveNum == numSolvesInRound) {
@@ -67,6 +55,20 @@ export const Game = (props) => {
         
       }))
     setShowPopup({cuber : null, solveIdx : null})
+  }
+
+  function saveTimes() {
+    const player = competitors.find(c => c.id === PLAYER_ID)
+    setStats(prev => savePlayerTimes(player, event, prev))
+
+  }
+
+
+  async function resetRound() {
+    saveTimes()
+    setSolveNum(0)
+    await resetCompetitors()
+    
   }
 
 
@@ -95,7 +97,10 @@ export const Game = (props) => {
           <Toggle disabled = {toggleButtonDisabled} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
           <h1>Hide BPAs/WPAs</h1>
         </div>
+        {/*
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
+        */}
+        <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => resetRound()}>Rematch</button>
       </div>
 
       <TimeHeaders/>
