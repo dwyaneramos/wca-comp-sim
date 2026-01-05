@@ -27,8 +27,9 @@
 - [ ] Graph user's recent times
 - [ ] Be able to view stats for different events
 - [ ] Show mo10ao5
-- [ ] Show best averages
-- [ ] Show best times
+- [X] Show best averages
+- [X] Show best times
+- [ ] Make it look nice
 
 ## Tech Stack
 

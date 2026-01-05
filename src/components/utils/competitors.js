@@ -87,11 +87,17 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
     let newBestAvgs = [...eventStats.bestAvgs, player.avg]
     newBestAvgs.sort(compareNumbers)
     newBestAvgs = newBestAvgs.slice(0, 5)
-
+    
     const newNumRoundsDone = eventStats.numRoundsDone + 1
     const newAvgRank = (eventStats.avgPlacing * eventStats.numRoundsDone + rank) / newNumRoundsDone
     const newNumCompetitors = (eventStats.avgCompetitorsInRound * eventStats.numRoundsDone + competitorsInRound) / newNumRoundsDone
+    
+    let newPodiumCount = [...eventStats.podiumCount] 
+    if (rank >= 1 && rank <= 3) {
+      newPodiumCount[rank - 1]++;
+    }
 
+    console.log("new podium count ",newPodiumCount)
     return {
       ...prevStats,
       [event] : {
@@ -100,7 +106,8 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
         solves: newSolves,
         numRoundsDone : newNumRoundsDone,
         avgPlacing : newAvgRank,
-        avgCompetitorsInRound : newNumCompetitors
+        avgCompetitorsInRound : newNumCompetitors,
+        podiumCount : newPodiumCount
       }
     }
   
