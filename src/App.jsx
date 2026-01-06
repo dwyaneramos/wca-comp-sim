@@ -25,7 +25,7 @@ export function useLocalStorage(key, initialValue) {
 
 const Popup = ({errMsg, setError}) => {
   return (
-    <div className ="fixed rounded-md top-0 bottom-0 my-auto right-0 left-0 mx-auto text-center bg-white border-2 border-red-200 w-2xl h-50 pt-10 pb-30 z-100">
+    <div className ="fixed z-100 rounded-md top-0 bottom-0 my-auto right-0 left-0 mx-auto text-center bg-white border-2 border-red-200 w-2xl h-50 pt-10 pb-30 z-100">
       <h1 className = "font-bold text-red-500 underline text-2xl">Error:</h1>
       <p className = "text-xl">
       {errMsg}
@@ -105,7 +105,7 @@ const startingStats = {
     <>
       <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}/>
       {error && <Popup errMsg={error} setError={setError}/>}
-      <CurrentPage changePage = {changePage} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}/>
+      <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}/>
     </>
   )
 

@@ -6,7 +6,7 @@ const SolvesLineGraph = (props) => {
   const solveNums = Array.from({length: props.eventStats.solves.length}, (_, i ) => i + 1)
   const xRecentSolves = 10
   const solvesToDisplay = props.eventStats.solves.slice(-xRecentSolves)
-  const solveNumsLabelsToDisplay = solveNums.slice(-xRecentSolves)
+  const solveNumsLabelsToDisplay = (solveNums.slice(-xRecentSolves)).map((s) => "Solve " + s)
   console.log(solveNumsLabelsToDisplay)
 
 
@@ -52,18 +52,17 @@ export const Stats = (props) => {
   const eventStats = stats[event]
 
    return (
-    <section className="mt-20  ">
+    <section className="mt-15 p-5">
 
-      <h1>Stats Page:</h1>
       <div className="flex flex-col justify-center items-center place-content-around">
         
-        <SolvesLineGraph eventStats ={eventStats}/>
 
         <div className = "flex flex-row ">
           <Top5Section type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
           <CompStats eventStats = {eventStats} event = {event}/>
           <Top5Section type = {"Singles"} topTimes = {eventStats.bestTimes}/>
         </div>
+        <SolvesLineGraph eventStats ={eventStats}/>
       </div>
     </section>
   )
@@ -71,16 +70,24 @@ export const Stats = (props) => {
 
 const CompStats = ({eventStats, event}) => {
   return (
-    <div className = "bg-white h-90 rounded-md p-3 border-2 border-gray-200">
+    <div className = "bg-white w-2xs h-85 rounded-md p-3 border-2 border-gray-200">
       <h1 className = "text-lg">Competition Stats for {event}</h1>
-      <h2 className = "text-gray-600">Competitions</h2>
-      <p>Simulated {eventStats.numRoundsDone} rounds</p>
-      
+      <div className = "my-2">
+        <h2 className = "text-gray-600">Competitions</h2>
+        <p>Simulated {eventStats.numRoundsDone} rounds</p>
+      </div>
+
+      <div className = "my-2">
       <h2 className = "text-gray-600">Total Solves Done</h2>
       <p>{eventStats.solves.length} solves</p>
+      </div>
 
+      <div className = "my-2">
       <h2 className = "text-gray-600">Average Placing</h2>
       <p>{eventStats.avgPlacing.toFixed(2)} out of {eventStats.avgCompetitorsInRound}</p>
+      </div>
+      
+
 
 
       <h2 className = "text-gray-600">Podium Count</h2>
@@ -125,7 +132,7 @@ const Top5Section = ({type, topTimes}) => {
 
 
   return (
-    <div className = "w-2xs flex pt-3 flex-col items-center h-90 bg-white rounded-md border-2 border-gray-200 mb-10">
+    <div className = "w-3xs flex pt-3 flex-col items-center h-85 bg-white rounded-md border-2 border-gray-200 mb-5">
       <h1 className = "text-xl mb-3">Top 5 {type}:</h1>
       
       <div className = "flex flex-col gap-2">

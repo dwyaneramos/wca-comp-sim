@@ -20,6 +20,7 @@ export const Game = (props) => {
   const event = props.event
   const setStats = props.setStats
   const stats = props.stats
+  const setPopup = props.setPopup
   const resetCompetitors = props.resetCompetitors
 
   const [solveNum, setSolveNum] = useState(0)
@@ -62,8 +63,30 @@ export const Game = (props) => {
     const player = sortedCompetitors[playerRank - 1]
     setStats(prev => savePlayerTimes(player, event, prev, playerRank, competitors.length))
     console.log(playerRank, "ASDHSJDAHa")
-
   }
+
+  function submitTime (time) {
+    if (isNaN(time) || time <= 0) {
+      console.log("Not a number")
+      setPopup("Invalid Time Input")
+    } else {
+
+      const nextSolveNum = solveNum + 1 
+      setSolveNum(nextSolveNum)
+      setCompetitors(prev => 
+        prev.map(c => {
+          if (c.id !== PLAYER_ID) {
+            return c 
+          }
+
+          return createPlayerWithNewTime(c, nextSolveNum, time)
+          
+        }))
+      setTime("")
+    }
+  }
+
+
 
 
   async function resetRound() {
@@ -85,7 +108,7 @@ export const Game = (props) => {
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-4">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
-        <button onClick={() => submitTime(timeInput, setCompetitors, solveNum, competitors, setSolveNum, setTime)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
+        <button onClick={() => submitTime(timeInput)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
           <FaArrowRight/>
         </button>
       </div>
@@ -152,21 +175,6 @@ const Toggle = ({disabled, variable, setterFunc}) => {
       <div className = {`${variable ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
     </button>
   )
-}
-
-function submitTime (time, setCompetitors, solveNum, competitors, setSolveNum, setTime) {
-  const nextSolveNum = solveNum + 1 
-  setSolveNum(nextSolveNum)
-  setCompetitors(prev => 
-    prev.map(c => {
-      if (c.id !== PLAYER_ID) {
-        return c 
-      }
-
-      return createPlayerWithNewTime(c, nextSolveNum, time)
-      
-    }))
-  setTime("")
 }
 
 
