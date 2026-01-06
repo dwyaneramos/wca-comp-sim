@@ -1,21 +1,69 @@
+import {Chart as ChartJS} from "chart.js/auto"
+import {Bar, Line} from "react-chartjs-2"
+
+
+const SolvesLineGraph = (props) => {
+  const solveNums = Array.from({length: props.eventStats.solves.length}, (_, i ) => i + 1)
+  const xRecentSolves = 10
+  const solvesToDisplay = props.eventStats.solves.slice(-xRecentSolves)
+  const solveNumsLabelsToDisplay = solveNums.slice(-xRecentSolves)
+  console.log(solveNumsLabelsToDisplay)
+
+
+  return (
+    <div className="w-200 bg-white h-full p-5 rounded-md border-2 border-gray-200">
+      <h1 className = "text-xl m-2">Most Recent {solvesToDisplay.length} solves</h1>
+      
+      <Line data = {{
+        labels: solveNumsLabelsToDisplay,
+        datasets: [
+          {
+            label: "Time",
+            data: solvesToDisplay,
+            tension: 0.3
+          }
+        ]
+
+      }}
+
+      options = {{
+          responsive: true,
+          plugins : {
+            legend : {
+              display: false
+            }
+          },
+          scales : {
+            x : {
+              ticks : {
+                display: false
+              }
+            }
+          }
+        }}/>
+    </div>
+
+  )
+}
+
 export const Stats = (props) => {
   const event = props.event
   const stats = props.stats 
   const eventStats = stats[event]
 
-  console.log("SDHFNJSDHFJ", eventStats)
-  return (
-    <section className="mt-20 ">
+   return (
+    <section className="mt-20  ">
 
       <h1>Stats Page:</h1>
-      <div className="flex flex-row gap-10">
+      <div className="flex flex-col justify-center items-center place-content-around">
         
-        <div className = "flex flex-col">
+        <SolvesLineGraph eventStats ={eventStats}/>
+
+        <div className = "flex flex-row ">
           <Top5Section type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
+          <CompStats eventStats = {eventStats} event = {event}/>
           <Top5Section type = {"Singles"} topTimes = {eventStats.bestTimes}/>
         </div>
-        <CompStats eventStats = {eventStats} event = {event}/>
-
       </div>
     </section>
   )
@@ -23,7 +71,7 @@ export const Stats = (props) => {
 
 const CompStats = ({eventStats, event}) => {
   return (
-    <div className = "bg-white h-100 rounded-md p-3 border-2 border-gray-200">
+    <div className = "bg-white h-90 rounded-md p-3 border-2 border-gray-200">
       <h1 className = "text-lg">Competition Stats for {event}</h1>
       <h2 className = "text-gray-600">Competitions</h2>
       <p>Simulated {eventStats.numRoundsDone} rounds</p>
