@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react";
+import {validateTime} from "../services/helper.js"
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../utils/competitors.js"
@@ -22,7 +23,7 @@ export const Game = (props) => {
   const event = props.event
   const setStats = props.setStats
   const stats = props.stats
-  const setPopup = props.setPopup
+  const setErrorPopup = props.setPopup
   const resetCompetitors = props.resetCompetitors
 
   const [solveNum, setSolveNum] = useState(0)
@@ -52,23 +53,30 @@ export const Game = (props) => {
 
 
   function editTime (time, idx) {
-    if (time.includes("+")) {
-      time = time.slice(0, -1)
-    } else if (time === "DNF") {
-      time = DNF
-    }
 
-    setCompetitors(prev => 
-      prev.map(c => {
-        if (c.id !== PLAYER_ID) {
-          return c 
-        }
+    if (validateTime(time)) {
+      if (time.includes("+")) {
+        time = time.slice(0, -1)
+      } else if (time === "DNF") {
+        time = DNF
+      }
 
-        return createPlayerWithNewTime(c, idx + 1, time)
-        
-      }))
-    setShowPopup({cuber : null, solveIdx : null})
+      setCompetitors(prev => 
+        prev.map(c => {
+          if (c.id !== PLAYER_ID) {
+            return c 
+          }
+
+          return createPlayerWithNewTime(c, idx + 1, time)
+          
+        }))
+      setShowPopup({cuber : null, solveIdx : null})
+    } else {
+    setErrorPopup("Invalid Time")
   }
+  }
+
+  
 
   function saveTimes() {
     const playerRank = sortedCompetitors.findIndex((c) => c.id == PLAYER_ID) + 1
@@ -77,17 +85,13 @@ export const Game = (props) => {
   }
 
   function submitTime (time) {
-    if ( (isNaN(time) && !time.includes("+") && time !== "DNF" ) || time <= 0) {
-      console.log("Not a number")
-      setPopup("Invalid Time Input")
-    } else {
+    if ( validateTime(time) ) {
 
       if (time === "DNF") {
         time = DNF;
       } else if (time.includes("+")) {
         time = time.slice(0, -1)
       }
-
       const nextSolveNum = solveNum + 1 
       setSolveNum(nextSolveNum)
       setCompetitors(prev => 
@@ -100,7 +104,10 @@ export const Game = (props) => {
           
         }))
       setTime("")
+    } else {
+      setErrorPopup("Invalid Time Input")
     }
+    
   }
 
 
