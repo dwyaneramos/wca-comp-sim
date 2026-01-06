@@ -1,4 +1,5 @@
 const invalidTimes = [-1, -2, 0]
+const DNF = 999;
 
 
 export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null) => {
@@ -18,13 +19,32 @@ export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, a
 }
 
 export const genPlayerWPABPA = (timesWOLastSolve) => {
+  
+
   const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
-  const wpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+  const wpa = timesWOLastSolve.includes(DNF) ? DNF : (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
   return {bpa, wpa}
 }
 
 export const genPlayerAvg = (times) => {
-  const avg = (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
+
+  const hasMultipleDNFs = (times) => {
+    let dnfCount = 0;
+    for (const t of times) {
+      if (t == DNF) {
+        dnfCount++;
+      }
+
+      if (dnfCount > 1) {
+        return true;
+      }
+    }
+    return false;
+
+  }
+
+
+  const avg = hasMultipleDNFs(times) ? DNF : (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
   return avg
 }
 

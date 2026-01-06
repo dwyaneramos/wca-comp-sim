@@ -55,7 +55,6 @@ export const Stats = (props) => {
     <section className="mt-15 p-5">
 
       <div className="flex flex-col justify-center items-center place-content-around">
-        
 
         <div className = "flex flex-row ">
           <Top5Section type = {"Averages"} topTimes = {eventStats.bestAvgs}/>

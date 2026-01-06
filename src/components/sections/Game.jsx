@@ -5,6 +5,8 @@ import {createPlayerWithNewTime, savePlayerTimes} from "../utils/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
 
 const PLAYER_ID = "Player"
+const DNF = 999
+
 
 
 const genScramble = async (event) => {
@@ -31,6 +33,10 @@ export const Game = (props) => {
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
+
+  useEffect(()=> {
+    console.log(competitors)
+  }, [competitors])
   
 
   useEffect(() => {
@@ -46,6 +52,12 @@ export const Game = (props) => {
 
 
   function editTime (time, idx) {
+    if (time.includes("+")) {
+      time = time.slice(0, -1)
+    } else if (time === "DNF") {
+      time = DNF
+    }
+
     setCompetitors(prev => 
       prev.map(c => {
         if (c.id !== PLAYER_ID) {
@@ -62,14 +74,19 @@ export const Game = (props) => {
     const playerRank = sortedCompetitors.findIndex((c) => c.id == PLAYER_ID) + 1
     const player = sortedCompetitors[playerRank - 1]
     setStats(prev => savePlayerTimes(player, event, prev, playerRank, competitors.length))
-    console.log(playerRank, "ASDHSJDAHa")
   }
 
   function submitTime (time) {
-    if (isNaN(time) || time <= 0) {
+    if ( (isNaN(time) && !time.includes("+") && time !== "DNF" ) || time <= 0) {
       console.log("Not a number")
       setPopup("Invalid Time Input")
     } else {
+
+      if (time === "DNF") {
+        time = DNF;
+      } else if (time.includes("+")) {
+        time = time.slice(0, -1)
+      }
 
       const nextSolveNum = solveNum + 1 
       setSolveNum(nextSolveNum)
@@ -179,23 +196,53 @@ const Toggle = ({disabled, variable, setterFunc}) => {
 
 
 const EditTimePopup = ({cuber, idx, onClick}) => {
-  const [newTime, setNewTime] = useState(cuber.times[idx].toFixed(2))
+  let initNewTime = cuber.times[idx] == DNF ? "DNF" : cuber.times[idx].toFixed(2)
+  const [newTime, setNewTime] = useState(initNewTime)
+  const [ogTime] = useState(cuber.times[idx].toFixed(2))
   return (
-    <div className = "bg-green-200 flex justify-center items-center flex-col w-200 h-100 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
+    <div className = "bg-white border-2 border-gray-200 flex gap-2 justify-center items-center flex-col
+      w-100 h-50 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
       <h1>Edit Time</h1>
-      <input className="bg-white w-md" type="" name="edit time input" value={newTime} onChange={(e)=>setNewTime(e.target.value)}/>
-      <button type="" onClick={()=>onClick(newTime, idx)} className ="bg-green-500 p-2 rounded-md text-white cursor-pointer">Confirm</button>
+      <input className="bg-gray-100 text-center w-50 p-3 rounded-md" type=""
+        name="edit time input" value={newTime} onChange={(e)=>setNewTime(e.target.value)}/>
+      <div className = "flex flex-row gap-2">
+        <button type="" onClick={() => togglePenalty(ogTime, newTime, "DNF", setNewTime)} className ="bg-green-500 p-2 w-20 rounded-md text-white cursor-pointer">DNF</button>
+        <button type="" onClick={()=> onClick(newTime, idx)} className ="bg-green-500 p-2 w-20 rounded-md text-white cursor-pointer">Confirm</button>
+        <button type="" onClick={() => togglePenalty(ogTime, newTime, "+2", setNewTime)} className ="bg-green-500 p-2 w-20 rounded-md text-white cursor-pointer">+2</button>
+      </div>
       
     </div>
   )
 }
 
+const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
+  if (ogTime == DNF) {
+    return
+  }
+
+  if (penalty == "DNF") {
+    if (newTime == "DNF") {
+      setNewTime(ogTime)
+    } else {
+      setNewTime("DNF")
+    }
+  } else if (penalty == "+2") {
+    if (newTime.includes("+")) {
+      setNewTime(ogTime)
+    } else {
+      setNewTime(Number.parseFloat(ogTime) + 2 + "+")
+    }
+  }
+}
+
 const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup, rank}) => {
   let avgToDisplay = "";
   if (solveNum == 4) {
-      avgToDisplay = cuber.bpa.toFixed(2) + "/" + cuber.wpa.toFixed(2)
+      const displayedWPA = cuber.wpa == DNF ? "DNF": cuber.wpa.toFixed(2) 
+      avgToDisplay = cuber.bpa.toFixed(2) + "/" + displayedWPA
   } else if (solveNum > 4 ) {
-      avgToDisplay = cuber.avg.toFixed(2)
+      const displayedAvg = cuber.avg == DNF ? "DNF": cuber.avg.toFixed(2) 
+      avgToDisplay = displayedAvg;
   } else {
       avgToDisplay = "#####"
   }
@@ -217,7 +264,10 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {cuber.id === PLAYER_ID &&
 
         cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? time.toFixed(2) : "#####"
+          let timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? time.toFixed(2) : "#####"
+          if (timeToDisplay == DNF) {
+            timeToDisplay = "DNF";
+          }
           return (
             <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} className = {`text-center ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
               {timeToDisplay}
