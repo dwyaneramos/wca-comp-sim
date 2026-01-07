@@ -242,7 +242,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   let avgToDisplay = "";
   if (solveNum == 4) {
       const displayedWPA = cuber.wpa == DNF ? "DNF": cuber.wpa.toFixed(2) 
-      avgToDisplay = formatTime(cuber.bpa) + "/" + formatTime(cuber.wpa)
+      avgToDisplay = formatTime(cuber.bpa) + " / " + formatTime(cuber.wpa)
   } else if (solveNum > 4 ) {
       avgToDisplay = formatTime(cuber.avg)
   } else {
@@ -250,12 +250,12 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   }
 
   return (
-    <div className = "grid w-3xl grid-cols-9 border-2 border-gray-200 rounded-md items-center">
+    <div className = "grid w-3xl grid-cols-9 border-2 border-gray-200 rounded-md items-center pr-2">
 
       <h1 className = "text-xl text-center">{rank + 1}</h1>
 
-      <div className = "col-span-2 flex flex-col gap-1 py-1">
-        <h1 className = "w-40 truncate text-xl">{cuber.name}</h1>
+      <div className = "col-span-2 w-40 flex flex-col gap-1 py-1">
+        <h1 className = "truncate text-xl">{cuber.name}</h1>
         <h2 className = "text-gray-500">{cuber.id}</h2>
       </div>
 
@@ -292,7 +292,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {/* Display BPA/WPA */}
 
       {
-        <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"} text-center`}>
+        <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"} text-wrap text-center`}>
           {((canViewOtherTimes || cuber.id === PLAYER_ID) && canViewPotentialAvg) ? avgToDisplay : "#####"}
         </h1>
       }
