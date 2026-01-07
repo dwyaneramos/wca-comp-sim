@@ -19,13 +19,15 @@
 - [X] Edit times
 - [X] Toggle visibility of other cubers' times
 - [X] Polish formatting
-- [ ] Display times properly in MM:SS:ms format
+- [X] Display times properly in MM:SS:ms format
+- [ ] Be able to enter times in MM:SS:ms format
+- [X] make sure you can't enter a really big time
 
 ### Stats Page
 
-- [ ] Show how many rounds a user has competed in
-- [ ] Graph user's recent times
-- [ ] Be able to view stats for different events
+- [X] Show how many rounds a user has competed in
+- [X] Graph user's recent times
+- [X] Be able to view stats for different events
 - [ ] Show mo10ao5
 - [X] Show best averages
 - [X] Show best times
@@ -35,3 +37,6 @@
 
 - React / JavaScript
 - TailwindCSS
+- React Icons
+- ChartJS
+- Cubing JS Module

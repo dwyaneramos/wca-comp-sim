@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {validateTime} from "../services/helper.js"
+import {validateTime, formatTime} from "../services/helper.js"
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../utils/competitors.js"
@@ -105,7 +105,7 @@ export const Game = (props) => {
         }))
       setTime("")
     } else {
-      setErrorPopup("Invalid Time Input")
+      setErrorPopup("Invalid Time or Time is greater than 10 mins")
     }
     
   }
@@ -271,11 +271,8 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {cuber.id === PLAYER_ID &&
 
         cuber.times.map((time, idx) => {
-          let timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? time.toFixed(2) : "#####"
-          if (timeToDisplay == DNF) {
-            timeToDisplay = "DNF";
-          }
-          return (
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
+                return (
             <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} className = {`text-center ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
               {timeToDisplay}
             </button>
@@ -287,7 +284,8 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
 
       {cuber.id !== PLAYER_ID && 
         cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? time.toFixed(2) : "#####"
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
+
           return (
             <div key = {idx} className = "text-center">
               {timeToDisplay}
