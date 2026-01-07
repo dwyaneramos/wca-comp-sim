@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {validateTime, formatTime} from "../services/helper.js"
+import {validateTime, formatTime, convertTime} from "../services/helper.js"
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../utils/competitors.js"
@@ -86,12 +86,8 @@ export const Game = (props) => {
 
   function submitTime (time) {
     if ( validateTime(time) ) {
+      time = convertTime(time) 
 
-      if (time === "DNF") {
-        time = DNF;
-      } else if (time.includes("+")) {
-        time = time.slice(0, -1)
-      }
       const nextSolveNum = solveNum + 1 
       setSolveNum(nextSolveNum)
       setCompetitors(prev => 
@@ -246,10 +242,9 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   let avgToDisplay = "";
   if (solveNum == 4) {
       const displayedWPA = cuber.wpa == DNF ? "DNF": cuber.wpa.toFixed(2) 
-      avgToDisplay = cuber.bpa.toFixed(2) + "/" + displayedWPA
+      avgToDisplay = formatTime(cuber.bpa) + "/" + formatTime(cuber.wpa)
   } else if (solveNum > 4 ) {
-      const displayedAvg = cuber.avg == DNF ? "DNF": cuber.avg.toFixed(2) 
-      avgToDisplay = displayedAvg;
+      avgToDisplay = formatTime(cuber.avg)
   } else {
       avgToDisplay = "#####"
   }
