@@ -31,6 +31,8 @@ export const Game = (props) => {
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
   const numSolvesInRound = 5
   const [toggleButtonDisabled, setToggleDisability] = useState(false);
+  const [rematchBtnClickable, setRematchBtnClickability] = useState(false);
+  console.log(rematchBtnClickable)
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
@@ -44,6 +46,7 @@ export const Game = (props) => {
     if (solveNum == numSolvesInRound) {
       setViewOtherTimes(true);
       setToggleDisability(true);
+      setRematchBtnClickability(true);
 
     } else {
       setScramble(genScramble(event));
@@ -55,25 +58,19 @@ export const Game = (props) => {
   function editTime (time, idx) {
 
     if (validateTime(time)) {
-      if (time.includes("+")) {
-        time = time.slice(0, -1)
-      } else if (time === "DNF") {
-        time = DNF
-      }
-
+      time = convertTime(time)
       setCompetitors(prev => 
         prev.map(c => {
           if (c.id !== PLAYER_ID) {
             return c 
           }
-
           return createPlayerWithNewTime(c, idx + 1, time)
           
         }))
       setShowPopup({cuber : null, solveIdx : null})
     } else {
     setErrorPopup("Invalid Time")
-  }
+    }
   }
 
   
@@ -101,7 +98,7 @@ export const Game = (props) => {
         }))
       setTime("")
     } else {
-      setErrorPopup("Invalid Time or Time is greater than 10 mins")
+      setErrorPopup("Invalid time or time is greater than 10 mins")
     }
     
   }
@@ -111,7 +108,10 @@ export const Game = (props) => {
 
   async function resetRound() {
     saveTimes()
+    console.log("RAHHH", rematchBtnClickable)
     setSolveNum(0)
+    setRematchBtnClickability(false);
+    setToggleDisability(false);
     await resetCompetitors()
     
   }
@@ -145,7 +145,7 @@ export const Game = (props) => {
         {/*
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
         */}
-        <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => resetRound()}>Rematch</button>
+        <button type="" disabled={!rematchBtnClickable} className = {`${rematchBtnClickable ? "cursor-pointer bg-green-300 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
       </div>
 
       <TimeHeaders/>
@@ -263,6 +263,9 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
 
       {/* Display Times */}
 
+
+
+      {/* Player's times*/}
       {cuber.id === PLAYER_ID &&
 
         cuber.times.map((time, idx) => {
@@ -277,6 +280,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
         })
       }
 
+      {/* Competitors' times*/}
       {cuber.id !== PLAYER_ID && 
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
