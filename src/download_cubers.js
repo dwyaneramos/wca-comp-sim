@@ -3,10 +3,6 @@ import fs from "fs";
 const dataURL = "../public/cubers.json";
 const data = fs.readFileSync(dataURL);
 const dataJSON = JSON.parse(data)
-dataJSON.cubers.push({
-  "name" : "Jason Yo",
-  "id" : "2032YOJA23"
-})
 
 
 export const ExtractPlayers =  async () => {
