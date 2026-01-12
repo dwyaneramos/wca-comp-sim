@@ -1,4 +1,6 @@
-import {DNF, INVALID_TIMES} from "../utils/constants.js"
+const invalidTimes = [-1, -2, 0]
+
+import {DNF} from "../utils/constants.js"
 
 export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null) => {
   return {
@@ -94,7 +96,7 @@ export const fetchTimes = async (cuber, event) => {
     if (eventResults) {
       for (const [roundKey, round] of Object.entries(eventResults)) {
         for (const solve of round.solves) {
-          if (!(INVALID_TIMES.includes(solve))) {
+          if (!(invalidTimes.includes(solve))) {
             recentTimes.push(solve/100)
           }
 

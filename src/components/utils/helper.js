@@ -5,14 +5,19 @@ const TEN_MINS = 600
 const MMSSFORMAT = /^0?\d:[0-5]?\d\.\d{2}$/ 
 
 export const convertTime = (time) => {
+  console.log(time, 'sajdsa')
   if (time === "DNF") {
     time = DNF;
   } else if (time.includes("+")) {
     time = time.slice(0, -1)
-  } else if (MMSSFORMAT.test(time)) {
-    time = convertFromMMSSFormat(time)
   }
 
+
+  if (MMSSFORMAT.test(time)) {
+    time = convertFromMMSSFormat(time)
+  } else {
+    time = Number.parseFloat(time)
+  }
   return time
 }
 

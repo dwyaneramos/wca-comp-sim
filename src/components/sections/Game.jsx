@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from "react";
-import {validateTime, formatTime, convertTime} from "../utils/helper.js"
+import {validateTime, formatTime, convertTime, convertToMMSS} from "../utils/helper.js"
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
@@ -71,7 +71,9 @@ export const Game = (props) => {
   function editTime (time, idx) {
 
     if (validateTime(time)) {
+      console.log("OG time", time)
       time = convertTime(time)
+      console.log("CONVERTED TIME ", time)
       setCompetitors(prev => 
         prev.map(c => {
           if (c.id !== PLAYER_ID) {
@@ -121,7 +123,6 @@ export const Game = (props) => {
 
   async function resetRound() {
     saveTimes()
-    console.log("RAHHH", rematchBtnClickable)
     setSolveNum(0)
     setRematchBtnClickability(false);
     setToggleDisability(false);
@@ -218,9 +219,9 @@ const Toggle = ({disabled, variable, setterFunc}) => {
 
 
 const EditTimePopup = ({cuber, idx, onClick}) => {
-  let initNewTime = cuber.times[idx] == DNF ? "DNF" : cuber.times[idx].toFixed(2)
+  const initNewTime = cuber.times[idx] == DNF ? "DNF" :  formatTime(cuber.times[idx])
   const [newTime, setNewTime] = useState(initNewTime)
-  const [ogTime] = useState(cuber.times[idx].toFixed(2))
+  const [ogTime] = useState(formatTime(cuber.times[idx]))
   return (
     <div className = "bg-white border-2 border-gray-200 flex gap-2 justify-center items-center flex-col
       w-100 h-50 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
@@ -238,6 +239,7 @@ const EditTimePopup = ({cuber, idx, onClick}) => {
 }
 
 const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
+
   if (ogTime == DNF) {
     return
   }
@@ -252,7 +254,7 @@ const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
     if (newTime.includes("+")) {
       setNewTime(ogTime)
     } else {
-      setNewTime(Number.parseFloat(ogTime) + 2 + "+")
+      setNewTime(formatTime(convertTime(ogTime) + 2) + "+")
     }
   }
 }
