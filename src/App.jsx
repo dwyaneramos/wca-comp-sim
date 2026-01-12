@@ -7,7 +7,7 @@ import {Game} from './components/sections/Game'
 import {Stats} from './components/sections/Stats'
 import {NavBar} from './components/NavBar'
 import {createPlayer} from './components/services/cuber.js'
-import {simulateAllCompetitors, addUser} from './components/utils/competitors.js'
+import {simulateAllCompetitors, addUser} from './components/services/competitors.js'
 import { RxCross1 } from "react-icons/rx";
 
 export function useLocalStorage(key, initialValue) {

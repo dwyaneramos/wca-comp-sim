@@ -25,6 +25,7 @@ export const Game = (props) => {
 
   const [solveNum, setSolveNum] = useState(0)
   const solveNumRef = useRef(solveNum);
+
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
   const numSolvesInRound = 5
@@ -289,7 +290,8 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
                 return (
-            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} className = {`text-center ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
+            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum ? false : true}
+              className = {`text-center ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
               {timeToDisplay}
             </button>
           )

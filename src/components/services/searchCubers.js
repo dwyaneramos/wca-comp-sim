@@ -1,4 +1,4 @@
-import {isCuberInList} from '../utils/competitors.js'
+import {isCuberInList} from '../services/competitors.js'
 
 export const searchCubers = async (searchInput, competitors) => {
   let results = [] 
