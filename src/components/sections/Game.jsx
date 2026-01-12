@@ -1,13 +1,10 @@
-import {useState, useEffect} from "react";
-import {validateTime, formatTime, convertTime} from "../services/helper.js"
+import {useState, useEffect, useRef} from "react";
+import {validateTime, formatTime, convertTime} from "../utils/helper.js"
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
-import {createPlayerWithNewTime, savePlayerTimes} from "../utils/competitors.js"
+import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-
-const PLAYER_ID = "Player"
-const DNF = 999
-
+import {PLAYER_ID, DNF} from "../utils/constants.js"
 
 
 const genScramble = async (event) => {
@@ -27,19 +24,34 @@ export const Game = (props) => {
   const resetCompetitors = props.resetCompetitors
 
   const [solveNum, setSolveNum] = useState(0)
+  const solveNumRef = useRef(solveNum);
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
   const numSolvesInRound = 5
   const [toggleButtonDisabled, setToggleDisability] = useState(false);
   const [rematchBtnClickable, setRematchBtnClickability] = useState(false);
-  console.log(rematchBtnClickable)
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
 
+  useEffect(() => {
+    solveNumRef.current = solveNum;
+  }, [solveNum]);
+
+
   useEffect(()=> {
     console.log(competitors)
   }, [competitors])
+
+  useEffect(() => {
+    return () => {
+      console.log(solveNumRef.current, sortedCompetitorsRef.current)
+      if (solveNumRef.current === numSolvesInRound) {
+        saveTimes()
+      }
+    }
+
+  }, [])
   
 
   useEffect(() => {
@@ -76,8 +88,8 @@ export const Game = (props) => {
   
 
   function saveTimes() {
-    const playerRank = sortedCompetitors.findIndex((c) => c.id == PLAYER_ID) + 1
-    const player = sortedCompetitors[playerRank - 1]
+    const playerRank = sortedCompetitorsRef.current.findIndex((c) => c.id == PLAYER_ID) + 1
+    const player = sortedCompetitorsRef.current[playerRank - 1]
     setStats(prev => savePlayerTimes(player, event, prev, playerRank, competitors.length))
   }
 
@@ -118,6 +130,12 @@ export const Game = (props) => {
 
 
   let sortedCompetitors = [...competitors];
+  const sortedCompetitorsRef = useRef([]);
+
+  useEffect(() => {
+    sortedCompetitorsRef.current = sortedCompetitors;
+  }, [sortedCompetitors]);
+
   if (solveNum >= 1 && solveNum <= numSolvesInRound - 1) {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return Math.min(...c1.times.slice(0,solveNum)) - Math.min(...c2.times.slice(0,solveNum))} )
   } else if (solveNum == numSolvesInRound) {

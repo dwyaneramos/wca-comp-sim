@@ -49,6 +49,10 @@ function App() {
             "Game" : Game,
             "Stats" : Stats}
 
+  useEffect(()=> {
+    console.log(competitors)
+  }, [competitors])
+
 
 
 const startingStats = {

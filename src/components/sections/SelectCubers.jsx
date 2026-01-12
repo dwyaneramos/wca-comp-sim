@@ -2,9 +2,8 @@ import {useState, useEffect} from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoPersonAddOutline } from "react-icons/io5";
 import {searchCubers} from "../services/searchCubers.js"
-import {addCompetitor} from "../utils/competitors.js"
-
-const PLAYER_ID = "Player"
+import {addCompetitor} from "../services/competitors.js"
+import {PLAYER_ID} from "../utils/constants.js"
 
 export const SelectCubers = ({changePage, setCompetitors, competitors}) => {
 

@@ -22,16 +22,26 @@
 - [X] Display times properly in MM:SS:ms format
 - [ ] Be able to enter times in MM:SS:ms format
 - [X] make sure you can't enter a really big time
+- [ ] save stats when clicking home (not just when rematching)
+- [ ] Scale  std.dev for different events
+- [ ] Implement inspection timer
+- [ ] Implement Mo3
 
 ### Stats Page
 
 - [X] Show how many rounds a user has competed in
 - [X] Graph user's recent times
 - [X] Be able to view stats for different events
+- [ ] Graph times should be in 2dp
 - [ ] Show mo10ao5
 - [X] Show best averages
 - [X] Show best times
 - [ ] Make it look nice
+- [ ] Change colours for 4th/5th results
+
+### Etc
+
+- [ ] Show some notes on how cubing js scrambles (e.g., using L moves in 2x2)
 
 ## Tech Stack
 
