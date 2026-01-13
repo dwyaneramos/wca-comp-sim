@@ -170,22 +170,24 @@ export const Game = (props) => {
       </div>
 
       <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
-      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup}/>
+      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
+        competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}/>
       {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
     </section>
   )
-}
+} 
 
 
 
-const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup}) => {
+const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup, numSolvesInRound}) => {
   return (
     <div className="flex flex-col gap-2  overflow-y-scroll">
       {competitors.map((cuber, idx) => {
 
         return (
           <div key = {cuber.id}>
-            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup} rank = {idx}/> 
+            <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
+              canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup} rank = {idx} numSolvesInRound = {numSolvesInRound}/> 
           </div>
         )
       })}
@@ -198,9 +200,9 @@ const TimeHeaders = ({numSolvesInRound}) => {
   let solves = new Array(numSolvesInRound); for (let i = 1; i <= numSolvesInRound; i++) solves[i - 1] = i
 
   return (
-     <div className = "grid w-3xl text-center grid-cols-9 border-2 border-gray-200 rounded-md p-2 items-center">
+     <div className = {`grid w-3xl text-center ${numSolvesInRound == 3 ? `grid-cols-7` : `grid-cols-9`} border-2 border-gray-200 rounded-md p-2 items-center`}>
       <h1>Rank</h1>
-      <h1 className="col-span-2">Competitor</h1>
+      <h1 className="col-span-2 text-left">Competitor</h1>
 
       {solves.map((s) => {
         return (
@@ -261,19 +263,19 @@ const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
   }
 }
 
-const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup, rank}) => {
+const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup, rank, numSolvesInRound}) => {
   let avgToDisplay = "";
-  if (solveNum == 4) {
+  if (solveNum == numSolvesInRound - 1) {
       const displayedWPA = cuber.wpa == DNF ? "DNF": cuber.wpa.toFixed(2) 
-      avgToDisplay = formatTime(cuber.bpa) + " / " + formatTime(cuber.wpa)
-  } else if (solveNum > 4 ) {
+      avgToDisplay = numSolvesInRound == 3 ? formatTime(cuber.bpa) : formatTime(cuber.bpa) + " / " + formatTime(cuber.wpa)
+  } else if (solveNum > numSolvesInRound - 1 ) {
       avgToDisplay = formatTime(cuber.avg)
   } else {
       avgToDisplay = "#####"
   }
 
   return (
-    <div className = "grid w-3xl grid-cols-9 border-2 border-gray-200 rounded-md items-center pr-2">
+    <div className = {`grid w-3xl ${numSolvesInRound == 3 ? "grid-cols-7" : "grid-cols-9"} border-2 border-gray-200 rounded-md items-center pr-2`}>
 
       <h1 className = "text-xl text-center">{rank + 1}</h1>
 

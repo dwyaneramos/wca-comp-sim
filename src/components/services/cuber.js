@@ -34,7 +34,7 @@ export const genPlayerWPABPA = (timesWOLastSolve, numSolves) => {
   return {bpa, wpa}
 }
 
-export const genPlayerAvg = (times) => {
+export const genPlayerAvg = (times, numSolves) => {
 
   const hasMultipleDNFs = (times) => {
     let dnfCount = 0;
@@ -51,8 +51,10 @@ export const genPlayerAvg = (times) => {
 
   }
 
-
-  const avg = hasMultipleDNFs(times) ? DNF : (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3;
+  
+  const avg = hasMultipleDNFs(times) ? DNF : 
+              (numSolves == 5 ?  (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3 :
+                                (times.reduce((acc, curr) => acc + curr, 0) / 3))
   return avg
 }
 
@@ -73,7 +75,7 @@ export const createSimCuber = async (cuber, event, numSolves) => {
   }
   times = times;
   const timesWOLastSolve = times.slice(0, -1);
-  const avg = genPlayerAvg(times);
+  const avg = genPlayerAvg(times, numSolves);
   const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolves);
 
   return createCuber(cuber.id, cuber.name, times, bpa, wpa, avg)
