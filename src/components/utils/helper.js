@@ -2,7 +2,7 @@
 import {DNF} from "./constants.js"
 const TEN_MINS = 600
 
-const MMSSFORMAT = /^0?\d:[0-5]?\d\.\d{2}$/ 
+const MMSSFORMAT = /^0?\d:[0-5]?\d\.\d?\d$/ 
 
 export const convertTime = (time) => {
   console.log(time, 'sajdsa')

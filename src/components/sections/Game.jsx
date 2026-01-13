@@ -144,12 +144,12 @@ export const Game = (props) => {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return c1.avg - c2.avg})
   }
   return (
-    <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
+    <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-full bg-white">
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-4">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button disabled={toggleButtonDisabled} onClick={() => submitTime(timeInput)} type="" 
-          className = {`${toggleButtonDisabled ?  "bg-gray-400" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
+          className = {`${toggleButtonDisabled ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
           <FaArrowRight color = {`${toggleButtonDisabled ? "white" : "black"}`}/>
         </button>
       </div>
@@ -181,7 +181,7 @@ export const Game = (props) => {
 
 const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup, numSolvesInRound}) => {
   return (
-    <div className="flex flex-col gap-2  overflow-y-scroll">
+    <div className="flex flex-col gap-2 mb-10">
       {competitors.map((cuber, idx) => {
 
         return (
