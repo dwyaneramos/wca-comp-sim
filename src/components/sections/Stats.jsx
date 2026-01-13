@@ -126,8 +126,8 @@ const Top5Section = ({type, topTimes}) => {
   const rankColors = {0 : "bg-[#ebcc34]",
                       1 : "bg-[#9e9e9e]",
                       2 : "bg-[#f2a750]",
-                      3 : "bg-[#d1d1d1]",
-                      4 : "bg-[#d1d1d1]"}
+                      3 : "bg-green-100",
+                      4 : "bg-green-100"}
 
 
   return (

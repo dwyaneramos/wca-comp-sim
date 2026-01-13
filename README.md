@@ -21,7 +21,8 @@
 - [X] Toggle visibility of other cubers' times
 - [X] Polish formatting
 - [X] Display times properly in MM:SS:ms format
-- [ ] Be able to enter times in MM:SS:ms format
+- [X] Be able to enter times in MM:SS:ms format
+- [X] Edit times in MM:SS:ms format
 - [X] make sure you can't enter a really big time
 - [X] save stats when clicking home (not just when rematching)
 - [ ] Scale  std.dev for different events

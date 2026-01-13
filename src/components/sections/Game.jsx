@@ -4,7 +4,7 @@ import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {PLAYER_ID, DNF} from "../utils/constants.js"
+import {PLAYER_ID, DNF, MO3_EVENTS} from "../utils/constants.js"
 
 
 const genScramble = async (event) => {
@@ -18,6 +18,7 @@ export const Game = (props) => {
   const competitors = props.competitors;
   const setCompetitors = props.setCompetitors;
   const event = props.event
+  const numSolvesInRound = MO3_EVENTS.includes(event) ? 3 : 5
   const setStats = props.setStats
   const stats = props.stats
   const setErrorPopup = props.setPopup
@@ -28,7 +29,6 @@ export const Game = (props) => {
 
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
-  const numSolvesInRound = 5
   const [toggleButtonDisabled, setToggleDisability] = useState(false);
   const [rematchBtnClickable, setRematchBtnClickability] = useState(false);
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
@@ -79,7 +79,7 @@ export const Game = (props) => {
           if (c.id !== PLAYER_ID) {
             return c 
           }
-          return createPlayerWithNewTime(c, idx + 1, time)
+          return createPlayerWithNewTime(c, idx + 1, time, numSolvesInRound)
           
         }))
       setShowPopup({cuber : null, solveIdx : null})
@@ -108,7 +108,7 @@ export const Game = (props) => {
             return c 
           }
 
-          return createPlayerWithNewTime(c, nextSolveNum, time)
+          return createPlayerWithNewTime(c, nextSolveNum, time, numSolvesInRound)
           
         }))
       setTime("")
@@ -148,8 +148,9 @@ export const Game = (props) => {
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-4">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
-        <button onClick={() => submitTime(timeInput)} type="" className = "bg-blue-200 cursor-pointer  w-10 h-10 flex justify-center items-center rounded-md">
-          <FaArrowRight/>
+        <button disabled={toggleButtonDisabled} onClick={() => submitTime(timeInput)} type="" 
+          className = {`${toggleButtonDisabled ?  "bg-gray-400" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
+          <FaArrowRight color = {`${toggleButtonDisabled ? "white" : "black"}`}/>
         </button>
       </div>
 
@@ -168,7 +169,7 @@ export const Game = (props) => {
         <button type="" disabled={!rematchBtnClickable} className = {`${rematchBtnClickable ? "cursor-pointer bg-green-300 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
       </div>
 
-      <TimeHeaders/>
+      <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
       <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes} competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup}/>
       {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
     </section>
@@ -193,8 +194,9 @@ const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPot
   )
 }
 
-const TimeHeaders = () => {
-  const solves = [1,2,3,4,5]
+const TimeHeaders = ({numSolvesInRound}) => {
+  let solves = new Array(numSolvesInRound); for (let i = 1; i <= numSolvesInRound; i++) solves[i - 1] = i
+
   return (
      <div className = "grid w-3xl text-center grid-cols-9 border-2 border-gray-200 rounded-md p-2 items-center">
       <h1>Rank</h1>

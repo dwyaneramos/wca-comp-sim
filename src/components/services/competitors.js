@@ -1,16 +1,22 @@
 import {createSimCuber, createPlayer, genPlayerWPABPA, genPlayerAvg} from '../services/cuber.js'
-import {PLAYER_ID} from "../utils/constants.js"
+import {PLAYER_ID, MO3_EVENTS} from "../utils/constants.js"
+
+
+
+
 export const simulateAllCompetitors = async (competitorList, event) => {
+   const numSolves = MO3_EVENTS.includes(event) ? 3 : 5
    const simmedCompetitors = await Promise.all (
     competitorList.map((c) => {
     if (c.id !== PLAYER_ID) {
       try {
-        return createSimCuber(c, event)
+        return createSimCuber(c, event, numSolves)
         } catch (err) {
           throw err;
         }
     } else {
-      return createPlayer() 
+      let timeSlots = new Array(numSolves); for (let i = 0; i < numSolves; i++) timeSlots[i] = -1
+      return createPlayer(timeSlots) 
     }
     
   })
@@ -27,14 +33,14 @@ export const addUser = (competitorList) => {
   return [...competitorList, user]
 }
 
-export const createPlayerWithNewTime = (c, solveNum, time) => {
+export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound) => {
   let newTimes = [...c.times];
   newTimes[solveNum - 1] = (parseFloat(time));
 
   let updatedPlayer = null
   if (solveNum >= 4  || newTimes[-2] !== -1) {
     const timesWOLastSolve = newTimes.slice(0, -1)
-    const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve);
+    const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolvesInRound);
     const avg = genPlayerAvg(newTimes);
     console.log(avg)
     updatedPlayer = createPlayer(newTimes, bpa, wpa, avg);

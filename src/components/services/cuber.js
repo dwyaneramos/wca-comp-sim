@@ -1,6 +1,4 @@
-const invalidTimes = [-1, -2, 0]
-
-import {DNF} from "../utils/constants.js"
+import {DNF, INVALID_TIMES} from "../utils/constants.js"
 
 export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null) => {
   return {
@@ -18,11 +16,21 @@ export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, a
 
 }
 
-export const genPlayerWPABPA = (timesWOLastSolve) => {
-  
+export const genPlayerWPABPA = (timesWOLastSolve, numSolves) => {
+{/*
+  Instead of a wpa and bpa for MO3 events, it will just be the average of the first 2 solves, hence why wpa and bpa are the same
+*/}
+  const bpa = numSolves == 5 ? ((timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3) : 
+                                (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0) / 2);
 
-  const bpa = (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3;
-  const wpa = timesWOLastSolve.includes(DNF) ? DNF : (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3;
+  let wpa = -1;
+  if (timesWOLastSolve.includes(DNF)) {
+    wpa = DNF
+  } else {
+    
+    wpa = numSolves == 5 ? (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3 :
+                           bpa
+  }
   return {bpa, wpa}
 }
 
@@ -48,7 +56,7 @@ export const genPlayerAvg = (times) => {
   return avg
 }
 
-export const createSimCuber = async (cuber, event) => {
+export const createSimCuber = async (cuber, event, numSolves) => {
   const officialTimes = await fetchTimes(cuber, event)
   if (officialTimes.length <= 5) {
     throw new Error(`Insufficient official results to do simulations for ${cuber.name}`)
@@ -59,14 +67,14 @@ export const createSimCuber = async (cuber, event) => {
 
 
   let times = []
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numSolves; i++) {
     const time = genRandomTime(mean);
     times.push(time)
   }
   times = times;
   const timesWOLastSolve = times.slice(0, -1);
   const avg = genPlayerAvg(times);
-  const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve);
+  const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolves);
 
   return createCuber(cuber.id, cuber.name, times, bpa, wpa, avg)
 
@@ -96,7 +104,7 @@ export const fetchTimes = async (cuber, event) => {
     if (eventResults) {
       for (const [roundKey, round] of Object.entries(eventResults)) {
         for (const solve of round.solves) {
-          if (!(invalidTimes.includes(solve))) {
+          if (!(INVALID_TIMES.includes(solve))) {
             recentTimes.push(solve/100)
           }
 
