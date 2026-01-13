@@ -7,7 +7,7 @@ export const searchCubers = async (searchInput, competitors) => {
   const dataJSON = await data.json()
 
   for (let cuber of dataJSON.cubers) {
-    if (cuber.name.toLowerCase().includes(searchInput.toLowerCase()) && !isCuberInList(competitors, cuber)) {
+    if (nameOrIDMatches(searchInput, cuber) && !isCuberInList(competitors, cuber)) {
       results.push(cuber)
       if (results.length >= 10) {
         break
@@ -15,4 +15,10 @@ export const searchCubers = async (searchInput, competitors) => {
     }
   }
   return results
+}
+
+const nameOrIDMatches = (searchInput, cuber) => {
+  return (cuber.name.toLowerCase().includes(searchInput.toLowerCase())) || (cuber.id.toLowerCase().includes(searchInput.toLowerCase()))
+
+
 }

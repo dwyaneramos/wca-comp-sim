@@ -8,7 +8,7 @@
 - [X] Do cuber validation (a cuber can't be simulated in an event they haven't competed in)
 - [x] Ensure people can't enter the same cuber twice
 - [ ] Use keypresses to make entering cubers more convenient
-- [ ] Search with WCA IDs
+- [X] Search with WCA IDs
 
 ### Game Page
 
@@ -27,7 +27,7 @@
 - [X] save stats when clicking home (not just when rematching)
 - [ ] Scale  std.dev for different events
 - [ ] Implement inspection timer
-- [ ] Implement Mo3
+- [X] Implement Mo3
 
 ### Stats Page
 
