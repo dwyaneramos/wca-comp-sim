@@ -70,7 +70,7 @@ export const createSimCuber = async (cuber, event, numSolves) => {
 
   let times = []
   for (let i = 0; i < numSolves; i++) {
-    const time = genRandomTime(mean);
+    const time = genRandomTime(mean, event);
     times.push(time)
   }
   times = times;
@@ -83,7 +83,44 @@ export const createSimCuber = async (cuber, event, numSolves) => {
 }
 
 
-export const genRandomTime = (mean) => {
+export const genRandomTime = (mean, event) => {
+  const eventStdDevFactor = {
+    "sprint": 0.1,
+    "med": 0.08,
+    "big": 0.1,
+    "bld": 0.15
+
+  }
+
+  const eventCategory = {
+  "222": "sprint",
+  "333": "sprint",
+  "444": "med",
+  "555": "big",
+  "666": "big",
+  "777": "big",
+  "333oh": "sprint",
+  "333bf": "bld",
+  "clock": "sprint",
+  "minx": "big",
+  "pyram": "sprint",
+  "skewb": "sprint",
+  "444bf": "bld",
+  "555bf": "bld",
+  "333mbf": "bld",
+
+}
+  
+  const stdDev = eventStdDevFactor[eventCategory[event]] * mean
+
+  const time = randLogNormal(mean, stdDev)
+  return time
+  //const stdDev = 0.8
+  //const time = z * stdDev + mean;
+  //return time
+}
+
+const randNormal = (mean) => {
   let u = 0;
   let v = 0;
 
@@ -91,10 +128,18 @@ export const genRandomTime = (mean) => {
   while (v === 0) v = Math.random()
 
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  const stdDev = 0.8
-  const time = z * stdDev + mean;
-  return time
+  return z
+
 }
+
+const randLogNormal = (mean, stdDev) => {
+  // convert desired mean/std to log-space params
+  const variance = stdDev ** 2;
+  const mu = Math.log(mean ** 2 / Math.sqrt(variance + mean ** 2));
+  const sigma = Math.sqrt(Math.log(1 + variance / mean ** 2));
+
+  return Math.exp(mu + sigma * randNormal(mean));
+};
 
 export const fetchTimes = async (cuber, event) => {
   const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/" + cuber.id + ".json"
