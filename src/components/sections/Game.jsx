@@ -29,6 +29,7 @@ export const Game = (props) => {
 
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
+  const [areCubersRanked, setCubersRanked] = useState(true)
 
 
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
@@ -137,7 +138,7 @@ export const Game = (props) => {
     sortedCompetitorsRef.current = sortedCompetitors;
   }, [sortedCompetitors]);
 
-  if (solveNum >= 1 && solveNum <= numSolvesInRound - 1) {
+  if (solveNum >= 1 && solveNum <= numSolvesInRound - 1 && areCubersRanked) {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return Math.min(...c1.times.slice(0,solveNum)) - Math.min(...c2.times.slice(0,solveNum))} )
   } else if (solveNum == numSolvesInRound) {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return c1.avg - c2.avg})
@@ -154,14 +155,11 @@ export const Game = (props) => {
       </div>
 
       <div className = "flex flex-row gap-5">
-        <div className = "flex flex-row text-lg justify-center items-center gap-3">
-          <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes}/>
-          <h1>Hide other times</h1>
-        </div>
-        <div className = "flex flex-row text-lg justify-center items-center gap-3">
-          <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
-          <h1>Hide BPAs/WPAs</h1>
-        </div>
+        <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
+
+        <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg} text = {"Hide BPAs/WPAs"}/>
+
+        <Toggle disabled = {endOfRound} variable = {areCubersRanked} setterFunc = {setCubersRanked} text = {"Hide provisional rankings"}/>
         {/*
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
         */}
@@ -212,11 +210,17 @@ const TimeHeaders = ({numSolvesInRound}) => {
     </div>
   )
 }
-const Toggle = ({disabled, variable, setterFunc}) => {
+const Toggle = ({disabled, variable, setterFunc, text}) => {
   return (
-    <button type="" disabled = {disabled} className={` ${variable ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setterFunc(!variable)}>
-      <div className = {`${variable ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
-    </button>
+
+
+
+    <div className = "flex flex-row text-lg justify-center items-center gap-3">
+      <button type="" disabled = {disabled} className={` ${variable ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setterFunc(!variable)}>
+        <div className = {`${variable ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
+      </button>
+      <h1>{text}</h1>
+    </div>
   )
 }
 
