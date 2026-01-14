@@ -71,10 +71,10 @@ const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {
     { name: "3x3x3 Multi-Blind", code: "333mbf" }
   ];
   return (
-    <select disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
+    <select defaultValue = {defaultEvent} disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
       {wcaEvents.map((event) => {
         return (
-          <option selected = {event.code == defaultEvent ? "selected" : "" } key={event.code} value={event.code}>{event.name}</option>
+          <option  key={event.code} value={event.code}>{event.name}</option>
         ) 
       })}
       

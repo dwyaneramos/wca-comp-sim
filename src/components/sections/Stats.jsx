@@ -31,7 +31,17 @@ const SolvesLineGraph = (props) => {
           plugins : {
             legend : {
               display: false
-            }
+            },
+          tooltip: {
+            displayColors: false,
+            callbacks: {
+              label: (ogTime) => {
+                const value = ogTime.parsed.y;
+                return `Time: ${value.toFixed(2)}`;
+                }
+              }
+            },
+
           },
           scales : {
             x : {
@@ -83,7 +93,7 @@ const CompStats = ({eventStats, event}) => {
 
       <div className = "my-2">
       <h2 className = "text-gray-600">Average Placing</h2>
-      <p>{eventStats.avgPlacing.toFixed(2)} out of {eventStats.avgCompetitorsInRound}</p>
+      <p>{eventStats.avgPlacing.toFixed(2)} out of {eventStats.avgCompetitorsInRound.toFixed(2)}</p>
       </div>
       
 
@@ -109,14 +119,6 @@ const CompStats = ({eventStats, event}) => {
       </div>
 
 
-    </div>
-  )
-}
-
-const Graph = () => {
-  return (
-    <div className="bg-red-200 w-200 h-200">
-      aj
     </div>
   )
 }
