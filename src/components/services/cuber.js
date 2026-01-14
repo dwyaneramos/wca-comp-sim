@@ -85,7 +85,7 @@ export const createSimCuber = async (cuber, event, numSolves) => {
 
 export const genRandomTime = (mean, event) => {
   const eventStdDevFactor = {
-    "sprint": 0.1,
+    "sprint": 0.3,
     "med": 0.08,
     "big": 0.1,
     "bld": 0.15

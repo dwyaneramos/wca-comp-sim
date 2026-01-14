@@ -166,7 +166,7 @@ export const Game = (props) => {
         {/*
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
         */}
-        <button type="" disabled={!rematchBtnClickable} className = {`${rematchBtnClickable ? "cursor-pointer bg-green-300 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
+        <button type="" disabled={!rematchBtnClickable} className = {`${rematchBtnClickable ? "cursor-pointer bg-green-500 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
       </div>
 
       <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
