@@ -40,6 +40,7 @@
 - [X] Show best times
 - [ ] Make it look nice
 - [ ] Change colours for 4th/5th results
+- [ ] Be able to reload results
 
 ### Etc
 

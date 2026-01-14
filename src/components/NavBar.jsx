@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 
 
-export const NavBar = ({changePage, disabledEventDropdown, setEvent}) => {
+export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent}) => {
   const selectEventCallback = (newEvent) => {
     setEvent(newEvent.target.value)
   }
@@ -21,7 +21,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent}) => {
               <a href="" onClick={()=>changePage("")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
             </div>
               
-              <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
+              <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
         </div>
 
 
@@ -36,7 +36,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent}) => {
           <div className = "flex flex-row gap-2">
             <a href="#" onClick={()=>changePage("Home")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
             <a href="#" onClick={()=>changePage("Stats")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
-          <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback}/> 
+          <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
           </div>
         </div>
 
@@ -50,7 +50,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent}) => {
 
 
 
-const SelectEventDropdown = ({ disabled, onChange }) => {
+const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {
   const wcaEvents = [
     { name: "3x3x3 Cube", code: "333" },
     { name: "2x2x2 Cube", code: "222" },
@@ -74,8 +74,8 @@ const SelectEventDropdown = ({ disabled, onChange }) => {
     <select disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
       {wcaEvents.map((event) => {
         return (
-          <option key={event.code} value={event.code}>{event.name}</option>
-        )
+          <option selected = {event.code == defaultEvent ? "selected" : "" } key={event.code} value={event.code}>{event.name}</option>
+        ) 
       })}
       
     </select>

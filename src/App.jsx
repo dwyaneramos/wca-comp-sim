@@ -44,7 +44,7 @@ function App() {
   const [error, setError] = useState(null);
   const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
   const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
-  const [event, setEvent] = useState("333")
+  const [event, setEvent] = useLocalStorage("event", "333")
   const lookup = {"Home" : SelectCubers,
             "Game" : Game,
             "Stats" : Stats}
@@ -107,7 +107,7 @@ const startingStats = {
 
   return (
     <>
-      <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}/>
+      <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent} defaultEvent = {event}/>
       {error && <Popup errMsg={error} setError={setError}/>}
       <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}/>
     </>

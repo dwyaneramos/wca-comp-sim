@@ -146,13 +146,17 @@ export const Game = (props) => {
   return (
     <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-full bg-white">
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
-      <div className = "flex flex-row gap-2 mt-10 mb-4">
+      <div className = "flex flex-row gap-2 mt-10 mb-2">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
           className = {`${endOfRound ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
           <FaArrowRight color = {`${endOfRound ? "white" : "black"}`}/>
         </button>
       </div>
+
+      <button type="" disabled={!endOfRound} 
+        className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-400 text-gray-200"} mb-2 w-sm p-2 rounded-md `} 
+        onClick = {() => resetRound()}>Rematch</button>
 
       <div className = "flex flex-row gap-5">
         <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
@@ -163,7 +167,6 @@ export const Game = (props) => {
         {/*
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
         */}
-        <button type="" disabled={!endOfRound} className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
       </div>
 
       <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
