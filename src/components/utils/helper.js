@@ -4,6 +4,30 @@ const TEN_MINS = 600
 
 const MMSSFORMAT = /^0?\d:[0-5]?\d\.\d*\d$/ 
 
+export const genSuffix = (number) => {
+  const conversion = {
+    0 : "th",
+    1 : "st",
+    2 : "nd",
+    3 : "rd",
+    4 : "th",
+    5 : "th",
+    6 : "th",
+    7 : "th",
+    8 : "th",
+    9 : "th"
+    }
+
+  if (number in conversion) {
+    return conversion[number]
+  } else if (number >= 11 && number <= 19) {
+    return "th"
+  } else {
+    return conversion[number % 10]
+  }
+  
+}
+
 export const convertTime = (time) => {
   console.log(time, 'sajdsa')
   if (time === "DNF") {

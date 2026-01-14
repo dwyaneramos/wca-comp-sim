@@ -1,5 +1,6 @@
 import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
+import {genSuffix} from "../utils/helper.js"
 
 
 const SolvesLineGraph = (props) => {
@@ -78,6 +79,8 @@ export const Stats = (props) => {
 }
 
 const CompStats = ({eventStats, event}) => {
+  const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
+  const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
   return (
     <div className = "bg-white w-2xs h-85 rounded-md p-3 border-2 border-gray-200">
       <h1 className = "text-lg">Competition Stats for {event}</h1>
@@ -93,7 +96,7 @@ const CompStats = ({eventStats, event}) => {
 
       <div className = "my-2">
       <h2 className = "text-gray-600">Average Placing</h2>
-      <p>{eventStats.avgPlacing.toFixed(2)} out of {eventStats.avgCompetitorsInRound.toFixed(2)}</p>
+      <p>{roundedAvgPlacing}{genSuffix(roundedAvgPlacing)} out of {roundedAvgCompetitors} competitors</p>
       </div>
       
 
