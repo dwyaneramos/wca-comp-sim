@@ -29,11 +29,12 @@ export const Game = (props) => {
 
   const [canViewOtherTimes, setViewOtherTimes] = useState(true)
   const [canViewPotentialAvg, setViewPotentialAvg] = useState(true)
-  const [toggleButtonDisabled, setToggleDisability] = useState(false);
-  const [rematchBtnClickable, setRematchBtnClickability] = useState(false);
+
+
   const [showPopup, setShowPopup] = useState({cuber: null, solveIdx: null});
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
+  const [endOfRound, setEndOfRound] = useState(false);
 
   useEffect(() => {
     solveNumRef.current = solveNum;
@@ -58,8 +59,7 @@ export const Game = (props) => {
   useEffect(() => {
     if (solveNum == numSolvesInRound) {
       setViewOtherTimes(true);
-      setToggleDisability(true);
-      setRematchBtnClickability(true);
+      setEndOfRound(true)
 
     } else {
       setScramble(genScramble(event));
@@ -124,8 +124,7 @@ export const Game = (props) => {
   async function resetRound() {
     saveTimes()
     setSolveNum(0)
-    setRematchBtnClickability(false);
-    setToggleDisability(false);
+    setEndOfRound(false);
     await resetCompetitors()
     
   }
@@ -148,25 +147,25 @@ export const Game = (props) => {
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-4">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
-        <button disabled={toggleButtonDisabled} onClick={() => submitTime(timeInput)} type="" 
-          className = {`${toggleButtonDisabled ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
-          <FaArrowRight color = {`${toggleButtonDisabled ? "white" : "black"}`}/>
+        <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
+          className = {`${endOfRound ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
+          <FaArrowRight color = {`${endOfRound ? "white" : "black"}`}/>
         </button>
       </div>
 
       <div className = "flex flex-row gap-5">
         <div className = "flex flex-row text-lg justify-center items-center gap-3">
-          <Toggle disabled = {toggleButtonDisabled} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes}/>
+          <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes}/>
           <h1>Hide other times</h1>
         </div>
         <div className = "flex flex-row text-lg justify-center items-center gap-3">
-          <Toggle disabled = {toggleButtonDisabled} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
+          <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg}/>
           <h1>Hide BPAs/WPAs</h1>
         </div>
         {/*
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
         */}
-        <button type="" disabled={!rematchBtnClickable} className = {`${rematchBtnClickable ? "cursor-pointer bg-green-500 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
+        <button type="" disabled={!endOfRound} className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-400 text-gray-200"} p-2 rounded-md `} onClick = {() => resetRound()}>Rematch</button>
       </div>
 
       <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
