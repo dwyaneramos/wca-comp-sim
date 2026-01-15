@@ -25,7 +25,7 @@
 - [X] Edit times in MM:SS:ms format
 - [X] make sure you can't enter a really big time
 - [X] save stats when clicking home (not just when rematching)
-- [ ] Scale  std.dev for different events
+- [X] Scale  std.dev for different events
 - [ ] Implement inspection timer
 - [X] Implement Mo3
 
@@ -34,13 +34,13 @@
 - [X] Show how many rounds a user has competed in
 - [X] Graph user's recent times
 - [X] Be able to view stats for different events
-- [ ] Graph times should be in 2dp
+- [X] Graph times should be in 2dp
 - [ ] Show mo10ao5
 - [X] Show best averages
 - [X] Show best times
 - [ ] Make it look nice
 - [ ] Change colours for 4th/5th results
-- [ ] Be able to reload results
+- [ ] Be able to reset results
 
 ### Etc
 
