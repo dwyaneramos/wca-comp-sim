@@ -12,7 +12,7 @@ const SolvesLineGraph = (props) => {
 
 
   return (
-    <div className="w-220 bg-white h-full p-5 rounded-md border-2 border-gray-200">
+    <div className="w-220 bg-white drop-shadow-lg h-full p-5 rounded-md border-2 border-gray-200">
       <h1 className = "text-xl m-2">Most Recent {solvesToDisplay.length} solves</h1>
       
       <Line data = {{
@@ -21,7 +21,8 @@ const SolvesLineGraph = (props) => {
           {
             label: "Time",
             data: solvesToDisplay,
-            tension: 0.3
+            tension: 0.3,
+            borderColor: "#35de5d"
           }
         ]
 
@@ -59,33 +60,55 @@ const SolvesLineGraph = (props) => {
 
 export const Stats = (props) => {
   const event = props.event
+  const eventNameLookup = {
+  "333": "3x3x3 Cube",
+  "222": "2x2x2 Cube",
+  "444": "4x4x4 Cube",
+  "555": "5x5x5 Cube",
+  "666": "6x6x6 Cube",
+  "777": "7x7x7 Cube",
+  "333bf": "3x3x3 Blindfolded",
+  "333fm": "3x3x3 Fewest Moves",
+  "333oh": "3x3x3 One-Handed",
+  "clock": "Clock",
+  "minx": "Megaminx",
+  "pyram": "Pyraminx",
+  "skewb": "Skewb",
+  "sq1": "Square-1",
+  "444bf": "4x4x4 Blindfolded",
+  "555bf": "5x5x5 Blindfolded",
+  "333mbf": "3x3x3 Multi-Blind"
+}
   const stats = props.stats 
   const eventStats = stats[event]
 
    return (
     <section className="mt-15 p-5 flex items-center flex-col">
-      <h1 className = "bg-white w-215 p-3 m-3 border-gray-200 drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">Competition Stats for {event}</h1>
-      <div className="flex flex-col justify-center items-center place-content-around">
+      <h1 className = "bg-white w-2xl p-3 m-3 border-gray-200 
+        drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">
+        Competition Stats for {eventNameLookup[event]}</h1>
+      <div className="flex flex-col gap-5 justify-center items-center place-content-around">
 
-        <div className = "flex flex-row ">
+        <div className = "flex flex-row gap-2">
           <TopResultsSection type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
-          <CompStats eventStats = {eventStats} event = {event}/>
+          <CompStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
           <TopResultsSection type = {"Singles"} topTimes = {eventStats.bestTimes}/>
         </div>
         <SolvesLineGraph eventStats ={eventStats}/>
       </div>
 
-        <TopResultsSection type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
     </section>
   )
 }
 
-const CompStats = ({eventStats, event}) => {
+const CompStats = ({eventStats, event, times}) => {
   const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
   const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
+  
+  const mean = times.reduce((acc, curr) => acc + curr, 0) / times.length 
+  console.log(mean)
   return (
-    <div className = "bg-white w-2xs h-85 rounded-md p-3 border-2 border-gray-200">
-      <h1 className = "text-lg font-semibold">Competition Stats for {event}</h1>
+    <div className = "text-lg bg-white drop-shadow-lg w-2xs h-105 rounded-md p-3 border-2 border-gray-200">
       <div className = "my-2">
         <h2 className = "text-gray-600">Competitions</h2>
         <p>Simulated {eventStats.numRoundsDone} rounds</p>
@@ -94,6 +117,11 @@ const CompStats = ({eventStats, event}) => {
       <div className = "my-2">
       <h2 className = "text-gray-600">Total Solves Done</h2>
       <p>{eventStats.solves.length} solves</p>
+      </div>
+
+      <div className = "my-2">
+      <h2 className = "text-gray-600">Mean Time</h2>
+      <p>{formatTime(mean)}s</p>
       </div>
 
       <div className = "my-2">
@@ -131,7 +159,7 @@ const CompStats = ({eventStats, event}) => {
 const TopResultsSection = ({type, topTimes}) => {
   return (
     <div className = "white p-2 rounded-md w-2xs h-105 drop-shadow-md border-2 border-gray-200 bg-white">
-      <h1 className = "text-xl mb-5 font-semibold pl-2 pt-2">Top 5 {type}</h1>
+      <h1 className = "text-xl mb-5 font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
         <h2 className = "bg-green-400 drop-shadow-lg py-3 w-50 text-center rounded-lg text-white font-semibold text-6xl">

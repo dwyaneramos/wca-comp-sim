@@ -9,7 +9,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
   const isSmall = window.innerWidth < 500
 
   return (
-    <div className = "flex flex-col sm:place-content-between bg-white drop-shadow-sm sm:px-30 text-lg py-3 fixed top-0 w-screen">
+    <div className = "flex flex-col sm:place-content-between bg-white drop-shadow-sm sm:px-30 text-lg py-3 fixed top-0 w-screen z-100">
 
       {isSmall && 
         <div className="flex flex-col justify-center items-center gap-2">
