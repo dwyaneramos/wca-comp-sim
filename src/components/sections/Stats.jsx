@@ -13,7 +13,7 @@ const SolvesLineGraph = (props) => {
 
   return (
     <div className="w-220 bg-white drop-shadow-lg h-full p-5 rounded-md border-2 border-gray-200">
-      <h1 className = "text-xl m-2">Most Recent {solvesToDisplay.length} solves</h1>
+      <h1 className = "text-xl mb-2 pb-2 text-gray-600">Most Recent {solvesToDisplay.length} solves</h1>
       
       <Line data = {{
         labels: solveNumsLabelsToDisplay,
@@ -83,18 +83,18 @@ export const Stats = (props) => {
   const eventStats = stats[event]
 
    return (
-    <section className="mt-15 p-5 flex items-center flex-col">
+    <section className="mt-12 p-5 flex items-center flex-col">
       <h1 className = "bg-white w-2xl p-3 m-3 border-gray-200 
         drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">
         Competition Stats for {eventNameLookup[event]}</h1>
-      <div className="flex flex-col gap-5 justify-center items-center place-content-around">
-
-        <div className = "flex flex-row gap-2">
+      <div className="flex gap-3 flex-col items-center justify-center">
+        
+        <div className="flex flex-row gap-2">
           <TopResultsSection type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
-          <CompStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
+          <SolvesLineGraph eventStats ={eventStats}/>
           <TopResultsSection type = {"Singles"} topTimes = {eventStats.bestTimes}/>
         </div>
-        <SolvesLineGraph eventStats ={eventStats}/>
+        <CompStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
       </div>
 
     </section>
@@ -108,48 +108,51 @@ const CompStats = ({eventStats, event, times}) => {
   const mean = times.reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
   return (
-    <div className = "text-lg bg-white drop-shadow-lg w-2xs h-105 rounded-md p-3 border-2 border-gray-200">
-      <div className = "my-2">
+    <div className = " flex flex-row text-lg w-300 place-content-between bg-white drop-shadow-lg  rounded-md p-3 border-2 border-gray-200">
+      <div className = "">
         <h2 className = "text-gray-600">Competitions</h2>
         <p>Simulated {eventStats.numRoundsDone} rounds</p>
       </div>
 
-      <div className = "my-2">
-      <h2 className = "text-gray-600">Total Solves Done</h2>
-      <p>{eventStats.solves.length} solves</p>
+      <div className = "">
+        <h2 className = "text-gray-600">Total Solves Done</h2>
+        <p>{eventStats.solves.length} solves</p>
       </div>
 
-      <div className = "my-2">
-      <h2 className = "text-gray-600">Mean Time</h2>
-      <p>{formatTime(mean)}s</p>
+      <div className = "flex flex-col items-center">
+        <h2 className = "text-gray-600">Podium Count</h2>
+        <div className = "flex flex-row bg-gray-100 gap-5 p-2 items-center justify-center rounded-md">
+          <div className = "flex flex-col items-center ">
+            <span className="text-3xl">🥇</span> 
+            <span className="text-xl">{eventStats.podiumCount[0]}</span>
+          </div>
+
+          <div className = "flex flex-col items-center ">
+            <span className="text-3xl">🥈</span> 
+            <span className="text-xl">{eventStats.podiumCount[1]}</span>
+          </div>
+
+          <div className = "flex flex-col items-center ">
+            <span className = "text-3xl">🥉</span> 
+            <span className = "text-xl">{eventStats.podiumCount[2]}</span>
+          </div>
+          
+        </div>
+
       </div>
 
-      <div className = "my-2">
-      <h2 className = "text-gray-600">Average Placing</h2>
-      <p>{roundedAvgPlacing}{genSuffix(roundedAvgPlacing)} out of {roundedAvgCompetitors} competitors</p>
+      <div className = "">
+        <h2 className = "text-gray-600">Mean Time</h2>
+        <p>{formatTime(mean)}</p>
+      </div>
+
+      <div className = "">
+        <h2 className = "text-gray-600">Average Placing</h2>
+        <p>{roundedAvgPlacing}{genSuffix(roundedAvgPlacing)} out of {roundedAvgCompetitors} competitors</p>
       </div>
       
 
 
-
-      <h2 className = "text-gray-600">Podium Count</h2>
-      <div className = "flex flex-row bg-gray-100 gap-5 p-2 items-center justify-center rounded-md">
-        <div className = "flex flex-col items-center ">
-          <span className="text-3xl">🥇</span> 
-          <span className="text-xl">{eventStats.podiumCount[0]}</span>
-        </div>
-
-        <div className = "flex flex-col items-center ">
-          <span className="text-3xl">🥈</span> 
-          <span className="text-xl">{eventStats.podiumCount[1]}</span>
-        </div>
-
-        <div className = "flex flex-col items-center ">
-          <span className = "text-3xl">🥉</span> 
-          <span className = "text-xl">{eventStats.podiumCount[2]}</span>
-        </div>
-        
-      </div>
 
 
     </div>
@@ -158,13 +161,13 @@ const CompStats = ({eventStats, event, times}) => {
 
 const TopResultsSection = ({type, topTimes}) => {
   return (
-    <div className = "white p-2 rounded-md w-2xs h-105 drop-shadow-md border-2 border-gray-200 bg-white">
+    <div className = "white p-2 rounded-md w-3xs h-126 drop-shadow-md border-2 border-gray-200 bg-white">
       <h1 className = "text-xl mb-5 font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
         <h2 className = "bg-green-400 drop-shadow-lg py-3 w-50 text-center rounded-lg text-white font-semibold text-6xl">
-          {formatTime(topTimes[0])}s</h2>
-          <h3 className = "font-semibold mb-4">Personal Best</h3>
+          {formatTime(topTimes[0])}</h2>
+          <h3 className = "font-semibold mb-4 text-gray-600 ">Personal Best</h3>
         {(topTimes.slice(1, 5)).map((time, idx) => {
           return (
             <div key = {idx} className = "flex place-content-between 
@@ -174,7 +177,7 @@ const TopResultsSection = ({type, topTimes}) => {
               </span>
 
               <span className = "">
-                {formatTime(time)}s 
+                {formatTime(time)} 
               </span>
             </div>
           )

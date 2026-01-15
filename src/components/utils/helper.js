@@ -73,9 +73,9 @@ export const formatTime = (time) => {
   if (time == DNF) {
     time = "DNF";
   } else if (time > 60) {
-    time = convertToMMSS(time)
+    time = convertToMMSS(time) + "s"
   } else {
-    time = time.toFixed(2)
+    time = time.toFixed(2) + "s"
   }
   return time
 
