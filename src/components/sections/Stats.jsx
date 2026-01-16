@@ -1,6 +1,6 @@
 import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
-import {genSuffix, formatTime} from "../utils/helper.js"
+import {genSuffix, formatTime, startingStats} from "../utils/helper.js"
 
 
 const SolvesLineGraph = (props) => {
@@ -12,7 +12,7 @@ const SolvesLineGraph = (props) => {
 
 
   return (
-    <div className="w-220 bg-white drop-shadow-lg h-full p-5 rounded-md border-2 border-gray-200">
+    <div className="bg-white drop-shadow-lg h-100 p-5 rounded-md border-2 border-gray-200">
       <h1 className = "text-xl mb-2 pb-2 text-gray-600">Most Recent {solvesToDisplay.length} solves</h1>
       
       <Line data = {{
@@ -30,6 +30,7 @@ const SolvesLineGraph = (props) => {
 
       options = {{
           responsive: true,
+          maintainAspectRatio: false,
           plugins : {
             legend : {
               display: false
@@ -60,6 +61,7 @@ const SolvesLineGraph = (props) => {
 
 export const Stats = (props) => {
   const event = props.event
+  const setStats = props.setStats
   const eventNameLookup = {
   "333": "3x3x3 Cube",
   "222": "2x2x2 Cube",
@@ -82,22 +84,61 @@ export const Stats = (props) => {
   const stats = props.stats 
   const eventStats = stats[event]
 
+  const createEmptyEventStats = () => ({
+    bestTimes: [],
+    bestAvgs: [],
+    solves: [],
+    numRoundsDone: 0,
+    avgPlacing: 0,
+    avgCompetitorsInRound: 0,
+    podiumCount: [0, 0, 0],
+  });
+
+  const resetStats = () => {
+    setStats(prev => ({
+      ...prev,
+      [event]: createEmptyEventStats(),
+    }))
+  }
+
    return (
-    <section className="mt-12 p-5 flex items-center flex-col">
+    <section className="mt-12 p-5 flex items-center flex-col gap-2">
       <h1 className = "bg-white w-2xl p-3 m-3 border-gray-200 
         drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">
         Competition Stats for {eventNameLookup[event]}</h1>
-      <div className="flex gap-3 flex-col items-center justify-center">
-        
-        <div className="flex flex-row gap-2">
-          <TopResultsSection type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
+      <div className="grid grid-cols-5 gap-2 auto-rows-max w-full">
+          
+        <span className="col-span-1">
+          <TopResultsSection className=""  type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
+        </span> 
+        <span className="col-span-3">
           <SolvesLineGraph eventStats ={eventStats}/>
-          <TopResultsSection type = {"Singles"} topTimes = {eventStats.bestTimes}/>
-        </div>
-        <CompStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
+        </span>
+        
+        <span className="col-span-1">
+          <TopResultsSection   type = {"Singles"} topTimes = {eventStats.bestTimes}/>
+        </span>
       </div>
 
+      <div className = "grid grid-cols-7 gap-2 w-full">
+        <span className = "col-span-6">
+          <CompStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
+        </span>
+        <span className = "col-span-1">
+          <ResetButton resetStats = {resetStats}/>
+        </span>
+      </div>
+        
+
     </section>
+  )
+}
+
+const ResetButton = ({resetStats}) => {
+  return (
+    <button onClick = {resetStats} className = "bg-red-500 text-2xl drop-shadow-md cursor-pointer h-full w-full rounded-md text-white" type="">
+      Reset Stats
+    </button>
   )
 }
 
@@ -108,7 +149,7 @@ const CompStats = ({eventStats, event, times}) => {
   const mean = times.reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
   return (
-    <div className = " flex flex-row text-lg w-300 place-content-between bg-white drop-shadow-lg  rounded-md p-3 border-2 border-gray-200">
+    <div className = " flex flex-row text-lg items-center w-full place-content-between bg-white drop-shadow-lg  rounded-md p-3 border-2 border-gray-200">
       <div className = "">
         <h2 className = "text-gray-600">Competitions</h2>
         <p>Simulated {eventStats.numRoundsDone} rounds</p>
@@ -161,7 +202,7 @@ const CompStats = ({eventStats, event, times}) => {
 
 const TopResultsSection = ({type, topTimes}) => {
   return (
-    <div className = "white p-2 rounded-md w-3xs h-126 drop-shadow-md border-2 border-gray-200 bg-white">
+    <div className = "white p-2 rounded-md drop-shadow-md border-2 border-gray-200 bg-white">
       <h1 className = "text-xl mb-5 font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
