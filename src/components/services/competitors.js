@@ -41,12 +41,12 @@ export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound) => 
   if (solveNum >= 4  || newTimes[-2] !== -1) {
     const timesWOLastSolve = newTimes.slice(0, -1)
     const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolvesInRound);
-    const avg = genPlayerAvg(newTimes);
+    const avg = genPlayerAvg(newTimes, numSolvesInRound);
     console.log(avg)
     updatedPlayer = createPlayer(newTimes, bpa, wpa, avg);
     
   } else {
-    updatedPlayer = createPlayer(newTimes)
+    updatedPlayer = createPlayer(newTimes,)
   }
 
   return updatedPlayer;
