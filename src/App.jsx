@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './index.css'
@@ -50,6 +50,7 @@ function App() {
             "Game" : Game,
             "Stats" : Stats}
 
+
   useEffect(()=> {
     console.log(competitors)
   }, [competitors])
@@ -80,6 +81,7 @@ function App() {
     }
   }
   
+
 
 
   const CurrentPage = lookup[page]

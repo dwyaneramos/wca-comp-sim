@@ -41,6 +41,7 @@
 - [X] Make it look nice
 - [X] Change colours for 4th/5th results
 - [X] Be able to reset results
+- [ ] Show dates of times
 
 ### Etc
 

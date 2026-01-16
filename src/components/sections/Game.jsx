@@ -24,6 +24,7 @@ export const Game = (props) => {
   const setErrorPopup = props.setPopup
   const resetCompetitors = props.resetCompetitors
 
+
   const [solveNum, setSolveNum] = useState(0)
   const solveNumRef = useRef(solveNum);
 
@@ -36,6 +37,16 @@ export const Game = (props) => {
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
   const [endOfRound, setEndOfRound] = useState(false);
+
+
+
+  const updateKeyPress = (e) => {
+    const char = e.key 
+  } 
+  useEffect(() => {
+    document.addEventListener('keydown', updateKeyPress)
+  }, [])
+  
 
   useEffect(() => {
     solveNumRef.current = solveNum;
@@ -147,7 +158,7 @@ export const Game = (props) => {
     <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-2">
-        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
+        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter") submitTime(timeInput)}}  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
           className = {`${endOfRound ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
           <FaArrowRight color = {`${endOfRound ? "white" : "black"}`}/>
