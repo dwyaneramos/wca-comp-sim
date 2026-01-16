@@ -24,7 +24,7 @@ const events = ["333",
                "555bf"]
 
 export const defaultStats = () => {
-  return { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0, podiumCount : [0, 0, 0], prAvgHistory: [] }
+  return { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0, podiumCount : [0, 0, 0], prAvgHistory: [], prSinHistory: [] }
 }
 
 

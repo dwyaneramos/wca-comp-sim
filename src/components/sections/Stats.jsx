@@ -101,6 +101,11 @@ export const Stats = (props) => {
     {
       data : eventStats.prAvgHistory,
       title: "History of PR Averages"
+    },
+
+    {
+      data : eventStats.prSinHistory,
+      title: "History of PR Singles"
     }
   ]
   const [dataForGraphIndex, setDataForGraphIndex] = useState(0)

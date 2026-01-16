@@ -99,6 +99,9 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
     const newPrAvgHistory = eventStats.prAvgHistory.length == 0 ? [player.avg] : 
                         (eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1] <= player.avg ? eventStats.prAvgHistory : [...eventStats.prAvgHistory, player.avg])
     
+    const bestSingleThatRound = Math.min(...player.times)
+    const newPrSinHistory = eventStats.prSinHistory.length == 0 ? [bestSingleThatRound] : 
+                        (eventStats.prSinHistory[eventStats.prSinHistory.length - 1] <= bestSingleThatRound ? eventStats.prSinHistory : [...eventStats.prSinHistory, bestSingleThatRound])
     let newPodiumCount = [...eventStats.podiumCount] 
     if (rank >= 1 && rank <= 3) {
       newPodiumCount[rank - 1]++;
@@ -115,7 +118,8 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
         avgPlacing : newAvgRank,
         avgCompetitorsInRound : newNumCompetitors,
         podiumCount : newPodiumCount,
-        prAvgHistory : newPrAvgHistory
+        prAvgHistory : newPrAvgHistory,
+        prSinHistory : newPrSinHistory
         
       }
     }
