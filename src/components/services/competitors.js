@@ -96,6 +96,8 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
     const newNumRoundsDone = eventStats.numRoundsDone + 1
     const newAvgRank = (eventStats.avgPlacing * eventStats.numRoundsDone + rank) / newNumRoundsDone
     const newNumCompetitors = (eventStats.avgCompetitorsInRound * eventStats.numRoundsDone + competitorsInRound) / newNumRoundsDone
+    const newPrAvgHistory = eventStats.prAvgHistory.length == 0 ? [player.avg] : 
+                        (eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1] <= player.avg ? eventStats.prAvgHistory : [...eventStats.prAvgHistory, player.avg])
     
     let newPodiumCount = [...eventStats.podiumCount] 
     if (rank >= 1 && rank <= 3) {
@@ -112,7 +114,9 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
         numRoundsDone : newNumRoundsDone,
         avgPlacing : newAvgRank,
         avgCompetitorsInRound : newNumCompetitors,
-        podiumCount : newPodiumCount
+        podiumCount : newPodiumCount,
+        prAvgHistory : newPrAvgHistory
+        
       }
     }
   

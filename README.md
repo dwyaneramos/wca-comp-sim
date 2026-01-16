@@ -38,9 +38,9 @@
 - [ ] Show mo10ao5
 - [X] Show best averages
 - [X] Show best times
-- [ ] Make it look nice
-- [ ] Change colours for 4th/5th results
-- [ ] Be able to reset results
+- [X] Make it look nice
+- [X] Change colours for 4th/5th results
+- [X] Be able to reset results
 
 ### Etc
 

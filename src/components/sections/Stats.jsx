@@ -1,21 +1,25 @@
+import {useState, useEffect} from "react"
 import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
-import {genSuffix, formatTime, startingStats} from "../utils/helper.js"
+import {genSuffix, formatTime, defaultStats} from "../utils/helper.js"
 
 
 const SolvesLineGraph = (props) => {
-  const solveNums = Array.from({length: props.eventStats.solves.length}, (_, i ) => i + 1)
+  const solveNums = Array.from({length: props.dataForGraph.data.length}, (_, i ) => i + 1)
   const xRecentSolves = 10
-  const solvesToDisplay = props.eventStats.solves.slice(-xRecentSolves)
-  const solveNumsLabelsToDisplay = (solveNums.slice(-xRecentSolves)).map((s) => "Solve " + s)
+  const solvesToDisplay = props.dataForGraph.data.slice(-xRecentSolves)
+  const solveNumsLabelsToDisplay = (solveNums.slice(-xRecentSolves)).map((s) => "Result " + s)
   console.log(solveNumsLabelsToDisplay)
 
 
   return (
-    <div className="bg-white drop-shadow-lg h-100 p-5 rounded-md border-2 border-gray-200">
-      <h1 className = "text-xl mb-2 pb-2 text-gray-600">Most Recent {solvesToDisplay.length} solves</h1>
+    <div className = " bg-white rounded-md drop-shadow-lg p-5 border-2 border-gray-200">
       
-      <Line data = {{
+    <h1 className = "text-xl mb-2  text-gray-600">{props.dataForGraph.title}</h1>
+    <div className="h-80">
+      
+      <Line
+        data = {{
         labels: solveNumsLabelsToDisplay,
         datasets: [
           {
@@ -29,6 +33,9 @@ const SolvesLineGraph = (props) => {
       }}
 
       options = {{
+          layout: {
+            autoPadding: true,
+          },
           responsive: true,
           maintainAspectRatio: false,
           plugins : {
@@ -54,6 +61,7 @@ const SolvesLineGraph = (props) => {
             }
           }
         }}/>
+    </div>
     </div>
 
   )
@@ -83,21 +91,25 @@ export const Stats = (props) => {
 }
   const stats = props.stats 
   const eventStats = stats[event]
+  const displayableData = [
 
-  const createEmptyEventStats = () => ({
-    bestTimes: [],
-    bestAvgs: [],
-    solves: [],
-    numRoundsDone: 0,
-    avgPlacing: 0,
-    avgCompetitorsInRound: 0,
-    podiumCount: [0, 0, 0],
-  });
+    {
+      data : eventStats.solves,
+     title: "Most recent " + eventStats.solves.length + " solves"
+    },
+
+    {
+      data : eventStats.prAvgHistory,
+      title: "History of PR Averages"
+    }
+  ]
+  const [dataForGraphIndex, setDataForGraphIndex] = useState(0)
+
 
   const resetStats = () => {
     setStats(prev => ({
       ...prev,
-      [event]: createEmptyEventStats(),
+      [event]: defaultStats(),
     }))
   }
 
@@ -112,7 +124,7 @@ export const Stats = (props) => {
           <TopResultsSection className=""  type = {"Averages"} topTimes = {eventStats.bestAvgs}/>
         </span> 
         <span className="col-span-3">
-          <SolvesLineGraph eventStats ={eventStats}/>
+          <SolvesLineGraph dataForGraph ={displayableData[dataForGraphIndex]}/>
         </span>
         
         <span className="col-span-1">
@@ -121,9 +133,14 @@ export const Stats = (props) => {
       </div>
 
       <div className = "grid grid-cols-7 gap-2 w-full">
-        <span className = "col-span-6">
-          <CompStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
+        <span className = "col-span-1">
+          <ChangeGraphDataButton setDataForGraphIndex = {setDataForGraphIndex} dataForGraphIndex = {dataForGraphIndex} numTypesOfData = {displayableData.length}/> 
         </span>
+        <span className = "col-span-5">
+          <CompSummaryStats eventStats = {eventStats} event = {event} times = {eventStats.solves}/>
+        </span>
+
+
         <span className = "col-span-1">
           <ResetButton resetStats = {resetStats}/>
         </span>
@@ -131,6 +148,15 @@ export const Stats = (props) => {
         
 
     </section>
+  )
+}
+
+
+const ChangeGraphDataButton = ({setDataForGraphIndex, dataForGraphIndex, numTypesOfData}) => {
+  const newIndex = (dataForGraphIndex + 1) % numTypesOfData
+
+  return (
+    <button type="" onClick = {() => setDataForGraphIndex(newIndex)} className = "bg-green-400 h-full w-full text-white drop-shadow-md rounded-md text-2xl">Change Displayed Data</button>
   )
 }
 
@@ -142,7 +168,7 @@ const ResetButton = ({resetStats}) => {
   )
 }
 
-const CompStats = ({eventStats, event, times}) => {
+const CompSummaryStats = ({eventStats, event, times}) => {
   const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
   const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
   
