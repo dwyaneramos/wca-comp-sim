@@ -8,10 +8,10 @@ import {PLAYER_ID} from "../utils/constants.js"
 export const SelectCubers = ({changePage, setCompetitors, competitors}) => {
 
   return (
-    <div className= "flex content-center h-screen justify-center items-center mt-5">
+    <div className= "flex content-center h-screen justify-center items-center pt-10">
       
       <div className ="flex items-center flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
-                        w-[95vw] overflow-x-hidden sm:w-3xl h-[85vh]">
+                        w-[95vw] overflow-x-hidden  sm:w-3xl h-200">
           <h1 className="text-2xl pb-3 pt-15">Add your competitors</h1>
           <SearchBar setCompetitors = {setCompetitors} competitors = {competitors}/>
           <button onClick={() => changePage("Game")} type="" className=" bg-green-500 py-2 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
@@ -38,7 +38,8 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
 
       {
         competitors.length > 0 &&
-      <div className = "flex  gap-2 justify-center overflow-y-scroll content-start flex-wrap flex-row h-90">
+      <div className = "flex  gap-2 justify-center  overflow-y-scroll 
+            content-start flex-wrap flex-row h-90">
 
         {competitors.map((cuber) => {
           if (cuber.id !== PLAYER_ID) {

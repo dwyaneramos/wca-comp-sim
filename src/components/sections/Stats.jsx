@@ -161,7 +161,7 @@ const ChangeGraphDataButton = ({setDataForGraphIndex, dataForGraphIndex, numType
   const newIndex = (dataForGraphIndex + 1) % numTypesOfData
 
   return (
-    <button type="" onClick = {() => setDataForGraphIndex(newIndex)} className = "bg-green-400 h-full w-full text-white drop-shadow-md rounded-md text-2xl">Change Displayed Data</button>
+    <button type="" onClick = {() => setDataForGraphIndex(newIndex)} className = "bg-green-400 p-2 h-full w-full text-white drop-shadow-md rounded-md text-2xl">Change Displayed Data</button>
   )
 }
 
@@ -180,7 +180,7 @@ const CompSummaryStats = ({eventStats, event, times}) => {
   const mean = times.reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
   return (
-    <div className = " flex flex-row text-lg items-center w-full place-content-between bg-white drop-shadow-lg  rounded-md p-3 border-2 border-gray-200">
+    <div className = " flex gap-4 text-center flex-row text-lg items-center w-full place-content-between bg-white drop-shadow-lg  rounded-md p-3 border-2 border-gray-200">
       <div className = "">
         <h2 className = "text-gray-600">Competitions</h2>
         <p>Simulated {eventStats.numRoundsDone} rounds</p>
@@ -233,13 +233,15 @@ const CompSummaryStats = ({eventStats, event, times}) => {
 
 const TopResultsSection = ({type, topTimes}) => {
   return (
-    <div className = "white p-2 rounded-md drop-shadow-md border-2 border-gray-200 bg-white">
-      <h1 className = "text-xl mb-5 font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
+    <div className = "white p-2 h-full rounded-md drop-shadow-md border-2 border-gray-200 bg-white">
+      <h1 className = "text-xl mb-5 text-center font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
-        <h2 className = "bg-green-400 drop-shadow-lg py-3 w-50 text-center rounded-lg text-white font-semibold text-6xl">
-          {formatTime(topTimes[0])}</h2>
-          <h3 className = "font-semibold mb-4 text-gray-600 ">Personal Best</h3>
+        <h2 className = "bg-green-400 drop-shadow-lg py-3 lg:w-45 w-30 text-center rounded-lg text-white font-semibold text-6xl">
+          {formatTime(topTimes[0])}
+        </h2>
+        <h3 className = "font-semibold mb-4 text-gray-600 ">Personal Best</h3>
+
         {(topTimes.slice(1, 5)).map((time, idx) => {
           return (
             <div key = {idx} className = "flex place-content-between 

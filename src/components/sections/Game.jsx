@@ -144,7 +144,7 @@ export const Game = (props) => {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return c1.avg - c2.avg})
   }
   return (
-    <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-full bg-white">
+    <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
       <div className = "flex flex-row gap-2 mt-10 mb-2">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 "  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
@@ -168,11 +168,15 @@ export const Game = (props) => {
         <button type="" className = "bg-green-500 p-2 rounded-md cursor-pointer text-white" onClick = {() => saveTimes(setStats, event, competitors)}>Rematch</button>
         */}
       </div>
+      
 
       <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
-      <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
-        competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}/>
-      {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
+
+      <div className="overflow-y-scroll h-[50vh]">
+        <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
+          competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}/>
+        {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
+      </div>
     </section>
   )
 } 

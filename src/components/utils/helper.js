@@ -56,7 +56,6 @@ export const genSuffix = (number) => {
 }
 
 export const convertTime = (time) => {
-  console.log(time, 'sajdsa')
   if (time === "DNF") {
     time = DNF;
   } else if (time.includes("+")) {
@@ -100,9 +99,9 @@ export const formatTime = (time) => {
   if (time == DNF) {
     time = "DNF";
   } else if (time > 60) {
-    time = convertToMMSS(time) + "s"
+    time = convertToMMSS(time) 
   } else {
-    time = time.toFixed(2) + "s"
+    time = time.toFixed(2) 
   }
   return time
 
