@@ -7,9 +7,13 @@ import {genSuffix, formatTime, defaultStats} from "../utils/helper.js"
 const SolvesLineGraph = (props) => {
   const solveNums = Array.from({length: props.dataForGraph.data.length}, (_, i ) => i + 1)
   const xRecentSolves = 10
-  const solvesToDisplay = props.dataForGraph.data.slice(-xRecentSolves)
+  const solvesToDisplay = props.dataForGraph.data.slice(-xRecentSolves).map((solve, idx) => ({
+    x : idx,
+    y : solve.time,
+    date: solve.date
+  }))
   const solveNumsLabelsToDisplay = (solveNums.slice(-xRecentSolves)).map((s) => "Result " + s)
-  console.log(solveNumsLabelsToDisplay)
+  console.log(solvesToDisplay)
 
 
   return (
@@ -45,9 +49,11 @@ const SolvesLineGraph = (props) => {
           tooltip: {
             displayColors: false,
             callbacks: {
-              label: (ogTime) => {
-                const value = ogTime.parsed.y;
-                return `Time: ${value.toFixed(2)}`;
+              label: (data) => {
+                const value = data.raw.y 
+                const date = data.raw.date
+                return [ `Time: ${value.toFixed(2)}`, 
+                         `Date: ${date}`];
                 }
               }
             },

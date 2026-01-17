@@ -83,7 +83,16 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
   }
 
     const eventStats = prevStats[event]
-    const newSolves = [...eventStats.solves, ...player.times]
+    const currDate = new Date(Date.now()).toLocaleString().split(",")[0]
+    const timesWithDates =  Array.from(
+                            player.times.map(t => ({
+                              time : t, 
+                              date: currDate 
+                                })
+                          ))
+    
+    const newSolves = [...eventStats.solves, ...timesWithDates]
+
     let newBestTimes = [...eventStats.bestTimes, ...player.times]
     newBestTimes.sort(compareNumbers)
     newBestTimes = newBestTimes.slice(0, 5)
@@ -96,12 +105,12 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
     const newNumRoundsDone = eventStats.numRoundsDone + 1
     const newAvgRank = (eventStats.avgPlacing * eventStats.numRoundsDone + rank) / newNumRoundsDone
     const newNumCompetitors = (eventStats.avgCompetitorsInRound * eventStats.numRoundsDone + competitorsInRound) / newNumRoundsDone
-    const newPrAvgHistory = eventStats.prAvgHistory.length == 0 ? [player.avg] : 
-                        (eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1] <= player.avg ? eventStats.prAvgHistory : [...eventStats.prAvgHistory, player.avg])
+    const newPrAvgHistory = eventStats.prAvgHistory.length == 0 ? [{time: player.avg, date: currDate }] : 
+                        (eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1].time <= player.avg ? eventStats.prAvgHistory : [...eventStats.prAvgHistory, {time: player.avg, date: currDate}])
     
     const bestSingleThatRound = Math.min(...player.times)
-    const newPrSinHistory = eventStats.prSinHistory.length == 0 ? [bestSingleThatRound] : 
-                        (eventStats.prSinHistory[eventStats.prSinHistory.length - 1] <= bestSingleThatRound ? eventStats.prSinHistory : [...eventStats.prSinHistory, bestSingleThatRound])
+    const newPrSinHistory = eventStats.prSinHistory.length == 0 ? [{time: bestSingleThatRound, date: currDate}] : 
+                        (eventStats.prSinHistory[eventStats.prSinHistory.length - 1].time <= bestSingleThatRound ? eventStats.prSinHistory : [...eventStats.prSinHistory, {time: bestSingleThatRound, date: currDate}])
     let newPodiumCount = [...eventStats.podiumCount] 
     if (rank >= 1 && rank <= 3) {
       newPodiumCount[rank - 1]++;
