@@ -183,7 +183,7 @@ const CompSummaryStats = ({eventStats, event, times}) => {
   const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
   const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
   
-  const mean = times.reduce((acc, curr) => acc + curr, 0) / times.length 
+  const mean = times.map((res) => res.time).reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
   return (
     <div className = " flex gap-4 text-center flex-row text-lg items-center w-full place-content-between bg-white drop-shadow-lg  rounded-md p-3 border-2 border-gray-200">
