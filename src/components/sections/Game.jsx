@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef} from "react";
 import {validateTime, formatTime, convertTime, convertToMMSS} from "../utils/helper.js"
+import {InspectionTimer} from "../utils/timer"
 import { FaArrowRight } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
@@ -38,8 +39,10 @@ export const Game = (props) => {
   const [scramble, setScramble] = useState("Loading scramble...")
   const [endOfRound, setEndOfRound] = useState(false);
 
+  const [inspectionOn, setInspection] = useState(false);
 
 
+  
   const updateKeyPress = (e) => {
     const char = e.key 
   } 
@@ -52,10 +55,6 @@ export const Game = (props) => {
     solveNumRef.current = solveNum;
   }, [solveNum]);
 
-
-  useEffect(()=> {
-    console.log(competitors)
-  }, [competitors])
 
   useEffect(() => {
     return () => {
@@ -130,6 +129,19 @@ export const Game = (props) => {
     
   }
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === "INPUT") return;
+      if (e.key === " ") setInspection(prev => !prev);
+    } ;
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+
+  }, []);
+
+
 
 
 
@@ -155,8 +167,11 @@ export const Game = (props) => {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return c1.avg - c2.avg})
   }
   return (
-    <section className = "flex flex-col pt-20 items-center gap-3  w-screen h-screen bg-white">
+    <section className = "flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white">
+      {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
       <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
+
+
       <div className = "flex flex-row gap-2 mt-10 mb-2">
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter") submitTime(timeInput)}}  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
