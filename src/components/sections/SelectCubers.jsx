@@ -81,6 +81,8 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
 const SearchBar = ({setCompetitors, competitors}) => {
   const [input, setInput] = useState("")
   const [searchResults, setSearchResults] = useState([])
+  const [highlightedCuberIndex, setCuberIndex] = useState(0)
+
 
   const Search = async (searchInput) => {
     const results = await searchCubers(input, competitors)
@@ -108,9 +110,25 @@ const SearchBar = ({setCompetitors, competitors}) => {
     setCompetitors((prev) => addCompetitor(prev, newPlayer))
   }
 
+  useEffect(() => {
+    console.log(highlightedCuberIndex)
+  }, [highlightedCuberIndex])
+
+  const handleKeyInput = (e) => {
+    const char = e.key
+    if (char === "ArrowDown") {
+      setCuberIndex((highlightedCuberIndex + 1) % searchResults.length)
+    } else if (char === "ArrowUp") {
+      setCuberIndex(highlightedCuberIndex == 0 ? searchResults.length - 1 : highlightedCuberIndex - 1)
+    } else if (char === "Enter") {
+      addPlayer(searchResults[highlightedCuberIndex])
+    }
+    console.log(char)
+  }
+
   const resultsBorder = searchResults.length > 0 ? "border-2 border-gray-200" : ""
   return (
-    <div className = "relative w-sm z-1 flex justify-center ">
+    <div className = "relative w-sm z-1 flex justify-center " onKeyDown = {(e) => handleKeyInput(e)}>
       <div className = "flex flex-row justify-center">
         <input onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
               className = "bg-gray-100 border-2 border-gray-300 rounded-md text-xl p-2 w-2xs sm:w-sm"/>
@@ -118,10 +136,10 @@ const SearchBar = ({setCompetitors, competitors}) => {
       </div>
 
       <div className = {`absolute flex mt-15 w-70 sm:w-full flex-col bg-gray-100 my-2 ${resultsBorder}`}>
-        {searchResults.map((cuber) => {
+        {searchResults.map((cuber, idx) => {
           return (
-            <div  key = {cuber.id} className = "flex flex-row hover:bg-gray-300 p-2 bg-gray-100 cursor-pointer"
-                  onClick={() => addPlayer(cuber)}>
+            <div key = {cuber.id} className = {` ${highlightedCuberIndex == idx ? "bg-gray-200": "" } flex flex-row p-2 bg-gray-100 cursor-pointer`}
+                  onClick={() => addPlayer(cuber)} onMouseEnter={()=>setCuberIndex(idx)}>
               
               <div className =  "w-40 sm:w-3xs truncate text-md sm:text-xl pr-5 ">
 
@@ -130,6 +148,7 @@ const SearchBar = ({setCompetitors, competitors}) => {
               <div className = "text-gray-700">
                 {cuber.id} 
               </div>
+
             </div>
           )
         })} 
