@@ -1,6 +1,49 @@
 # WCA Competition Simulator (Website Ver.)
 
-## To-Do List
+Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubing-comp-round-sim) before, but decided to make a website in order to learn React/JavaScript while also making it more accessible to more people and devices.
+
+## How to run this on your computer?
+
+### Website
+
+[Live Server Link](https://dwyaneramos.github.io/wca-comp-sim/)
+
+### Running it locally
+
+1. Clone this repository
+2. Run `npm install` on the same directory as this repository folder to install the necessary dependencies
+3. In the same directory, run `npm run dev` to locally run the app.
+4. Enjoy!
+
+## Keyboard Shortcuts
+
+| Key   | Action    |
+|--------------- | --------------- |
+| Enter   | Either enters the selected cuber or your time   |
+| Space | Starts/Stops the inspection timer in the game page |
+|↑ ↓| Navigate the search results|
+
+## Additional Notes
+
+- FMC and MBLD have yet to be properly implemented
+- You must click on the search result (or Enter) to add a particular cuber.
+- You can search for a cuber by entering in their name or their WCA ID.
+- The module used to generate scrambles (Cubing JS) uses D, B and L moves in 2x2. However, all scrambles are random-state except for big cubes and megaminx.
+- Not possible to use the inspection timer feature on tablets/phones
+
+## Tech Stack / Dependencices
+
+- React / JavaScript
+- TailwindCSS
+- React Icons
+- ChartJS
+- Cubing JS Module
+
+## Acknowledgements
+
+This app relies on the WCA Rest API made by Robin Ingelbrecht for simulating players' times
+
+## To-Do List (can be ignored)
 
 ### Starting Page
 
@@ -26,7 +69,7 @@
 - [X] make sure you can't enter a really big time
 - [X] save stats when clicking home (not just when rematching)
 - [X] Scale  std.dev for different events
-- [ ] Implement inspection timer
+- [X] Implement inspection timer
 - [X] Implement Mo3
 
 ### Stats Page
@@ -41,16 +84,4 @@
 - [X] Make it look nice
 - [X] Change colours for 4th/5th results
 - [X] Be able to reset results
-- [ ] Show dates of times
-
-### Etc
-
-- [ ] Show some notes on how cubing js scrambles (e.g., using L moves in 2x2)
-
-## Tech Stack
-
-- React / JavaScript
-- TailwindCSS
-- React Icons
-- ChartJS
-- Cubing JS Module
+- [X] Show dates of times

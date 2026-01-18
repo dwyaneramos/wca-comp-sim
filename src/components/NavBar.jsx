@@ -68,7 +68,6 @@ const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {
     { name: "Square-1", code: "sq1" },
     { name: "4x4x4 Blindfolded", code: "444bf" },
     { name: "5x5x5 Blindfolded", code: "555bf" },
-    { name: "3x3x3 Multi-Blind", code: "333mbf" }
   ];
   return (
     <select defaultValue = {defaultEvent} disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>

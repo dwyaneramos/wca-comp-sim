@@ -4,7 +4,6 @@ const TEN_MINS = 600
 
 const MMSSFORMAT = /^0?\d:[0-5]?\d\.\d*\d$/ 
 
-
 const events = ["333",  
                "222",  
                "444",  

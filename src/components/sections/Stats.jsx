@@ -101,7 +101,7 @@ export const Stats = (props) => {
 
     {
       data : eventStats.solves,
-     title: "Most recent " + eventStats.solves.length + " solves"
+     title: "Most recent " + Math.min(10, eventStats.solves.length) + " solves"
     },
 
     {

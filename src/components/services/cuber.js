@@ -1,4 +1,4 @@
-import {DNF, INVALID_TIMES} from "../utils/constants.js"
+import {DNF, INVALID_TIMES } from "../utils/constants.js"
 
 export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null) => {
   return {
@@ -108,9 +108,12 @@ export const genRandomTime = (mean, event) => {
   "skewb": "sprint",
   "444bf": "bld",
   "555bf": "bld",
-  "333mbf": "bld",
-
 }
+  const dnfChance = eventCategory[event] == "bld" ? 0.5: 0.03 
+  const roll = Math.random()
+  if (roll <= dnfChance) {
+    return DNF
+  }
   
   const stdDev = eventStdDevFactor[eventCategory[event]] * mean
 

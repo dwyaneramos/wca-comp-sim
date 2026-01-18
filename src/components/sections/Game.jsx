@@ -1,7 +1,7 @@
 import {useState, useEffect, useRef} from "react";
 import {validateTime, formatTime, convertTime, convertToMMSS} from "../utils/helper.js"
 import {InspectionTimer} from "../utils/timer"
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
@@ -42,13 +42,15 @@ export const Game = (props) => {
   const [inspectionOn, setInspection] = useState(false);
 
 
-  
+  {/*
+
   const updateKeyPress = (e) => {
     const char = e.key 
   } 
   useEffect(() => {
     document.addEventListener('keydown', updateKeyPress)
   }, [])
+  */} 
   
 
   useEffect(() => {
@@ -169,10 +171,14 @@ export const Game = (props) => {
   return (
     <section className = "flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white">
       {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
-      <h1 className="text-3xl pt-20 px-20">{scramble}</h1> 
+      <h1 className="text-3xl pt-20 px-20 text-center">{scramble}</h1> 
 
 
       <div className = "flex flex-row gap-2 mt-10 mb-2">
+
+        <button type="" className="cursor-pointer bg-gray-200 rounded-md p-1"  onClick={()=>setInspection(prev => !prev)}>
+          <FaStopwatch size={30}/>
+        </button>
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter") submitTime(timeInput)}}  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
           className = {`${endOfRound ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
@@ -180,9 +186,14 @@ export const Game = (props) => {
         </button>
       </div>
 
-      <button type="" disabled={!endOfRound} 
-        className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-400 text-gray-200"} mb-2 w-sm p-2 rounded-md `} 
-        onClick = {() => resetRound()}>Rematch</button>
+
+        
+
+        <button type="" disabled={!endOfRound} 
+          className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"} mb-2 w-sm p-2 rounded-md `} 
+
+          onClick = {() => resetRound()}>Rematch</button>
+
 
       <div className = "flex flex-row gap-5">
         <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
