@@ -84,14 +84,17 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
 
     const eventStats = prevStats[event]
     const currDate = new Date(Date.now()).toLocaleString().split(",")[0]
-    const timesWithDates =  Array.from(
-                            player.times.map(t => ({
+    let startIdx = eventStats.solves.length == 0 ? 1 : (eventStats.solves[eventStats.solves.length - 1]).idx + 1
+    const timesWithInfo =  Array.from(
+                            player.times.map((t, i) => ({
                               time : t, 
-                              date: currDate 
+                              date: currDate,
+                              idx: startIdx + i
+
                                 })
                           ))
     
-    const newSolves = [...eventStats.solves, ...timesWithDates]
+    const newSolves = [...eventStats.solves, ...timesWithInfo]
 
     let newBestTimes = [...eventStats.bestTimes, ...player.times]
     newBestTimes.sort(compareNumbers)

@@ -2,18 +2,21 @@ import {useState, useEffect} from "react"
 import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
 import {genSuffix, formatTime, defaultStats} from "../utils/helper.js"
+import {DNF} from "../utils/constants.js"
 
 
 const SolvesLineGraph = (props) => {
-  const solveNums = Array.from({length: props.dataForGraph.data.length}, (_, i ) => i + 1)
-  const xRecentSolves = 10
-  const solvesToDisplay = props.dataForGraph.data.slice(-xRecentSolves).map((solve, idx) => ({
+  const numRecentSolves = 10
+  const xRecentSolves = props.dataForGraph.data.slice(-numRecentSolves).map((solve, idx) => ({
     x : idx,
     y : solve.time,
-    date: solve.date
+    date: solve.date,
+    idx: solve.idx
   }))
-  const solveNumsLabelsToDisplay = (solveNums.slice(-xRecentSolves)).map((s) => "Result " + s)
+  console.log(xRecentSolves)
+  const solvesToDisplay = xRecentSolves.filter((solve) => solve.y != DNF)
   console.log(solvesToDisplay)
+  const solveNumsLabelsToDisplay = (solvesToDisplay.map((s) => "Result " + s.idx))
 
 
   return (
