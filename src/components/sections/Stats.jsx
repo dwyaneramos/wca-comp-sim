@@ -24,7 +24,7 @@ const SolvesLineGraph = (props) => {
     <div className = " bg-white rounded-md drop-shadow-lg p-5 border-2 border-gray-200">
       
     <h1 className = "text-xl mb-2  text-gray-600">{props.dataForGraph.title}</h1>
-    <div className="h-80">
+    <div className="h-85">
       
       <Line
         data = {{
@@ -33,7 +33,7 @@ const SolvesLineGraph = (props) => {
           {
             label: "Time",
             data: solvesToDisplay,
-            tension: 0.3,
+            tension: 0.1,
             borderColor: "#35de5d"
           }
         ]
@@ -119,7 +119,7 @@ export const Stats = (props) => {
     }
   ]
   const [dataForGraphIndex, setDataForGraphIndex] = useState(0)
-
+  
 
   const resetStats = () => {
     setStats(prev => ({
@@ -186,6 +186,8 @@ const ResetButton = ({resetStats}) => {
 const CompSummaryStats = ({eventStats, event, times}) => {
   const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
   const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
+
+  const moXAo5 = eventStats.tenRecentAvgs.length == 0 ? "N/A" : formatTime(eventStats.tenRecentAvgs.reduce((acc, curr) => acc + curr, 0 ) / eventStats.tenRecentAvgs.length)
   
   const mean = times.map((res) => res.time).reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
@@ -224,8 +226,8 @@ const CompSummaryStats = ({eventStats, event, times}) => {
       </div>
 
       <div className = "">
-        <h2 className = "text-gray-600">Mean Time</h2>
-        <p>{formatTime(mean)}</p>
+        <h2 className = "text-gray-600">Mo{Math.min(10, eventStats.tenRecentAvgs.length)}Ao5</h2>
+        <p>{moXAo5}</p>
       </div>
 
       <div className = "">
@@ -243,7 +245,7 @@ const CompSummaryStats = ({eventStats, event, times}) => {
 
 const TopResultsSection = ({type, topTimes}) => {
   return (
-    <div className = "white p-2 h-full rounded-md drop-shadow-md border-2 border-gray-200 bg-white">
+    <div className = "white p-2 pb-5 h-full rounded-md drop-shadow-md border-2 border-gray-200 bg-white">
       <h1 className = "text-xl mb-5 text-center font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
