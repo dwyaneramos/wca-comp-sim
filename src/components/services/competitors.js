@@ -1,5 +1,5 @@
 import {createSimCuber, createPlayer, genPlayerWPABPA, genPlayerAvg} from '../services/cuber.js'
-import {PLAYER_ID, MO3_EVENTS} from "../utils/constants.js"
+import {PLAYER_ID, MO3_EVENTS, EVENTS} from "../utils/constants.js"
 
 
 
@@ -46,7 +46,7 @@ export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound) => 
     updatedPlayer = createPlayer(newTimes, bpa, wpa, avg);
     
   } else {
-    updatedPlayer = createPlayer(newTimes,)
+    updatedPlayer = createPlayer(newTimes)
   }
 
   return updatedPlayer;
@@ -76,6 +76,16 @@ export const isCuberInList = (competitorList, c) => {
   }
   return false;
 }
+
+
+export const defaultStats = () => {
+  return { bestTimes: [], bestAvgs: [], solves: [], numRoundsDone: 0, avgPlacing: 0, avgCompetitorsInRound: 0, podiumCount : [0, 0, 0], tenRecentAvgs: [], prAvgHistory: [], prSinHistory: [] }
+}
+
+
+export const startingStats = Object.fromEntries(
+  EVENTS.map(ev => [ev, defaultStats()])
+)
 
 export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRound) => {
   function compareNumbers(a, b) {
@@ -114,6 +124,8 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
     const bestSingleThatRound = Math.min(...player.times)
     const newPrSinHistory = eventStats.prSinHistory.length == 0 ? [{time: bestSingleThatRound, date: currDate}] : 
                         (eventStats.prSinHistory[eventStats.prSinHistory.length - 1].time <= bestSingleThatRound ? eventStats.prSinHistory : [...eventStats.prSinHistory, {time: bestSingleThatRound, date: currDate}])
+
+    const newTenRecentAvgs = tenRecentAvgs.length >= 10 ? [...(tenRecentAvgs.slice(1)), player.avg] : [...tenRecentAvgs, player.avg]
     let newPodiumCount = [...eventStats.podiumCount] 
     if (rank >= 1 && rank <= 3) {
       newPodiumCount[rank - 1]++;
@@ -130,6 +142,7 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
         avgPlacing : newAvgRank,
         avgCompetitorsInRound : newNumCompetitors,
         podiumCount : newPodiumCount,
+        tenRecentAvgs : newTenRecentAvgs,
         prAvgHistory : newPrAvgHistory,
         prSinHistory : newPrSinHistory
         

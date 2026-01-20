@@ -1,7 +1,8 @@
 import {useState, useEffect} from "react"
 import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
-import {genSuffix, formatTime, defaultStats} from "../utils/helper.js"
+import {genSuffix, formatTime } from "../utils/helper.js"
+import {defaultStats} from "../services/competitors.js"
 import {DNF} from "../utils/constants.js"
 
 
@@ -197,7 +198,7 @@ const CompSummaryStats = ({eventStats, event, times}) => {
 
       <div className = "">
         <h2 className = "text-gray-600">Total Solves Done</h2>
-        <p>{eventStats.solves.length} solves</p>
+        <p>{eventStats.solves.filter((solve) => solve.time != DNF).length} solves</p>
       </div>
 
       <div className = "flex flex-col items-center">

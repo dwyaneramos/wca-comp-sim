@@ -1,5 +1,21 @@
 
 
+export const EVENTS = ["333",  
+               "222",  
+               "444",  
+               "555",  
+               "666",  
+               "777",  
+               "333bf",
+               "333oh",
+               "333ft",
+               "clock",
+               "minx", 
+               "pyram",
+               "skewb",
+               "sq1",  
+               "444bf",
+               "555bf"]
 
 export const PLAYER_ID = "Player"
 export const DNF = 999
