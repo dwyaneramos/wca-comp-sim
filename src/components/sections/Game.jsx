@@ -133,7 +133,6 @@ export const Game = (props) => {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.target.tagName === "INPUT") return;
       if (e.key === " ") setInspection(prev => !prev);
     } ;
 
@@ -179,7 +178,8 @@ export const Game = (props) => {
         <button type="" className="cursor-pointer bg-gray-200 rounded-md p-1"  onClick={()=>setInspection(prev => !prev)}>
           <FaStopwatch size={30}/>
         </button>
-        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}  name="time" value={timeInput} onChange={(e) => setTime(e.target.value)}/>
+        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
+          name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
           className = {`${endOfRound ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
           <FaArrowRight color = {`${endOfRound ? "white" : "black"}`}/>
