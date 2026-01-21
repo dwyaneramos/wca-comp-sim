@@ -7,7 +7,7 @@ import {DNF} from "../utils/constants.js"
 
 
 const SolvesLineGraph = (props) => {
-  const numRecentSolves = 10
+  const numRecentSolves = 25
   const xRecentSolves = props.dataForGraph.data.slice(-numRecentSolves).map((solve, idx) => ({
     x : idx,
     y : solve.time,

@@ -50,8 +50,6 @@ export const genPlayerAvg = (times, numSolves) => {
     return false;
 
   }
-  console.log("NUM SOLVES", numSolves)
-
   
   const avg = hasMultipleDNFs(times) ? DNF : 
               (numSolves == 5 ?  (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3 :

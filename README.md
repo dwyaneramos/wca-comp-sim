@@ -79,6 +79,7 @@ This app relies on the WCA Rest API made by Robin Ingelbrecht for simulating pla
 - [X] Scale  std.dev for different events
 - [X] Implement inspection timer
 - [X] Implement Mo3
+- [ ] Be able to start inspection while input bar is focused
 - [ ] Calculate StdDev properly instead of it depending on cuber's recent mean of solves
 
 ### Stats Page

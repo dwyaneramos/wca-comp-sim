@@ -118,12 +118,14 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
     const newNumRoundsDone = eventStats.numRoundsDone + 1
     const newAvgRank = (eventStats.avgPlacing * eventStats.numRoundsDone + rank) / newNumRoundsDone
     const newNumCompetitors = (eventStats.avgCompetitorsInRound * eventStats.numRoundsDone + competitorsInRound) / newNumRoundsDone
-    const newPrAvgHistory = eventStats.prAvgHistory.length == 0 ? [{time: player.avg, date: currDate }] : 
-                        (eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1].time <= player.avg ? eventStats.prAvgHistory : [...eventStats.prAvgHistory, {time: player.avg, date: currDate}])
+    const newPrAvgHistory = eventStats.prAvgHistory.length == 0 ? [{time: player.avg, date: currDate, idx : 1 }] : 
+                        (eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1].time <= player.avg ? eventStats.prAvgHistory :
+                          [...eventStats.prAvgHistory, {time: player.avg, date: currDate, idx : eventStats.prAvgHistory[eventStats.prAvgHistory.length - 1].idx + 1}])
     
     const bestSingleThatRound = Math.min(...player.times)
-    const newPrSinHistory = eventStats.prSinHistory.length == 0 ? [{time: bestSingleThatRound, date: currDate}] : 
-                        (eventStats.prSinHistory[eventStats.prSinHistory.length - 1].time <= bestSingleThatRound ? eventStats.prSinHistory : [...eventStats.prSinHistory, {time: bestSingleThatRound, date: currDate}])
+    const newPrSinHistory = eventStats.prSinHistory.length == 0 ? [{time: bestSingleThatRound, date: currDate, idx : 1}] : 
+                        (eventStats.prSinHistory[eventStats.prSinHistory.length - 1].time <= bestSingleThatRound ? eventStats.prSinHistory :
+                      [...eventStats.prSinHistory, {time: bestSingleThatRound, date: currDate, idx : eventStats.prSinHistory[eventStats.prSinHistory.length - 1].idx + 1}])
 
     const newTenRecentAvgs = eventStats.tenRecentAvgs.length >= 10 ? [...(eventStats.tenRecentAvgs.slice(1)), player.avg] : [...eventStats.tenRecentAvgs, player.avg]
     let newPodiumCount = [...eventStats.podiumCount] 
