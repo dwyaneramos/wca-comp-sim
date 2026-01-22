@@ -97,31 +97,36 @@ export const genRandomTime = (mean, event) => {
 
   }
 
-  const eventCategory = {
-  "222": "sprint",
-  "333": "sprint",
-  "444": "med",
-  "555": "big",
-  "666": "big",
-  "777": "big",
-  "333oh": "sprint",
-  "333bf": "bld",
-  "clock": "sprint",
-  "minx": "big",
-  "pyram": "sprint",
-  "skewb": "sprint",
-  "444bf": "bld",
-  "555bf": "bld",
-}
-  const dnfChance = eventCategory[event] == "bld" ? 0.5: 0.03 
+
+  const eventInfo = {
+    "222":   { category: "sprint", bias: 1.00 },
+    "333":   { category: "sprint", bias: 1.10  },
+    "444":   { category: "med",    bias: 1.00 },
+    "555":   { category: "big",    bias: 1.00 },
+    "666":   { category: "big",    bias: 1.00 },
+    "777":   { category: "big",    bias: 1.00 },
+
+    "333oh": { category: "sprint", bias: 1.20 },
+
+    "333bf": { category: "bld",    bias: 1.00 },
+    "444bf": { category: "bld",    bias: 1.00 },
+    "555bf": { category: "bld",    bias: 1.00 },
+
+    "clock": { category: "sprint", bias: 1.00 },
+    "minx":  { category: "big",    bias: 1.00 },
+    "pyram": { category: "sprint", bias: 1.00 },
+    "skewb": { category: "sprint", bias: 1.00 },
+  };
+
+  const dnfChance = eventInfo[event] == "bld" ? 0.5: 0.03 
   const roll = Math.random()
   if (roll <= dnfChance) {
     return DNF
   }
   
-  const stdDev = eventStdDevFactor[eventCategory[event]] * mean
+  const stdDev = eventStdDevFactor[eventInfo[event].category] * mean
 
-  const time = randLogNormal(mean, stdDev)
+  const time = randLogNormal(mean, stdDev) * eventInfo[event].bias
   return time
   //const stdDev = 0.8
   //const time = z * stdDev + mean;
