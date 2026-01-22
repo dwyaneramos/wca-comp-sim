@@ -126,7 +126,7 @@ export const Game = (props) => {
         }))
       setTime("")
     } else {
-      setErrorPopup("Invalid time or time is greater than 10 mins")
+      setErrorPopup("Invalid Time")
     }
     
   }

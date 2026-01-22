@@ -16,12 +16,33 @@ export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, a
 
 }
 
+const isDNFed = (times, numSolves) => {
+  let dnfCount = 0;
+  for (const t of times) {
+    if (t == DNF) {
+      dnfCount++;
+    }
+
+    if ((dnfCount > 1) || (dnfCount == 1 & numSolves == 3)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export const genPlayerWPABPA = (timesWOLastSolve, numSolves) => {
 {/*
   Instead of a wpa and bpa for MO3 events, it will just be the average of the first 2 solves, hence why wpa and bpa are the same
 */}
-  const bpa = numSolves == 5 ? ((timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3) : 
+  let bpa = -1;
+  if (isDNFed(timesWOLastSolve, numSolves)) {
+      bpa = DNF;
+  } else {
+
+    bpa = numSolves == 5 ? ((timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3) : 
                                 (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0) / 2);
+  }
+  
 
   let wpa = -1;
   if (timesWOLastSolve.includes(DNF)) {
@@ -36,23 +57,7 @@ export const genPlayerWPABPA = (timesWOLastSolve, numSolves) => {
 
 export const genPlayerAvg = (times, numSolves) => {
   console.log("GENNING AVG", numSolves)
-
-  const isDNFed = (times) => {
-    let dnfCount = 0;
-    for (const t of times) {
-      if (t == DNF) {
-        dnfCount++;
-      }
-
-      if ((dnfCount > 1) || (dnfCount == 1 & numSolves == 3)) {
-        return true;
-      }
-    }
-    return false;
-
-  }
-  
-  const avg = isDNFed(times) ? DNF : 
+  const avg = isDNFed(times, numSolves) ? DNF : 
               (numSolves == 5 ?  (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3 :
                                 (times.reduce((acc, curr) => acc + curr, 0) / 3))
   return avg

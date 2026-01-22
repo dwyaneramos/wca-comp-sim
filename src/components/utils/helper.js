@@ -2,7 +2,7 @@
 import {DNF} from "./constants.js"
 const TEN_MINS = 600
 
-const MMSSFORMAT = /^0?\d:[0-5]?\d\.\d*\d$/ 
+const MMSSFORMAT = /^[0-5]?\d:[0-5]?\d\.\d*\d$/ 
 
 
 export const genSuffix = (number) => {
@@ -55,12 +55,7 @@ export const validateTime = (time) => {
   if ( (isNaN(time) && !time.includes("+") && time !== "DNF" && !MMSSFORMAT.test(time) ) || time <= 0) {
     console.log("Not a number")
     return false
-  } else if (Number.parseFloat(time) > TEN_MINS) {
-    console.log("Number too big")
-    return false
-  }
-
-  else {
+  }else {
     return true;
   }
 }
