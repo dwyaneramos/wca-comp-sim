@@ -5,7 +5,7 @@ import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {PLAYER_ID, DNF, MO3_EVENTS} from "../utils/constants.js"
+import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 
 const genScramble = async (event) => {
@@ -162,7 +162,7 @@ export const Game = (props) => {
     sortedCompetitorsRef.current = sortedCompetitors;
   }, [sortedCompetitors]);
 
-  if (solveNum >= 1 && solveNum <= numSolvesInRound - 1 && areCubersRanked) {
+  if ((solveNum >= 1 && solveNum <= numSolvesInRound - 1 && areCubersRanked) || BLD_EVENTS.includes(event)) {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return Math.min(...c1.times.slice(0,solveNum)) - Math.min(...c2.times.slice(0,solveNum))} )
   } else if (solveNum == numSolvesInRound) {
     sortedCompetitors = [...competitors].sort(function(c1, c2) {return c1.avg - c2.avg})
@@ -314,7 +314,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   let avgToDisplay = "";
   if (solveNum == numSolvesInRound - 1) {
       const displayedWPA = cuber.wpa == DNF ? "DNF": cuber.wpa.toFixed(2) 
-      avgToDisplay = numSolvesInRound == 3 ? formatTime(cuber.bpa) : formatTime(cuber.bpa) + " / " + formatTime(cuber.wpa)
+      avgToDisplay = numSolvesInRound == 3 ? formatTime(cuber.wpa) : formatTime(cuber.bpa) + " / " + formatTime(cuber.wpa)
   } else if (solveNum > numSolvesInRound - 1 ) {
       avgToDisplay = formatTime(cuber.avg)
   } else {
