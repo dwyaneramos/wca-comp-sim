@@ -5,7 +5,7 @@ import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {fetchRecords, checkIfSinRecord, checkIfAvgRecord} from "../services/records.js"
+import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, countryToContinent} from "../services/records.js"
 import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 
@@ -60,11 +60,35 @@ export const Game = (props) => {
           for (let i = 0; i < solveNum; i++) {
             const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country)
             if (isRecord == "NR") {
-              currRecords.nationalRecords[c.country] = {
+                currRecords.nationalRecords[c.country] = {
                 ...currRecords.nationalRecords[c.country],
                 sin : c.times[i]
-              }
-            }
+                }
+            } else if (isRecord == "CR") {
+                currRecords.nationalRecords[c.country] = {
+                ...currRecords.nationalRecords[c.country],
+                sin : c.times[i]
+                }
+                currRecords.continentalRecords[countryToContinent[c.country]] = {
+                ...currRecords.continentalRecords[countryToContinent[c.country]],
+                sin : c.times[i]
+                }
+            } else if (isRecord == "WR") {
+                currRecords.nationalRecords[c.country] = {
+                ...currRecords.nationalRecords[c.country],
+                sin : c.times[i]
+                }
+                currRecords.continentalRecords[countryToContinent[c.country]] = {
+                ...currRecords.continentalRecords[countryToContinent[c.country]],
+                sin : c.times[i]
+                }
+
+                currRecords.worldRecords = {
+                ...currRecords.worldRecords,
+                sin : c.times[i]
+                }
+
+          }
           }
       }
       console.log("SETTING THEM RECORDS")
@@ -80,7 +104,30 @@ export const Game = (props) => {
                 ...currRecords.nationalRecords[c.country],
                 avg : c.avg
               }
-            }
+        } else if (isRecord == "CR") {
+              currRecords.continentalRecords[countryToContinent[c.country]] = {
+                ...currRecords.continentalRecords[countryToContinent[c.country]],
+                avg : c.avg
+              }
+              currRecords.nationalRecords[c.country] = {
+                ...currRecords.nationalRecords[c.country],
+                avg : c.avg
+              }
+        } else if (isRecord == "WR") {
+              currRecords.worldRecords = {
+                ...currRecords.worldRecords,
+                avg : c.avg
+              }
+              currRecords.continentalRecords[countryToContinent[c.country]] = {
+                  ...currRecords.continentalRecords[countryToContinent[c.country]],
+                  avg : c.avg
+                }
+                currRecords.nationalRecords[c.country] = {
+                ...currRecords.nationalRecords[c.country],
+                avg : c.avg
+              }
+        }
+
       }
     }
     }

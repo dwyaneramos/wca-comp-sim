@@ -1,6 +1,6 @@
 
 
-const countryToContinent = {
+export const countryToContinent = {
   // africa
   DZ: "africa",
   AO: "africa",
@@ -212,15 +212,27 @@ const countryToContinent = {
 export const checkIfAvgRecord = (time, records, country) => {
   if (records === null) {
     return false
+  } else if (time <= records.worldRecords.avg) {
+    return "WR"
+  } else if (time <= records.continentalRecords[countryToContinent[country]].avg) {
+    return "CR"
   } else if (time <= records.nationalRecords[country].avg) {
     return "NR"
+  } else {
+    return false
   }
 }
 export const checkIfSinRecord = (time, records, country) => {
   if (records === null) {
     return false
+  } else if (time <= records.worldRecords.sin) {
+    return "WR"
+  } else if (time <= records.continentalRecords[countryToContinent[country]].sin) {
+    return "CR"
   } else if (time <= records.nationalRecords[country].sin) {
     return "NR"
+  } else {
+    return false
   }
 }
 
