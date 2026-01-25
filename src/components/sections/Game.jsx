@@ -43,68 +43,100 @@ export const Game = (props) => {
   const [inspectionOn, setInspection] = useState(false);
 
   const [records, setRecords] = useState(null)
+  const ogRecordsRef = useRef(null)
   useEffect(() => {
   (async () => {
     const r = await fetchRecords(competitors, event);
     setRecords(r);
+    ogRecordsRef.current = structuredClone(r)
   })();
 }, [event]);
 
 
   useEffect(() => {
     if (records !== null) {
-      let currRecords = structuredClone(records)
 
-      for (const c of competitors) {
+setRecords(prevRecords => {
+  if (!prevRecords) return prevRecords;
 
-          for (let i = 0; i < solveNum; i++) {
-            const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country)
-            if (isRecord == "NR" || isRecord == "CR" || isRecord == "WR") {
-                currRecords.nationalRecords[c.country] = {
-                ...currRecords.nationalRecords[c.country],
-                sin : c.times[i]
-                }
-            } else if (isRecord == "CR" || isRecord == "WR") {
-                currRecords.continentalRecords[countryToContinent[c.country]] = {
-                ...currRecords.continentalRecords[countryToContinent[c.country]],
-                sin : c.times[i]
-                }
-            } else if (isRecord == "WR") {
-                currRecords.worldRecords = {
-                ...currRecords.worldRecords,
-                sin : c.times[i]
-                }
+    const currRecords = structuredClone(prevRecords);
 
-          }
-          }
-      }
+    for (const c of competitors) {
+      for (let i = 0; i < solveNum; i++) {
+        const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
 
-    
-
-    if (solveNum === numSolvesInRound) {
-      for (const c of competitors) {
-        const isRecord = checkIfAvgRecord(c.avg, currRecords, c.country)
-        if (isRecord == "NR" || isRecord == "CR" || isRecord == "WR") {
-              currRecords.nationalRecords[c.country] = {
-                ...currRecords.nationalRecords[c.country],
-                avg : c.avg
-              }
-        } else if (isRecord == "CR" || isRecord == "WR") {
-              currRecords.continentalRecords[countryToContinent[c.country]] = {
-                ...currRecords.continentalRecords[countryToContinent[c.country]],
-                avg : c.avg
-              }
-        } else if (isRecord == "WR") {
-              currRecords.worldRecords = {
-                ...currRecords.worldRecords,
-                avg : c.avg
-              }
+        if (isRecord === "NR" || isRecord === "CR" || isRecord === "WR") {
+          currRecords.nationalRecords[c.country] = {
+            ...currRecords.nationalRecords[c.country],
+            sin: c.times[i],
+          };
         }
 
+        if (isRecord === "CR" || isRecord === "WR") {
+          currRecords.continentalRecords[countryToContinent[c.country]] = {
+            ...currRecords.continentalRecords[
+              countryToContinent[c.country]
+            ],
+            sin: c.times[i],
+          };
         }
-      }
-      setRecords(currRecords)
+
+        if (isRecord === "WR") {
+          currRecords.worldRecords = {
+            ...currRecords.worldRecords,
+            sin: c.times[i],
+          };
+        }
     }
+  }
+
+  // averages
+  if (solveNum === numSolvesInRound) {
+    for (const c of competitors) {
+      const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
+
+      if (isAvgRecord === "NR" || isAvgRecord === "CR" || isAvgRecord === "WR") {
+        currRecords.nationalRecords[c.country] = {
+          ...currRecords.nationalRecords[c.country],
+          avg: c.avg,
+        };
+      }
+
+      if (isAvgRecord === "CR" || isAvgRecord === "WR") {
+        currRecords.continentalRecords[countryToContinent[c.country]] = {
+          ...currRecords.continentalRecords[
+            countryToContinent[c.country]
+          ],
+          avg: c.avg,
+        };
+      }
+
+      if (isAvgRecord === "WR") {
+        currRecords.worldRecords = {
+          ...currRecords.worldRecords,
+          avg: c.avg,
+        };
+      }
+    }
+  }
+
+  return currRecords;
+});
+    }
+
+
+    solveNumRef.current = solveNum;
+
+
+    if (solveNum == numSolvesInRound) {
+      setViewOtherTimes(true);
+      setEndOfRound(true)
+
+    } else {
+      setScramble(genScramble(event));
+    }
+
+
 
   }, [solveNum])
   
@@ -122,12 +154,6 @@ export const Game = (props) => {
   }, [])
   */} 
   
-
-  useEffect(() => {
-    solveNumRef.current = solveNum;
-  }, [solveNum]);
-
-
   useEffect(() => {
     return () => {
       console.log(solveNumRef.current, sortedCompetitorsRef.current)
@@ -138,18 +164,6 @@ export const Game = (props) => {
 
   }, [])
   
-
-  useEffect(() => {
-    if (solveNum == numSolvesInRound) {
-      setViewOtherTimes(true);
-      setEndOfRound(true)
-
-    } else {
-      setScramble(genScramble(event));
-    }
-
-  }, [solveNum])
-
 
   function editTime (time, idx) {
 
@@ -223,6 +237,7 @@ export const Game = (props) => {
     saveTimes()
     setSolveNum(0)
     setEndOfRound(false);
+    setRecords(structuredClone(ogRecordsRef.current))
     await resetCompetitors()
     
   }
