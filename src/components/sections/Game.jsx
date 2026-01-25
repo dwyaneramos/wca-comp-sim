@@ -263,14 +263,14 @@ setRecords(prevRecords => {
 
       <div className = "flex flex-row gap-2 mt-10 mb-2">
 
-        <button type="" className="cursor-pointer bg-gray-200 rounded-md p-1"  onClick={()=>setInspection(prev => !prev)}>
-          <FaStopwatch size={30}/>
+        <button type="" className="cursor-pointer bg-green-500 rounded-md p-1"  onClick={()=>setInspection(prev => !prev)}>
+          <FaStopwatch size={30} color = {"white"}/>
         </button>
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
           name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
-          className = {`${endOfRound ?  "bg-gray-300" : "bg-blue-200 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
-          <FaArrowRight color = {`${endOfRound ? "white" : "black"}`}/>
+          className = {`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
+          <FaArrowRight color = {`${endOfRound ? "#374151" : "white"}`}/>
         </button>
       </div>
 
