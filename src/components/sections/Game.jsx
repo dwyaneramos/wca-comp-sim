@@ -59,30 +59,17 @@ export const Game = (props) => {
 
           for (let i = 0; i < solveNum; i++) {
             const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country)
-            if (isRecord == "NR") {
+            if (isRecord == "NR" || isRecord == "CR" || isRecord == "WR") {
                 currRecords.nationalRecords[c.country] = {
                 ...currRecords.nationalRecords[c.country],
                 sin : c.times[i]
                 }
-            } else if (isRecord == "CR") {
-                currRecords.nationalRecords[c.country] = {
-                ...currRecords.nationalRecords[c.country],
-                sin : c.times[i]
-                }
+            } else if (isRecord == "CR" || isRecord == "WR") {
                 currRecords.continentalRecords[countryToContinent[c.country]] = {
                 ...currRecords.continentalRecords[countryToContinent[c.country]],
                 sin : c.times[i]
                 }
             } else if (isRecord == "WR") {
-                currRecords.nationalRecords[c.country] = {
-                ...currRecords.nationalRecords[c.country],
-                sin : c.times[i]
-                }
-                currRecords.continentalRecords[countryToContinent[c.country]] = {
-                ...currRecords.continentalRecords[countryToContinent[c.country]],
-                sin : c.times[i]
-                }
-
                 currRecords.worldRecords = {
                 ...currRecords.worldRecords,
                 sin : c.times[i]
@@ -91,26 +78,20 @@ export const Game = (props) => {
           }
           }
       }
-      console.log("SETTING THEM RECORDS")
-      setRecords(currRecords)
 
     
 
     if (solveNum === numSolvesInRound) {
       for (const c of competitors) {
         const isRecord = checkIfAvgRecord(c.avg, currRecords, c.country)
-        if (isRecord == "NR") {
+        if (isRecord == "NR" || isRecord == "CR" || isRecord == "WR") {
               currRecords.nationalRecords[c.country] = {
                 ...currRecords.nationalRecords[c.country],
                 avg : c.avg
               }
-        } else if (isRecord == "CR") {
+        } else if (isRecord == "CR" || isRecord == "WR") {
               currRecords.continentalRecords[countryToContinent[c.country]] = {
                 ...currRecords.continentalRecords[countryToContinent[c.country]],
-                avg : c.avg
-              }
-              currRecords.nationalRecords[c.country] = {
-                ...currRecords.nationalRecords[c.country],
                 avg : c.avg
               }
         } else if (isRecord == "WR") {
@@ -118,18 +99,11 @@ export const Game = (props) => {
                 ...currRecords.worldRecords,
                 avg : c.avg
               }
-              currRecords.continentalRecords[countryToContinent[c.country]] = {
-                  ...currRecords.continentalRecords[countryToContinent[c.country]],
-                  avg : c.avg
-                }
-                currRecords.nationalRecords[c.country] = {
-                ...currRecords.nationalRecords[c.country],
-                avg : c.avg
-              }
         }
 
+        }
       }
-    }
+      setRecords(currRecords)
     }
 
   }, [solveNum])
@@ -425,7 +399,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   const recordColorLookup = {
             "WR" : "text-red-400",
             "NR" : "text-green-600",
-            "CR" : "text-yellow-400",
+            "CR" : "text-yellow-600",
             false : "text-black"
           }
 
