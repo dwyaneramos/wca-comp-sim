@@ -210,15 +210,15 @@ export const countryToContinent = {
 };
 
 
-const applyRecord(records, recordType, result, country) {
-  if (isRecord === "NR" || isRecord === "CR" || isRecord === "WR") {
+const applyRecord = (records, recordType, result, country) => {
+  if (recordType === "NR" || recordType === "CR" || recordType === "WR") {
     records.nationalRecords[country] = {
       ...records.nationalRecords[country],
       [recordType] : result,
     }
   }
 
-  if (isRecord === "CR" || isRecord === "WR") {
+  if (recordType === "CR" || recordType === "WR") {
     const continent = countryToContinent[country]      
     records.continentalRecords[continent] = {
       ...currRecords.continentalRecords[continent],
@@ -226,7 +226,7 @@ const applyRecord(records, recordType, result, country) {
     }
   }
 
-  if (isRecord === "WR") {
+  if (recordType === "WR") {
     currRecords.worldRecords = {
       ...currRecords.worldRecords,
       [recordType] : result,
@@ -244,7 +244,7 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
       // check single
       for (let i = 0; i < solveNum; i++) {
         const isSinRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
-        if (isRecord !== false) {
+        if (isSinRecord !== false) {
           applyRecord(currRecords, isSinRecord, c.times[i], c.country)
         }
 
