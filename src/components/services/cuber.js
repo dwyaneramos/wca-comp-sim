@@ -1,6 +1,6 @@
 import {DNF, INVALID_TIMES } from "../utils/constants.js"
 
-export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null) => {
+export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null, country = null) => {
   return {
     id: id,
     name: name,
@@ -8,11 +8,12 @@ export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa
     avg: avg,
     bpa: bpa,
     wpa: wpa,
+    country: country
   }
 }
 
-export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, avg = null) => {
-  return createCuber("Player", "Player", times, bpa, wpa, avg)
+export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, avg = null, country = null) => {
+  return createCuber("Player", "Player", times, bpa, wpa, avg, country)
 
 }
 
@@ -83,7 +84,7 @@ export const createSimCuber = async (cuber, event, numSolves) => {
   const avg = genPlayerAvg(times, numSolves);
   const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolves);
 
-  return createCuber(cuber.id, cuber.name, times, bpa, wpa, avg)
+  return createCuber(cuber.id, cuber.name, times, bpa, wpa, avg, cuber.country)
 
 }
 

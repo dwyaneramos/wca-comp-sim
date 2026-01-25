@@ -5,6 +5,7 @@ import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
+import {fetchRecords, checkIfRecord} from "../services/records.js"
 import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 
@@ -41,6 +42,42 @@ export const Game = (props) => {
 
   const [inspectionOn, setInspection] = useState(false);
 
+  const [records, setRecords] = useState(null)
+  useEffect(() => {
+  (async () => {
+    const r = await fetchRecords(competitors, event);
+    setRecords(r);
+  })();
+}, [event]);
+
+
+  useEffect(() => {
+    if (records !== null) {
+      let currRecords = structuredClone(records)
+
+      for (const c of competitors) {
+        if (c.id !== PLAYER_ID) {
+
+          for (let i = 0; i < solveNum; i++) {
+            const isRecord = checkIfRecord(c.times[i], records, c.country)
+            if (isRecord == "NR") {
+              currRecords.nationalRecords[c.country] = {
+                ...currRecords.nationalRecords[c.country],
+                sin : c.times[i]
+              }
+
+            }
+          }
+        }
+      }
+      setRecords(currRecords)
+    }
+
+  }, [solveNum])
+  
+  useEffect(() => {
+    console.log("JEJEJJEJEJJE", records)
+  }, [records])
 
   {/*
 
@@ -125,6 +162,9 @@ export const Game = (props) => {
           
         }))
       setTime("")
+
+
+
     } else {
       setErrorPopup("Invalid Time")
     }
@@ -211,7 +251,8 @@ export const Game = (props) => {
 
       <div className="overflow-y-scroll h-[50vh]">
         <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
-          competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}/>
+          competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}
+          setRecords = {setRecords} records = {records}/>
         {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
       </div>
     </section>
@@ -220,7 +261,7 @@ export const Game = (props) => {
 
 
 
-const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup, numSolvesInRound}) => {
+const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup, numSolvesInRound, setRecords, records}) => {
   return (
     <div className="flex flex-col gap-2 mb-10">
       {competitors.map((cuber, idx) => {
@@ -228,7 +269,8 @@ const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPot
         return (
           <div key = {cuber.id}>
             <PlayerRow cuber = {cuber} solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
-              canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup} rank = {idx} numSolvesInRound = {numSolvesInRound}/> 
+              canViewPotentialAvg = {canViewPotentialAvg} setShowPopup={setShowPopup} rank = {idx} numSolvesInRound = {numSolvesInRound}
+              setRecords = {setRecords} records={records}/> 
           </div>
         )
       })}
@@ -310,7 +352,7 @@ const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
   }
 }
 
-const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup, rank, numSolvesInRound}) => {
+const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, setShowPopup, rank, numSolvesInRound, setRecords, time, records}) => {
   let avgToDisplay = "";
   if (solveNum == numSolvesInRound - 1) {
       const displayedWPA = cuber.wpa == DNF ? "DNF": cuber.wpa.toFixed(2) 
@@ -357,9 +399,18 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {cuber.id !== PLAYER_ID && 
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
+          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country) : false;
+
+          const recordColorLookup = {
+            "WR" : "text-red-400",
+            "NR" : "text-green-600",
+            "CR" : "text-yellow-400",
+            false : "text-black"
+
+          }
 
           return (
-            <div key = {idx} className = "text-center">
+            <div key = {idx} className = {`text-center ${recordColorLookup[isRecord]}`}>
               {timeToDisplay}
             </div>
           )

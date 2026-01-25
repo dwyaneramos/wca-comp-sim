@@ -11,7 +11,7 @@ export const ExtractPlayers =  async () => {
 
   const apiLink = `https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons.json`;
   let pageNum = 1;
-  let maxPageNum = 100;
+  let maxPageNum = 279;
   try {
 
     while (pageNum <= maxPageNum) {
@@ -22,7 +22,8 @@ export const ExtractPlayers =  async () => {
       for (const cuber of json.items) {
         const dataToPush = {
           "name" : cuber.name,
-          "id" : cuber.id
+          "id" : cuber.id,
+          "country" : cuber.country
         }
         dataJSON.cubers.push(dataToPush)
         //console.log(dataToPush)
