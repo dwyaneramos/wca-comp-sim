@@ -209,6 +209,75 @@ export const countryToContinent = {
   VU: "oceania"
 };
 
+
+export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRound) => {
+  if (!prevRecords) return prevRecords;
+    let currRecords = structuredClone(prevRecords);
+
+    for (const c of competitors) {
+      // check single
+      for (let i = 0; i < solveNum; i++) {
+        const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
+
+        if (isRecord === "NR" || isRecord === "CR" || isRecord === "WR") {
+          currRecords.nationalRecords[c.country] = {
+            ...currRecords.nationalRecords[c.country],
+            sin: c.times[i],
+          };
+        }
+
+        if (isRecord === "CR" || isRecord === "WR") {
+          currRecords.continentalRecords[countryToContinent[c.country]] = {
+            ...currRecords.continentalRecords[
+              countryToContinent[c.country]
+            ],
+            sin: c.times[i],
+          };
+        }
+
+        if (isRecord === "WR") {
+          currRecords.worldRecords = {
+            ...currRecords.worldRecords,
+            sin: c.times[i],
+          };
+        }
+    }
+  }
+
+  // averages
+  if (solveNum === numSolvesInRound) {
+    for (const c of competitors) {
+      const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
+
+      if (isAvgRecord === "NR" || isAvgRecord === "CR" || isAvgRecord === "WR") {
+        currRecords.nationalRecords[c.country] = {
+          ...currRecords.nationalRecords[c.country],
+          avg: c.avg,
+        };
+      }
+
+      if (isAvgRecord === "CR" || isAvgRecord === "WR") {
+        currRecords.continentalRecords[countryToContinent[c.country]] = {
+          ...currRecords.continentalRecords[
+            countryToContinent[c.country]
+          ],
+          avg: c.avg,
+        };
+      }
+
+      if (isAvgRecord === "WR") {
+        currRecords.worldRecords = {
+          ...currRecords.worldRecords,
+          avg: c.avg,
+        };
+      }
+    }
+  }
+
+  return currRecords
+
+}
+
 export const checkIfAvgRecord = (time, records, country) => {
   if (records === null) {
     return false
@@ -235,6 +304,7 @@ export const checkIfSinRecord = (time, records, country) => {
     return false
   }
 }
+
 
 
 export const fetchRecords = async (competitors, event) => {

@@ -3,9 +3,9 @@ import {validateTime, formatTime, convertTime, convertToMMSS} from "../utils/hel
 import {InspectionTimer} from "../utils/timer"
 import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
-import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
+import {createPlayerWithNewTime, savePlayerTimes, rankCompetitors} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, countryToContinent} from "../services/records.js"
+import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, countryToContinent, updateRecords} from "../services/records.js"
 import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 
@@ -39,94 +39,27 @@ export const Game = (props) => {
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
   const [endOfRound, setEndOfRound] = useState(false);
-
   const [inspectionOn, setInspection] = useState(false);
 
   const [records, setRecords] = useState(null)
   const ogRecordsRef = useRef(null)
+
+  // set records
   useEffect(() => {
-  (async () => {
-    const r = await fetchRecords(competitors, event);
-    setRecords(r);
-    ogRecordsRef.current = structuredClone(r)
-  })();
+    const fetchAllRecords = async () => {
+      const r = await fetchRecords(competitors, event);
+      setRecords(r);
+      ogRecordsRef.current = structuredClone(r);
+    }
+    fetchAllRecords();
 }, [event]);
-
-
   useEffect(() => {
     if (records !== null) {
 
-setRecords(prevRecords => {
-  if (!prevRecords) return prevRecords;
-
-    const currRecords = structuredClone(prevRecords);
-
-    for (const c of competitors) {
-      for (let i = 0; i < solveNum; i++) {
-        const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
-
-        if (isRecord === "NR" || isRecord === "CR" || isRecord === "WR") {
-          currRecords.nationalRecords[c.country] = {
-            ...currRecords.nationalRecords[c.country],
-            sin: c.times[i],
-          };
-        }
-
-        if (isRecord === "CR" || isRecord === "WR") {
-          currRecords.continentalRecords[countryToContinent[c.country]] = {
-            ...currRecords.continentalRecords[
-              countryToContinent[c.country]
-            ],
-            sin: c.times[i],
-          };
-        }
-
-        if (isRecord === "WR") {
-          currRecords.worldRecords = {
-            ...currRecords.worldRecords,
-            sin: c.times[i],
-          };
-        }
+      setRecords(prevRecords => updateRecords(prevRecords, competitors, solveNum, numSolvesInRound));
     }
-  }
-
-  // averages
-  if (solveNum === numSolvesInRound) {
-    for (const c of competitors) {
-      const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
-
-      if (isAvgRecord === "NR" || isAvgRecord === "CR" || isAvgRecord === "WR") {
-        currRecords.nationalRecords[c.country] = {
-          ...currRecords.nationalRecords[c.country],
-          avg: c.avg,
-        };
-      }
-
-      if (isAvgRecord === "CR" || isAvgRecord === "WR") {
-        currRecords.continentalRecords[countryToContinent[c.country]] = {
-          ...currRecords.continentalRecords[
-            countryToContinent[c.country]
-          ],
-          avg: c.avg,
-        };
-      }
-
-      if (isAvgRecord === "WR") {
-        currRecords.worldRecords = {
-          ...currRecords.worldRecords,
-          avg: c.avg,
-        };
-      }
-    }
-  }
-
-  return currRecords;
-});
-    }
-
 
     solveNumRef.current = solveNum;
-
 
     if (solveNum == numSolvesInRound) {
       setViewOtherTimes(true);
@@ -243,18 +176,12 @@ setRecords(prevRecords => {
   }
 
 
-  let sortedCompetitors = [...competitors];
   const sortedCompetitorsRef = useRef([]);
-
+  let sortedCompetitors = rankCompetitors(competitors, solveNum, numSolvesInRound, event, areCubersRanked)
   useEffect(() => {
     sortedCompetitorsRef.current = sortedCompetitors;
   }, [sortedCompetitors]);
 
-  if ((solveNum >= 1 && solveNum <= numSolvesInRound - 1 && areCubersRanked) || BLD_EVENTS.includes(event)) {
-    sortedCompetitors = [...competitors].sort(function(c1, c2) {return Math.min(...c1.times.slice(0,solveNum)) - Math.min(...c2.times.slice(0,solveNum))} )
-  } else if (solveNum == numSolvesInRound) {
-    sortedCompetitors = [...competitors].sort(function(c1, c2) {return c1.avg - c2.avg})
-  }
   return (
     <section className = "flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white">
       {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }

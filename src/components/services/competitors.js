@@ -1,8 +1,15 @@
 import {createSimCuber, createPlayer, genPlayerWPABPA, genPlayerAvg} from '../services/cuber.js'
-import {PLAYER_ID, MO3_EVENTS, EVENTS} from "../utils/constants.js"
+import {PLAYER_ID, MO3_EVENTS, EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
-
-
+export const rankCompetitors = (competitors, solveNum, numSolvesInRound, event, areCubersRanked) => {
+  let sortedCompetitors = [...competitors];
+  if ((solveNum >= 1 && solveNum <= numSolvesInRound - 1 && areCubersRanked) || BLD_EVENTS.includes(event)) {
+    sortedCompetitors = sortedCompetitors.sort(function(c1, c2) {return Math.min(...c1.times.slice(0,solveNum)) - Math.min(...c2.times.slice(0,solveNum))} )
+  } else if (solveNum == numSolvesInRound) {
+    sortedCompetitors = sortedCompetitors.sort(function(c1, c2) {return c1.avg - c2.avg})
+  }
+  return sortedCompetitors
+}
 
 export const simulateAllCompetitors = async (competitorList, event) => {
    const numSolves = MO3_EVENTS.includes(event) ? 3 : 5
