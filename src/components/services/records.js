@@ -210,6 +210,32 @@ export const countryToContinent = {
 };
 
 
+const applyRecord(records, recordType, result, country) {
+  if (isRecord === "NR" || isRecord === "CR" || isRecord === "WR") {
+    records.nationalRecords[country] = {
+      ...records.nationalRecords[country],
+      [recordType] : result,
+    }
+  }
+
+  if (isRecord === "CR" || isRecord === "WR") {
+    const continent = countryToContinent[country]      
+    records.continentalRecords[continent] = {
+      ...currRecords.continentalRecords[continent],
+      [recordType] : result,
+    }
+  }
+
+  if (isRecord === "WR") {
+    currRecords.worldRecords = {
+      ...currRecords.worldRecords,
+      [recordType] : result,
+    };
+  }
+
+
+}
+
 export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRound) => {
   if (!prevRecords) return prevRecords;
     let currRecords = structuredClone(prevRecords);
@@ -217,62 +243,22 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
     for (const c of competitors) {
       // check single
       for (let i = 0; i < solveNum; i++) {
-        const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
-
-        if (isRecord === "NR" || isRecord === "CR" || isRecord === "WR") {
-          currRecords.nationalRecords[c.country] = {
-            ...currRecords.nationalRecords[c.country],
-            sin: c.times[i],
-          };
+        const isSinRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
+        if (isRecord !== false) {
+          applyRecord(currRecords, isSinRecord, c.times[i], c.country)
         }
 
-        if (isRecord === "CR" || isRecord === "WR") {
-          currRecords.continentalRecords[countryToContinent[c.country]] = {
-            ...currRecords.continentalRecords[
-              countryToContinent[c.country]
-            ],
-            sin: c.times[i],
-          };
-        }
-
-        if (isRecord === "WR") {
-          currRecords.worldRecords = {
-            ...currRecords.worldRecords,
-            sin: c.times[i],
-          };
-        }
-    }
-  }
-
-  // averages
-  if (solveNum === numSolvesInRound) {
-    for (const c of competitors) {
-      const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
-
-      if (isAvgRecord === "NR" || isAvgRecord === "CR" || isAvgRecord === "WR") {
-        currRecords.nationalRecords[c.country] = {
-          ...currRecords.nationalRecords[c.country],
-          avg: c.avg,
-        };
       }
-
-      if (isAvgRecord === "CR" || isAvgRecord === "WR") {
-        currRecords.continentalRecords[countryToContinent[c.country]] = {
-          ...currRecords.continentalRecords[
-            countryToContinent[c.country]
-          ],
-          avg: c.avg,
-        };
-      }
-
-      if (isAvgRecord === "WR") {
-        currRecords.worldRecords = {
-          ...currRecords.worldRecords,
-          avg: c.avg,
-        };
+    // check average if applicable
+    if (solveNum === numSolvesInRound) {
+        const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
+        if (isAvgRecord !== false) {
+        applyRecord(currRecords, isAvgRecord, c.avg, c.country)
       }
     }
   }
+
+
 
   return currRecords
 

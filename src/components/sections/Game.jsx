@@ -58,7 +58,6 @@ export const Game = (props) => {
 
       setRecords(prevRecords => updateRecords(prevRecords, competitors, solveNum, numSolvesInRound));
     }
-
     solveNumRef.current = solveNum;
 
     if (solveNum == numSolvesInRound) {
