@@ -210,33 +210,33 @@ export const countryToContinent = {
 };
 
 
-const applyRecord = (records, recordType, result, country) => {
-  if (recordType === "NR" || recordType === "CR" || recordType === "WR") {
-    records.nationalRecords[country] = {
-      ...records.nationalRecords[country],
-      [recordType] : result,
+
+const applyRecord = (records, recordType, AvgOrSin, result, country) => {
+    if (recordType === "NR" || recordType === "CR" || recordType === "WR") {
+      records.nationalRecords[country] = {
+        ...records.nationalRecords[country],
+        [AvgOrSin] : result,
+      }
+    }
+
+    if (recordType === "CR" || recordType === "WR") {
+      const continent = countryToContinent[country]      
+      records.continentalRecords[continent] = {
+        ...records.continentalRecords[continent],
+        [AvgOrSin] : result,
+      }
+    }
+
+    if (recordType === "WR") {
+      records.worldRecords = {
+        ...records.worldRecords,
+        [AvgOrSin] : result,
+      };
     }
   }
-
-  if (recordType === "CR" || recordType === "WR") {
-    const continent = countryToContinent[country]      
-    records.continentalRecords[continent] = {
-      ...currRecords.continentalRecords[continent],
-      [recordType] : result,
-    }
-  }
-
-  if (recordType === "WR") {
-    currRecords.worldRecords = {
-      ...currRecords.worldRecords,
-      [recordType] : result,
-    };
-  }
-
-
-}
 
 export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRound) => {
+
   if (!prevRecords) return prevRecords;
     let currRecords = structuredClone(prevRecords);
 
@@ -245,7 +245,7 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
       for (let i = 0; i < solveNum; i++) {
         const isSinRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
         if (isSinRecord !== false) {
-          applyRecord(currRecords, isSinRecord, c.times[i], c.country)
+          applyRecord(currRecords, isSinRecord, "sin", c.times[i], c.country)
         }
 
       }
@@ -253,7 +253,7 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
     if (solveNum === numSolvesInRound) {
         const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
         if (isAvgRecord !== false) {
-        applyRecord(currRecords, isAvgRecord, c.avg, c.country)
+        applyRecord(currRecords, isAvgRecord, "avg", c.avg, c.country)
       }
     }
   }

@@ -53,6 +53,7 @@ export const Game = (props) => {
     }
     fetchAllRecords();
 }, [event]);
+
   useEffect(() => {
     if (records !== null) {
 
@@ -71,6 +72,10 @@ export const Game = (props) => {
 
 
   }, [solveNum])
+
+  useEffect(() => {
+    console.log("SJFDDSFHDSJ", records)
+  }, [records])
   
   
   useEffect(() => {
