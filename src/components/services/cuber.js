@@ -12,7 +12,7 @@ export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa
   }
 }
 
-export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, avg = null, country = null) => {
+export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, avg = null, country = "NZ") => {
   return createCuber("Player", "Player", times, bpa, wpa, avg, country)
 
 }

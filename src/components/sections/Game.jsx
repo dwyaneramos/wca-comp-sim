@@ -5,7 +5,7 @@ import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {fetchRecords, checkIfRecord} from "../services/records.js"
+import {fetchRecords, checkIfSinRecord, checkIfAvgRecord} from "../services/records.js"
 import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 
@@ -56,21 +56,33 @@ export const Game = (props) => {
       let currRecords = structuredClone(records)
 
       for (const c of competitors) {
-        if (c.id !== PLAYER_ID) {
 
           for (let i = 0; i < solveNum; i++) {
-            const isRecord = checkIfRecord(c.times[i], records, c.country)
+            const isRecord = checkIfSinRecord(c.times[i], currRecords, c.country)
             if (isRecord == "NR") {
               currRecords.nationalRecords[c.country] = {
                 ...currRecords.nationalRecords[c.country],
                 sin : c.times[i]
               }
-
             }
           }
-        }
       }
+      console.log("SETTING THEM RECORDS")
       setRecords(currRecords)
+
+    
+
+    if (solveNum === numSolvesInRound) {
+      for (const c of competitors) {
+        const isRecord = checkIfAvgRecord(c.avg, currRecords, c.country)
+        if (isRecord == "NR") {
+              currRecords.nationalRecords[c.country] = {
+                ...currRecords.nationalRecords[c.country],
+                avg : c.avg
+              }
+            }
+      }
+    }
     }
 
   }, [solveNum])
@@ -363,6 +375,18 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       avgToDisplay = "#####"
   }
 
+  const recordColorLookup = {
+            "WR" : "text-red-400",
+            "NR" : "text-green-600",
+            "CR" : "text-yellow-400",
+            false : "text-black"
+          }
+
+
+  const isAvgRecord = solveNum == numSolvesInRound ? checkIfAvgRecord(cuber.avg, records, cuber.country) : false
+  const avgColour = recordColorLookup[isAvgRecord]
+
+
   return (
     <div className = {`grid w-3xl ${numSolvesInRound == 3 ? "grid-cols-7" : "grid-cols-9"} border-2 border-gray-200 rounded-md items-center pr-2`}>
 
@@ -384,9 +408,11 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
 
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-                return (
+          const isRecord = idx + 1 <= solveNum ? checkIfSinRecord(time, records, cuber.country) : false;
+
+                 return (
             <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum ? false : true}
-              className = {`text-center ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
+              className = {`text-center ${recordColorLookup[isRecord]} ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
               {timeToDisplay}
             </button>
           )
@@ -399,16 +425,9 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {cuber.id !== PLAYER_ID && 
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country) : false;
+          const isRecord = idx + 1 <= solveNum ? checkIfSinRecord(time, records, cuber.country) : false;
 
-          const recordColorLookup = {
-            "WR" : "text-red-400",
-            "NR" : "text-green-600",
-            "CR" : "text-yellow-400",
-            false : "text-black"
-
-          }
-
+         
           return (
             <div key = {idx} className = {`text-center ${recordColorLookup[isRecord]}`}>
               {timeToDisplay}
@@ -417,10 +436,10 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
         })
       }
 
-      {/* Display BPA/WPA */}
+      {/* Display BPA/WPA/AVG */}
 
       {
-        <h1 className = {`${solveNum == cuber.times.length ? "text-black" : "text-gray-500"} text-wrap text-center`}>
+        <h1 className = {`${solveNum == cuber.times.length ? avgColour : "text-gray-500"} text-wrap text-center`}>
           {((canViewOtherTimes || cuber.id === PLAYER_ID) && canViewPotentialAvg) ? avgToDisplay : "#####"}
         </h1>
       }

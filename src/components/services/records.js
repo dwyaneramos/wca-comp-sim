@@ -209,7 +209,14 @@ const countryToContinent = {
   VU: "oceania"
 };
 
-export const checkIfRecord = (time, records, country) => {
+export const checkIfAvgRecord = (time, records, country) => {
+  if (records === null) {
+    return false
+  } else if (time <= records.nationalRecords[country].avg) {
+    return "NR"
+  }
+}
+export const checkIfSinRecord = (time, records, country) => {
   if (records === null) {
     return false
   } else if (time <= records.nationalRecords[country].sin) {
