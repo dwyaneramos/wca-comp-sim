@@ -5,10 +5,11 @@ import {genSuffix, formatTime } from "../utils/helper.js"
 import {defaultStats} from "../services/competitors.js"
 import {DNF} from "../utils/constants.js"
 
+const NUM_RECENT_SOLVES = 25 
 
 const SolvesLineGraph = (props) => {
-  const numRecentSolves = 25
-  const xRecentSolves = props.dataForGraph.data.slice(-numRecentSolves).map((solve, idx) => ({
+  const NUM_RECENT_SOLVES = 25
+  const xRecentSolves = props.dataForGraph.data.slice(-NUM_RECENT_SOLVES).map((solve, idx) => ({
     x : idx,
     y : solve.time,
     date: solve.date,
@@ -105,7 +106,7 @@ export const Stats = (props) => {
 
     {
       data : eventStats.solves,
-     title: "Most recent " + Math.min(10, eventStats.solves.length) + " solves"
+     title: "Most recent " + Math.min(25, eventStats.solves.length) + " solves"
     },
 
     {
