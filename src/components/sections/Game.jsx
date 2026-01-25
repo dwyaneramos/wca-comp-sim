@@ -39,6 +39,7 @@ export const Game = (props) => {
   const [timeInput, setTime] = useState("")
   const [scramble, setScramble] = useState("Loading scramble...")
   const [endOfRound, setEndOfRound] = useState(false);
+  const endOfRoundRef = useRef(endOfRound)
   const [inspectionOn, setInspection] = useState(false);
 
   const [records, setRecords] = useState(null)
@@ -53,6 +54,10 @@ export const Game = (props) => {
     }
     fetchAllRecords();
 }, [event]);
+
+  useEffect(() => {
+    endOfRoundRef.current = endOfRound
+  }, [endOfRound])
 
   useEffect(() => {
     if (records !== null) {
@@ -72,10 +77,6 @@ export const Game = (props) => {
 
 
   }, [solveNum])
-
-  useEffect(() => {
-    console.log("SJFDDSFHDSJ", records)
-  }, [records])
   
   
   useEffect(() => {
@@ -141,7 +142,7 @@ export const Game = (props) => {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === " ") setInspection(prev => !prev);
+      if (e.key === " " && !endOfRoundRef.current) setInspection(prev => !prev);
     } ;
 
     window.addEventListener("keydown", handleKeyDown);
@@ -178,8 +179,9 @@ export const Game = (props) => {
 
       <div className = "flex flex-row gap-2 mt-10 mb-2">
 
-        <button type="" className="cursor-pointer bg-green-500 rounded-md p-1"  onClick={()=>setInspection(prev => !prev)}>
-          <FaStopwatch size={30} color = {"white"}/>
+        <button type="" className={`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"} rounded-md p-1`}
+          disabled={endOfRound} onClick={()=>setInspection(prev => !prev)}>
+          <FaStopwatch size={30} color = {`${endOfRound ? "#374151" : "white"}`}/>
         </button>
 
         <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
