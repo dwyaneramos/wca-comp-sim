@@ -5,7 +5,7 @@ import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes, rankCompetitors} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, countryToContinent, updateRecords} from "../services/records.js"
+import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, updateRecords} from "../services/records.js"
 import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 

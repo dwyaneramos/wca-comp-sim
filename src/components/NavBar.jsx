@@ -1,9 +1,14 @@
 import {useState, useEffect} from "react";
+import {countryToFlag, countryToContinent} from "./services/nationality.js"
 
 
 export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent}) => {
   const selectEventCallback = (newEvent) => {
     setEvent(newEvent.target.value)
+  }
+
+  const selectCountryCallback = (newCountry) => {
+    console.log()
   }
 
   const isSmall = window.innerWidth < 500
@@ -37,6 +42,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
             <a href="#" onClick={()=>changePage("Home")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
             <a href="#" onClick={()=>changePage("Stats")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
           <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
+          <CountryDropdown disabled = {disabledEventDropdown} onChange = {selectCountryCallback} defaultEvent = {"NZ"}/>
           </div>
         </div>
 
@@ -48,6 +54,25 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
   )
 }
 
+
+
+const CountryDropdown = ({disabled, onChange, defaultCountry}) => {
+  const countriess = Object.keys(countryToContinent).map((c) => (
+    {
+      name : c,
+      flag: countryToFlag(c)
+    }
+  ))
+  return (
+    <select defaultCountry = {defaultCountry} disabled = {disabled}>
+      {countriess.map((c) => {
+        return (
+          <option value={c.name} key={c.name}>{c.name} {c.flag}</option>
+        )
+      })}
+    </select>
+  )
+}
 
 
 const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {
