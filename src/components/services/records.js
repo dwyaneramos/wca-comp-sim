@@ -1,4 +1,5 @@
-import {countryToContinent, countries} from "./nationality.js"
+import {countries} from "./nationality.js"
+import {DNF} from "../utils/constants.js"
 
 
 const applyRecord = (records, recordType, AvgOrSin, result, country) => {
@@ -90,42 +91,43 @@ export const fetchRecords = async (competitors, event) => {
     worldRecords : {}
   }
 
-  const avgResult = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/world/average/${event}.json`);
-  const sinResult = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/world/single/${event}.json`);
-  const avgJson = await avgResult.json();
-  const sinJson = await sinResult.json();
-
-  const wrAvg = parseFloat(avgJson.items[0].best) / 100
-  const wrSin = parseFloat(sinJson.items[0].best) / 100
+  const wrAvg = await getRecord("world", "average", event)
+  const wrSin = await getRecord("world", "single", event)
   records.worldRecords = {"avg" : wrAvg, "sin" : wrSin}
 
   for (const c of competitors) {
     if (!(c.country in records.nationalRecords) && c.country != null) {
-      const avgResult = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/${c.country}/average/${event}.json`);
-      const sinResult = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/${c.country}/single/${event}.json`);
-      const avgJson = await avgResult.json();
-      const sinJson = await sinResult.json();
-
-      const nrAvg = parseFloat(avgJson.items[0].best) / 100
-      const nrSin = parseFloat(sinJson.items[0].best) / 100
+      const nrAvg = await getRecord(c.country, "average", event)
+      const nrSin = await getRecord(c.country, "single", event)
       records.nationalRecords[c.country] = {"avg" : nrAvg, "sin" : nrSin}
 
     }
-
-    if (!(countries[c.country].continent in records.continentalRecords) && (c.country != null)) {
-       
-      const avgResult = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/${countries[c.country].continent}/average/${event}.json`);
-      const sinResult = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/${countries[c.country].continent}/single/${event}.json`);
-      const avgJson = await avgResult.json();
-      const sinJson = await sinResult.json();
-
-      const crAvg = parseFloat(avgJson.items[0].best) / 100
-      const crSin = parseFloat(sinJson.items[0].best) / 100
-      records.continentalRecords[countries[c.country].continent] = {"avg" : crAvg, "sin" : crSin}
+    
+    const continent = countries[c.country].continent
+    if (!(continent in records.continentalRecords) && (c.country != null)) {
+      const crAvg = await getRecord(continent, "average", event)         
+      const crSin = await getRecord(continent, "single", event)
+      records.continentalRecords[continent] = {"avg" : crAvg, "sin" : crSin}
 
     } 
   }
+  console.log(records)
   return records
+}
+
+const getRecord = async (location, recordType, event) => {
+  try {
+    const result = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/rank/${location}/${recordType}/${event}.json`)
+    if (!result.ok) {
+      return DNF
+    }
+    const resultJSON = await result.json();
+    const time = parseFloat(resultJSON.items[0].best) / 100
+    return time
+  } catch (e) {
+    console.log("Error innit: ", e)
+    return DNF 
+  }
 }
 
 

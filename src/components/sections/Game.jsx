@@ -2,7 +2,6 @@ import {useState, useEffect, useRef} from "react";
 import {validateTime, formatTime, convertTime, convertToMMSS} from "../utils/helper.js"
 import {InspectionTimer} from "../utils/timer"
 import { FaArrowRight, FaStopwatch } from "react-icons/fa";
-import {createPlayer} from "../services/cuber.js"
 import {createPlayerWithNewTime, savePlayerTimes, rankCompetitors} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
 import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, updateRecords} from "../services/records.js"
@@ -25,6 +24,7 @@ export const Game = (props) => {
   const stats = props.stats
   const setErrorPopup = props.setPopup
   const resetCompetitors = props.resetCompetitors
+  const playerNationality = props.nationality
 
 
   const [solveNum, setSolveNum] = useState(0)
@@ -98,7 +98,7 @@ export const Game = (props) => {
           if (c.id !== PLAYER_ID) {
             return c 
           }
-          return createPlayerWithNewTime(c, idx + 1, time, numSolvesInRound)
+          return createPlayerWithNewTime(c, idx + 1, time, numSolvesInRound, playerNationality)
           
         }))
       setShowPopup({cuber : null, solveIdx : null})
@@ -127,7 +127,7 @@ export const Game = (props) => {
             return c 
           }
 
-          return createPlayerWithNewTime(c, nextSolveNum, time, numSolvesInRound)
+          return createPlayerWithNewTime(c, nextSolveNum, time, numSolvesInRound, playerNationality)
           
         }))
       setTime("")

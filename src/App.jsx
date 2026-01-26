@@ -6,7 +6,6 @@ import {SelectCubers} from './components/sections/SelectCubers'
 import {Game} from './components/sections/Game'
 import {Stats} from './components/sections/Stats'
 import {NavBar} from './components/NavBar'
-import {createPlayer} from './components/services/cuber.js'
 import {simulateAllCompetitors, addUser, startingStats} from './components/services/competitors.js'
 import { RxCross1 } from "react-icons/rx";
 
@@ -43,8 +42,9 @@ function App() {
   const [page, setPage] = useState("Home")
   const [error, setError] = useState(null);
   const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
-  const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
   const [event, setEvent] = useLocalStorage("event", "333")
+  const [nationality, setNationality] = useLocalStorage("nationality", "NZ")
+  const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
   const lookup = {"Home" : SelectCubers,
             "Game" : Game,
             "Stats" : Stats}
@@ -60,7 +60,7 @@ function App() {
   const [stats, setStats] = useLocalStorage("stats", startingStats)
 
   const Simulate = async () => {
-    const simmedCompetitors = await simulateAllCompetitors(competitors, event)
+    const simmedCompetitors = await simulateAllCompetitors(competitors, event, nationality)
     setCompetitors(simmedCompetitors)
     return simmedCompetitors
   }
@@ -90,9 +90,13 @@ function App() {
 
   return (
     <>
-      <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent} defaultEvent = {event}/>
+      <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}
+        defaultEvent = {event} setNationality = {setNationality} defaultNationality = {nationality}/>
+
       {error && <Popup errMsg={error} setError={setError}/>}
-      <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}/>
+
+      <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} 
+        competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate} nationality={nationality}/>
     </>
   )
 

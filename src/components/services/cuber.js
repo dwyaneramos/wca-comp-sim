@@ -1,6 +1,6 @@
 import {DNF, INVALID_TIMES } from "../utils/constants.js"
 
-export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa = null, avg = null, country = null) => {
+export const createCuber = (id, name, times = [-1,-1,-1,-1,-1], country, bpa = null, wpa = null, avg = null) => {
   return {
     id: id,
     name: name,
@@ -8,12 +8,12 @@ export const createCuber = (id, name, times = [-1,-1,-1,-1,-1],  bpa = null, wpa
     avg: avg,
     bpa: bpa,
     wpa: wpa,
-    country: country
+    country: country,
   }
 }
 
-export const createPlayer = (times = [-1,-1,-1,-1,-1], bpa = null, wpa = null, avg = null, country = "NZ") => {
-  return createCuber("Player", "Player", times, bpa, wpa, avg, country)
+export const createPlayer = (times = [-1,-1,-1,-1,-1], country = "NZ", bpa = null, wpa = null, avg = null) => {
+  return createCuber("Player", "Player", times, country, bpa, wpa, avg)
 
 }
 
@@ -57,7 +57,6 @@ export const genPlayerWPABPA = (timesWOLastSolve, numSolves) => {
 }
 
 export const genPlayerAvg = (times, numSolves) => {
-  console.log("GENNING AVG", numSolves)
   const avg = isDNFed(times, numSolves) ? DNF : 
               (numSolves == 5 ?  (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3 :
                                 (times.reduce((acc, curr) => acc + curr, 0) / 3))
@@ -84,7 +83,7 @@ export const createSimCuber = async (cuber, event, numSolves) => {
   const avg = genPlayerAvg(times, numSolves);
   const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolves);
 
-  return createCuber(cuber.id, cuber.name, times, bpa, wpa, avg, cuber.country)
+  return createCuber(cuber.id, cuber.name, times, cuber.country, bpa, wpa, avg)
 
 }
 

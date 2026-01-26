@@ -1,17 +1,17 @@
 import {useState, useEffect} from "react";
-import {countryToFlag, countryToContinent} from "./services/nationality.js"
+import {countryToFlag, countries} from "./services/nationality.js"
 
 
-export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent}) => {
+export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent, setNationality, defaultNationality}) => {
   const selectEventCallback = (newEvent) => {
     setEvent(newEvent.target.value)
   }
-
-  const selectCountryCallback = (newCountry) => {
-    console.log()
+  
+  const selectNationalityCallback = (newNationality) => {
+    setNationality(newNationality.target.value)
   }
-
   const isSmall = window.innerWidth < 500
+  
 
   return (
     <div className = "flex flex-col sm:place-content-between bg-white drop-shadow-sm sm:px-30 text-lg py-3 fixed top-0 w-screen z-100">
@@ -27,6 +27,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
             </div>
               
               <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
+            <NationalityDropdown disabled = {disabledEventDropdown} onChange = {selectNationalityCallback} defaultNationality = {defaultNationality}/>
         </div>
 
 
@@ -42,7 +43,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
             <a href="#" onClick={()=>changePage("Home")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
             <a href="#" onClick={()=>changePage("Stats")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
           <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
-          <CountryDropdown disabled = {disabledEventDropdown} onChange = {selectCountryCallback} defaultEvent = {"NZ"}/>
+          <NationalityDropdown disabled = {disabledEventDropdown} onChange = {selectNationalityCallback} defaultNationality = {defaultNationality}/>
           </div>
         </div>
 
@@ -56,18 +57,13 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
 
 
 
-const CountryDropdown = ({disabled, onChange, defaultCountry}) => {
-  const countriess = Object.keys(countryToContinent).map((c) => (
-    {
-      name : c,
-      flag: countryToFlag(c)
-    }
-  ))
+const NationalityDropdown = ({disabled, onChange, defaultNationality}) => {
   return (
-    <select defaultCountry = {defaultCountry} disabled = {disabled}>
-      {countriess.map((c) => {
+    <select defaultValue = {defaultNationality} disabled = {disabled} 
+      className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center " onChange={onChange}>
+      {Object.entries(countries).map(([id, c]) => {
         return (
-          <option value={c.name} key={c.name}>{c.name} {c.flag}</option>
+          <option value={id} key={id}>{c.flag} {c.name}</option>
         )
       })}
     </select>
@@ -95,7 +91,8 @@ const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {
     { name: "5x5x5 Blindfolded", code: "555bf" },
   ];
   return (
-    <select defaultValue = {defaultEvent} disabled = {disabled} className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
+    <select defaultValue = {defaultEvent} disabled = {disabled} 
+      className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
       {wcaEvents.map((event) => {
         return (
           <option  key={event.code} value={event.code}>{event.name}</option>

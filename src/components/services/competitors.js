@@ -11,7 +11,7 @@ export const rankCompetitors = (competitors, solveNum, numSolvesInRound, event, 
   return sortedCompetitors
 }
 
-export const simulateAllCompetitors = async (competitorList, event) => {
+export const simulateAllCompetitors = async (competitorList, event, nationality) => {
    const numSolves = MO3_EVENTS.includes(event) ? 3 : 5
    const simmedCompetitors = await Promise.all (
     competitorList.map((c) => {
@@ -23,7 +23,7 @@ export const simulateAllCompetitors = async (competitorList, event) => {
         }
     } else {
       let timeSlots = new Array(numSolves); for (let i = 0; i < numSolves; i++) timeSlots[i] = -1
-      return createPlayer(timeSlots) 
+      return createPlayer(timeSlots, nationality) 
     }
     
   })
@@ -40,9 +40,10 @@ export const addUser = (competitorList) => {
   return [...competitorList, user]
 }
 
-export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound) => {
+export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound, nationality) => {
   let newTimes = [...c.times];
-  newTimes[solveNum - 1] = (parseFloat(time));
+  newTimes[solveNum - 1] = (parseFloat(time)); 
+  console.log("WOOHOOOOO", nationality)
 
   let updatedPlayer = null
   if (solveNum >= 4  || newTimes[-2] !== -1) {
@@ -50,10 +51,10 @@ export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound) => 
     const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolvesInRound);
     const avg = genPlayerAvg(newTimes, numSolvesInRound);
     console.log(avg)
-    updatedPlayer = createPlayer(newTimes, bpa, wpa, avg);
+    updatedPlayer = createPlayer(newTimes, nationality, bpa, wpa, avg);
     
   } else {
-    updatedPlayer = createPlayer(newTimes)
+    updatedPlayer = createPlayer(newTimes, nationality) 
   }
 
   return updatedPlayer;
