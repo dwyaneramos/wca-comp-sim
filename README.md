@@ -33,11 +33,20 @@ Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubi
 ## Additional Notes
 
 - FMC and MBLD have yet to be properly implemented
+
 - You must click on the search result (or Enter) to add a particular cuber.
+
 - A cubers' times is simulated using their 50 most recent solves (they must have at least 5 successes to be simulated)
+
 - There is a JS script to fetch the WCA IDs/Names of all cubers in the WCA DB on which the program uses that for its search functionality. This script is currently run and its results are uploaded manually, so there might be some very new cubers on whom the program won't be able to recognise. This task is to be automated in the future.
-- The module used to generate scrambles (Cubing JS) uses D, B and L moves in 2x2. However, all scrambles are random-state except for big cubes and megaminx.
+
+- The module used to generate scrambles (Cubing JS) uses D, B and L moves in 2x2. However, **all scrambles are random-state** except for big cubes and megaminx.
+
 - There is no confirm popup for resetting your stats (press it wisely)
+
+- You can represent a country that has no official results (meaning free NRs :D)
+
+- There are some cases where a person's PR is faster than the NR, yet due to how the WCA API works, that PR is the NR. A good example is NZ's Andrew Feng, who has a 3x3 PR Avg of 5.49 but an NR Avg of 5.64. The NZ avg in this case would be 5.49
 
 ## Tech Stack / Dependencices
 
@@ -47,9 +56,11 @@ Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubi
 - ChartJS
 - Cubing JS Module
 
-## Acknowledgements
+## Acknowledgements and Declarations
 
 This app relies on the WCA Rest API made by Robin Ingelbrecht for simulating players' times
+
+This website is not at all associated with the WCA nor WST.
 
 ## To-Do List (can be ignored)
 
@@ -60,6 +71,8 @@ This app relies on the WCA Rest API made by Robin Ingelbrecht for simulating pla
 - [x] Ensure people can't enter the same cuber twice
 - [X] Use keypresses to make entering cubers more convenient
 - [X] Search with WCA IDs
+- [X] Select nationality
+- [ ] Search functionality for nationality
 
 ### Game Page
 
@@ -79,7 +92,8 @@ This app relies on the WCA Rest API made by Robin Ingelbrecht for simulating pla
 - [X] Scale  std.dev for different events
 - [X] Implement inspection timer
 - [X] Implement Mo3
-- [ ] Be able to start inspection while input bar is focused
+- [X] Be able to start inspection while input bar is focused
+- [X] Indicate if a time is a record
 - [ ] Calculate StdDev properly instead of it depending on cuber's recent mean of solves
 
 ### Stats Page

@@ -34,7 +34,7 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
     for (const c of competitors) {
       // check single
       for (let i = 0; i < solveNum; i++) {
-        const isSinRecord = checkIfSinRecord(c.times[i], currRecords, c.country);
+        const isSinRecord = checkIfRecord(c.times[i], currRecords, c.country, "sin");
         if (isSinRecord !== false) {
           applyRecord(currRecords, isSinRecord, "sin", c.times[i], c.country)
         }
@@ -42,7 +42,7 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
       }
     // check average if applicable
     if (solveNum === numSolvesInRound) {
-        const isAvgRecord = checkIfAvgRecord(c.avg, currRecords, c.country);
+        const isAvgRecord = checkIfRecord(c.avg, currRecords, c.country, "avg");
         if (isAvgRecord !== false) {
         applyRecord(currRecords, isAvgRecord, "avg", c.avg, c.country)
       }
@@ -55,32 +55,22 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
 
 }
 
-export const checkIfAvgRecord = (time, records, country) => {
+export const checkIfRecord(time, records, country, recordType) => {
   if (records === null) {
     return false
-  } else if (time <= records.worldRecords.avg) {
+  } else if (time <= records.worldRecords[recordType]) {
     return "WR"
-  } else if (time <= records.continentalRecords[countries[country].continent].avg) {
+  } else if (time <= records.continentalRecords[countries[country].continent][recordType]) {
     return "CR"
-  } else if (time <= records.nationalRecords[country].avg) {
+  } else if (time <= records.nationalRecords[country][recordType]){
     return "NR"
   } else {
     return false
   }
+
+
 }
-export const checkIfSinRecord = (time, records, country) => {
-  if (records === null) {
-    return false
-  } else if (time <= records.worldRecords.sin) {
-    return "WR"
-  } else if (time <= records.continentalRecords[countries[country].continent].sin) {
-    return "CR"
-  } else if (time <= records.nationalRecords[country].sin) {
-    return "NR"
-  } else {
-    return false
-  }
-}
+
 
 
 

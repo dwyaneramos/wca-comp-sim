@@ -4,7 +4,7 @@ import {InspectionTimer} from "../utils/timer"
 import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayerWithNewTime, savePlayerTimes, rankCompetitors} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
-import {fetchRecords, checkIfSinRecord, checkIfAvgRecord, updateRecords} from "../services/records.js"
+import {fetchRecords, checkIfRecord, updateRecords} from "../services/records.js"
 import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
 
 
@@ -338,7 +338,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
           }
 
 
-  const isAvgRecord = solveNum == numSolvesInRound ? checkIfAvgRecord(cuber.avg, records, cuber.country) : false
+  const isAvgRecord = solveNum == numSolvesInRound ? checkIfRecord(cuber.avg, records, cuber.country, "avg") : false
   const avgColour = recordColorLookup[isAvgRecord]
 
 
@@ -363,7 +363,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
 
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-          const isRecord = idx + 1 <= solveNum ? checkIfSinRecord(time, records, cuber.country) : false;
+          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
 
                  return (
             <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum ? false : true}
@@ -380,7 +380,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
       {cuber.id !== PLAYER_ID && 
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-          const isRecord = idx + 1 <= solveNum ? checkIfSinRecord(time, records, cuber.country) : false;
+          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
 
          
           return (
