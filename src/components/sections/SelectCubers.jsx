@@ -132,7 +132,7 @@ const SearchBar = ({setCompetitors, competitors}) => {
   return (
     <div className = "relative w-sm z-1 flex justify-center " onKeyDown = {(e) => handleKeyInput(e)}>
       <div className = "flex flex-row justify-center">
-        <input onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
+        <input onBlur={()=>{setInput(""); setSearchResults([])}} onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
               className = "bg-gray-100 border-2 border-gray-300 rounded-md text-xl p-2 w-2xs sm:w-sm"/>
         <IoIosSearch size={35} className = "absolute ml-60 sm:ml-85 mt-1"/>
       </div>

@@ -56,17 +56,9 @@ const NationalityDropdown = ({disabled, defaultNationality, setNationality}) => 
   <Select options={options} onChange={(option) => setNationality(option.value)} 
     defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}}
     classNames={{
-        control: () => `w-3xs`,
+        control: ({ isFocused }) => `w-3xs h-10`,
       
-      }}
-      styles={{
-
-          option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isSelected
-              ? "#4ade80": state.isFocused ? "#bbf7d0" : "", color: state.isSelected ? "white" : "black",
-          }),
-        }}/>
+      }}/>
   )
 }
 
@@ -96,16 +88,9 @@ const SelectEventDropdown = ({ disabled, setEvent, defaultEvent }) => {
     <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
       defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}}
       classNames = {{
-          control: () => `w-55`,
-        
-        }} 
-      styles={{
+          control: ({isFocused}) => `w-55 h-10`,
+        }} />
 
-          option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isSelected
-              ? "#4ade80": state.isFocused ? "#bbf7d0" : "", color: state.isSelected ? "white" : "black",
-          }),
-        }}/>
+  
   )
 }
