@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import {countryToFlag, countries} from "./services/nationality.js"
+import Select from "react-select"
 
 
 export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent, setNationality, defaultNationality}) => {
@@ -7,9 +8,6 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
     setEvent(newEvent.target.value)
   }
   
-  const selectNationalityCallback = (newNationality) => {
-    setNationality(newNationality.target.value)
-  }
   const isSmall = window.innerWidth < 500
   
 
@@ -43,7 +41,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
             <a href="#" onClick={()=>changePage("Home")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
             <a href="#" onClick={()=>changePage("Stats")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
           <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
-          <NationalityDropdown disabled = {disabledEventDropdown} onChange = {selectNationalityCallback} defaultNationality = {defaultNationality}/>
+          <NationalityDropdown disabled = {disabledEventDropdown} defaultNationality={defaultNationality} setNationality = {setNationality}/>
           </div>
         </div>
 
@@ -55,20 +53,20 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
   )
 }
 
-
-
-const NationalityDropdown = ({disabled, onChange, defaultNationality}) => {
+const NationalityDropdown = ({disabled, defaultNationality, setNationality}) => {
+  const options =  Object.entries(countries).map(([id, c]) => ({value: id, label: `${c.flag} ${c.name}`}))
+  console.log(defaultNationality) 
   return (
-    <select defaultValue = {defaultNationality} disabled = {disabled} 
-      className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center " onChange={onChange}>
-      {Object.entries(countries).map(([id, c]) => {
-        return (
-          <option value={id} key={id}>{c.flag} {c.name}</option>
-        )
-      })}
-    </select>
+  <Select options={options} onChange={(option) => setNationality(option.value)} 
+    defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}}
+    classNames={{
+        control: ({ isFocused }) =>
+          `w-3xs rounded-lg border ${isFocused ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-300"}
+           bg-white hover:border-blue-300 transition`,
+      }}/>
   )
 }
+
 
 
 const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {

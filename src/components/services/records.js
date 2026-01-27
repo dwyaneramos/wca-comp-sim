@@ -55,7 +55,7 @@ export const updateRecords = (prevRecords, competitors, solveNum, numSolvesInRou
 
 }
 
-export const checkIfRecord(time, records, country, recordType) => {
+export const checkIfRecord = (time, records, country, recordType) => {
   if (records === null) {
     return false
   } else if (time <= records.worldRecords[recordType]) {

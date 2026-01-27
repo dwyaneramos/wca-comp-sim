@@ -55,7 +55,7 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
               )
             } else {
                 return
-              }
+            }
         })} 
       </div>
       }
@@ -140,7 +140,7 @@ const SearchBar = ({setCompetitors, competitors}) => {
       <div className = {`absolute flex mt-15 w-70 sm:w-full flex-col bg-gray-100 my-2 ${resultsBorder}`}>
         {searchResults.map((cuber, idx) => {
           return (
-            <div key = {cuber.id} className = {` ${highlightedCuberIndex == idx ? "bg-gray-200": "" } flex flex-row p-2 bg-gray-100 cursor-pointer`}
+            <button key = {cuber.id} className = {` ${highlightedCuberIndex == idx ? "bg-gray-200": "" } text-left flex flex-row p-2 bg-gray-100 cursor-pointer`}
                   onClick={() => addPlayer(cuber)} onMouseEnter={()=>setCuberIndex(idx)}>
               
               <div className =  "w-40 sm:w-3xs truncate text-md sm:text-xl pr-5 ">
@@ -151,7 +151,7 @@ const SearchBar = ({setCompetitors, competitors}) => {
                 {cuber.id} 
               </div>
 
-            </div>
+            </button>
           )
         })} 
       </div>
