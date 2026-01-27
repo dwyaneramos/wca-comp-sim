@@ -4,10 +4,6 @@ import Select from "react-select"
 
 
 export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent, setNationality, defaultNationality}) => {
-  const selectEventCallback = (newEvent) => {
-    setEvent(newEvent.target.value)
-  }
-  
   const isSmall = window.innerWidth < 500
   
 
@@ -24,8 +20,8 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
               <a href="" onClick={()=>changePage("")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
             </div>
               
-              <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
-            <NationalityDropdown disabled = {disabledEventDropdown} onChange = {selectNationalityCallback} defaultNationality = {defaultNationality}/>
+              <SelectEventDropdown disabled = {disabledEventDropdown} setEvent = {setEvent} defaultEvent={defaultEvent}/> 
+          <NationalityDropdown disabled = {disabledEventDropdown} defaultNationality={defaultNationality} setNationality = {setNationality}/>
         </div>
 
 
@@ -40,7 +36,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
           <div className = "flex flex-row gap-2">
             <a href="#" onClick={()=>changePage("Home")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
             <a href="#" onClick={()=>changePage("Stats")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
-          <SelectEventDropdown disabled = {disabledEventDropdown} onChange = {selectEventCallback} defaultEvent={defaultEvent}/> 
+          <SelectEventDropdown disabled = {disabledEventDropdown} setEvent = {setEvent} defaultEvent={defaultEvent}/> 
           <NationalityDropdown disabled = {disabledEventDropdown} defaultNationality={defaultNationality} setNationality = {setNationality}/>
           </div>
         </div>
@@ -60,43 +56,56 @@ const NationalityDropdown = ({disabled, defaultNationality, setNationality}) => 
   <Select options={options} onChange={(option) => setNationality(option.value)} 
     defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}}
     classNames={{
-        control: ({ isFocused }) =>
-          `w-3xs rounded-lg border ${isFocused ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-300"}
-           bg-white hover:border-blue-300 transition`,
-      }}/>
+        control: () => `w-3xs`,
+      
+      }}
+      styles={{
+
+          option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected
+              ? "#4ade80": state.isFocused ? "#bbf7d0" : "", color: state.isSelected ? "white" : "black",
+          }),
+        }}/>
   )
 }
 
 
 
-const SelectEventDropdown = ({ disabled, onChange, defaultEvent }) => {
+const SelectEventDropdown = ({ disabled, setEvent, defaultEvent }) => {
   const wcaEvents = [
-    { name: "3x3x3 Cube", code: "333" },
-    { name: "2x2x2 Cube", code: "222" },
-    { name: "4x4x4 Cube", code: "444" },
-    { name: "5x5x5 Cube", code: "555" },
-    { name: "6x6x6 Cube", code: "666" },
-    { name: "7x7x7 Cube", code: "777" },
-    { name: "3x3x3 Blindfolded", code: "333bf" },
-    { name: "3x3x3 Fewest Moves", code: "333fm" },
-    { name: "3x3x3 One-Handed", code: "333oh" },
-    { name: "Clock", code: "clock" },
-    { name: "Megaminx", code: "minx" },
-    { name: "Pyraminx", code: "pyram" },
-    { name: "Skewb", code: "skewb" },
-    { name: "Square-1", code: "sq1" },
-    { name: "4x4x4 Blindfolded", code: "444bf" },
-    { name: "5x5x5 Blindfolded", code: "555bf" },
+    { label: "3x3x3 Cube", value: "333" },
+    { label: "2x2x2 Cube", value: "222" },
+    { label: "4x4x4 Cube", value: "444" },
+    { label: "5x5x5 Cube", value: "555" },
+    { label: "6x6x6 Cube", value: "666" },
+    { label: "7x7x7 Cube", value: "777" },
+    { label: "3x3x3 Blindfolded", value: "333bf" },
+    { label: "3x3x3 Fewest Moves", value: "333fm" },
+    { label: "3x3x3 One-Handed", value: "333oh" },
+    { label: "Clock", value: "clock" },
+    { label: "Megaminx", value: "minx" },
+    { label: "Pyraminx", value: "pyram" },
+    { label: "Skewb", value: "skewb" },
+    { label: "Square-1", value: "sq1" },
+    { label: "4x4x4 Blindfolded", value: "444bf" },
+    { label: "5x5x5 Blindfolded", value: "555bf" },
   ];
+  console.log(wcaEvents.find((e) => e.value === defaultEvent).label)
   return (
-    <select defaultValue = {defaultEvent} disabled = {disabled} 
-      className = "border-2 border-gray-300 rounded-md cursor-pointer p-1 text-center w-3xs sm:w-f" onChange={onChange}>
-      {wcaEvents.map((event) => {
-        return (
-          <option  key={event.code} value={event.code}>{event.name}</option>
-        ) 
-      })}
-      
-    </select>
+    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
+      defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}}
+      classNames = {{
+          control: () => `w-55`,
+        
+        }} 
+      styles={{
+
+          option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected
+              ? "#4ade80": state.isFocused ? "#bbf7d0" : "", color: state.isSelected ? "white" : "black",
+          }),
+        }}/>
   )
 }
