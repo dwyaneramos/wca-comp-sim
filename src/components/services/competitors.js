@@ -43,14 +43,12 @@ export const addUser = (competitorList) => {
 export const createPlayerWithNewTime = (c, solveNum, time, numSolvesInRound, nationality) => {
   let newTimes = [...c.times];
   newTimes[solveNum - 1] = (parseFloat(time)); 
-  console.log("WOOHOOOOO", nationality)
 
   let updatedPlayer = null
   if (solveNum >= 4  || newTimes[-2] !== -1) {
     const timesWOLastSolve = newTimes.slice(0, -1)
     const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolvesInRound);
     const avg = genPlayerAvg(newTimes, numSolvesInRound);
-    console.log(avg)
     updatedPlayer = createPlayer(newTimes, nationality, bpa, wpa, avg);
     
   } else {
@@ -141,7 +139,6 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
       newPodiumCount[rank - 1]++;
     }
 
-    console.log("new podium count ",newPodiumCount)
     return {
       ...prevStats,
       [event] : {

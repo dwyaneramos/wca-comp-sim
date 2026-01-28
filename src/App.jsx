@@ -50,9 +50,6 @@ function App() {
             "Stats" : Stats}
 
 
-  useEffect(()=> {
-    console.log(competitors)
-  }, [competitors])
 
 
 
@@ -79,13 +76,8 @@ function App() {
       setPage(page)
     }
   }
-  
-
-
 
   const CurrentPage = lookup[page]
-  console.log(stats)
-
 
 
   return (
