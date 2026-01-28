@@ -52,7 +52,7 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
 const NationalityDropdown = ({disabled, defaultNationality, setNationality}) => {
   const options =  Object.entries(countries).map(([id, c]) => ({value: id, label: `${c.flag} ${c.name}`}))
   return (
-  <Select options={options} onChange={(option) => setNationality(option.value)} 
+  <Select options={options} onChange={(option) => setNationality(option.value)} isDisabled={disabled}
     defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}}
     classNames={{
         control: ({ isFocused }) => `w-3xs h-10`,
@@ -83,7 +83,7 @@ const SelectEventDropdown = ({ disabled, setEvent, defaultEvent }) => {
     { label: "5x5x5 Blindfolded", value: "555bf" },
   ];
   return (
-    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
+    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)} isDisabled={disabled}
       defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}}
       classNames = {{
           control: ({isFocused}) => `w-55 h-10`,

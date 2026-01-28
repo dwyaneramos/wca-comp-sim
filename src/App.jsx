@@ -8,6 +8,7 @@ import {Stats} from './components/sections/Stats'
 import {NavBar} from './components/NavBar'
 import {simulateAllCompetitors, addUser, startingStats} from './components/services/competitors.js'
 import { RxCross1 } from "react-icons/rx";
+import { FaGithub } from "react-icons/fa";
 
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
@@ -36,6 +37,20 @@ const Popup = ({errMsg, setError}) => {
   )
 }
 
+const Watermark = () => {
+  return (
+    <div className = "flex flex-row gap-5 items-center absolute bottom-0 right-0 p-5 text-2xl text-gray-400">
+      <h1>
+        Website by Dwyane Ramos
+      </h1>
+      <a target="_blank" href="https://github.com/dwyaneramos/wca-comp-sim">
+        <FaGithub color={"gray-400"} size={40}/>
+      </a>
+    </div>
+
+  )
+}
+
 function App() {
 
  
@@ -43,7 +58,7 @@ function App() {
   const [error, setError] = useState(null);
   const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
   const [event, setEvent] = useLocalStorage("event", "333")
-  const [nationality, setNationality] = useLocalStorage("nationality", "NZ")
+  const [nationality, setNationality] = useLocalStorage("nationalit y", "NZ")
   const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
   const lookup = {"Home" : SelectCubers,
             "Game" : Game,
@@ -89,6 +104,7 @@ function App() {
 
       <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} 
         competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate} nationality={nationality}/>
+      <Watermark/>
     </>
   )
 
