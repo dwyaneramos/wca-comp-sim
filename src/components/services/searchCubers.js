@@ -2,7 +2,7 @@ import {isCuberInList} from '../services/competitors.js'
 
 export const searchCubers = async (searchInput, competitors) => {
   let results = [] 
-  const dataURL = "/cubers.json"
+  const dataURL = `${import.meta.env.BASE_URL}cubers.json`
   const data = await fetch(dataURL)
   const dataJSON = await data.json()
 
