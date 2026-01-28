@@ -25,7 +25,12 @@ export const Game = (props) => {
   const setErrorPopup = props.setPopup
   const resetCompetitors = props.resetCompetitors
   const playerNationality = props.nationality
+  const disableApp = props.disableApp
+  const disableAppRef = useRef(disableApp)
 
+  useEffect(() => {
+    disableAppRef.current = disableApp;
+  }, [disableApp]);
 
   const [solveNum, setSolveNum] = useState(0)
   const solveNumRef = useRef(solveNum);
@@ -142,6 +147,10 @@ export const Game = (props) => {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (disableAppRef.current) {
+        e.preventDefault()
+        return
+      } 
       if (e.key === " " && !endOfRoundRef.current) setInspection(prev => !prev);
     } ;
 
@@ -172,7 +181,7 @@ export const Game = (props) => {
   }, [sortedCompetitors]);
 
   return (
-    <section className = "flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white">
+    <section className = {`flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
       {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
       <h1 className="text-3xl pt-20 px-20 text-center">{scramble}</h1> 
 

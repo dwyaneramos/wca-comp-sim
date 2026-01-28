@@ -7,8 +7,8 @@ import {Game} from './components/sections/Game'
 import {Stats} from './components/sections/Stats'
 import {NavBar} from './components/NavBar'
 import {simulateAllCompetitors, addUser, startingStats} from './components/services/competitors.js'
-import { RxCross1 } from "react-icons/rx";
 import { FaGithub } from "react-icons/fa";
+import { Popup } from "./components/Popup.jsx"
 
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
@@ -23,19 +23,6 @@ export function useLocalStorage(key, initialValue) {
   return [value, setValue]
 }
 
-const Popup = ({errMsg, setError}) => {
-  return (
-    <div className ="fixed z-100 rounded-md top-0 bottom-0 my-auto right-0 left-0 mx-auto text-center bg-white border-2 border-red-200 w-2xl h-50 pt-10 pb-30 z-100">
-      <h1 className = "font-bold text-red-500 underline text-2xl">Error:</h1>
-      <p className = "text-xl">
-      {errMsg}
-      </p>
-      <button type="" onClick={()=>setError(null)} className = "absolute right-2 top-2 cursor-pointer hover:bg-gray-100 p-3 text-2xl rounded-md border-2 border-gray-200">
-        <RxCross1 size={20}/>
-      </button>
-    </div>
-  )
-}
 
 const Watermark = () => {
   return (
@@ -58,13 +45,22 @@ function App() {
   const [error, setError] = useState(null);
   const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
   const [event, setEvent] = useLocalStorage("event", "333")
-  const [nationality, setNationality] = useLocalStorage("nationalit y", "NZ")
+  const [nationality, setNationality] = useLocalStorage("nationality", "NZ")
   const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
   const lookup = {"Home" : SelectCubers,
             "Game" : Game,
             "Stats" : Stats}
+  const [disableUpdatePopup, setDisableUpdatePopup] = useLocalStorage("disableUpdatePopup", false)
+  const [showUpdatePopup, setShowUpdatePopup] = useState(disableUpdatePopup ? false : true)
+  const [disableApp, setDisableApp] = useState(false);
 
-
+  useEffect(() => {
+    if (showUpdatePopup || error) {
+      setDisableApp(true)
+    } else {
+      setDisableApp(false)
+    }
+  }, [showUpdatePopup, error])
 
 
 
@@ -92,6 +88,11 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    console.log(disableUpdatePopup)
+    
+  }, [disableUpdatePopup])
+
   const CurrentPage = lookup[page]
 
 
@@ -100,10 +101,16 @@ function App() {
       <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}
         defaultEvent = {event} setNationality = {setNationality} defaultNationality = {nationality}/>
 
-      {error && <Popup errMsg={error} setError={setError}/>}
+      {error && <Popup popupHeader={"ERROR"} popupMsg ={error} setPopupOn={setError} popupColor = {"red-500"}/>}
+
+      {showUpdatePopup && <Popup popupHeader={"ATTENTION"} 
+        popupMsg={"There has been changes to the way competitors are represented. To avoid any bugs, please go to Inspect, Storage, LocalStorage, delete competitors, then refresh. Thank you for using my website :)"}
+        setPopupOn={setShowUpdatePopup}
+        popupColor = {"red-500"} setDisableUpdatePopup = {setDisableUpdatePopup}/>}
 
       <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} 
-        competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate} nationality={nationality}/>
+        competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}
+        nationality={nationality} disableApp={disableApp}/>
       <Watermark/>
     </>
   )

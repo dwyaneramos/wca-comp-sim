@@ -172,13 +172,14 @@ const ChangeGraphDataButton = ({setDataForGraphIndex, dataForGraphIndex, numType
   const newIndex = (dataForGraphIndex + 1) % numTypesOfData
 
   return (
-    <button type="" onClick = {() => setDataForGraphIndex(newIndex)} className = "bg-green-400 p-2 h-full w-full text-white drop-shadow-md rounded-md text-2xl">Change Displayed Data</button>
+    <button type="" onClick = {() => setDataForGraphIndex(newIndex)} className = "bg-green-400 p-2 h-full w-full 
+      text-white drop-shadow-md rounded-md text-xl">Change Displayed Data</button>
   )
 }
 
 const ResetButton = ({resetStats}) => {
   return (
-    <button onClick = {resetStats} className = "bg-red-500 text-2xl drop-shadow-md cursor-pointer h-full w-full rounded-md text-white" type="">
+    <button onClick = {resetStats} className = "bg-red-500 text-xl drop-shadow-md cursor-pointer h-full w-full rounded-md text-white" type="">
       Reset Stats
     </button>
   )
