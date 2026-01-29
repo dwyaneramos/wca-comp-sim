@@ -1,6 +1,6 @@
 import {useState, useEffect, useRef} from "react";
 import {validateTime, formatTime, convertTime, convertToMMSS} from "../utils/helper.js"
-import {InspectionTimer} from "../utils/timer"
+import {InspectionTimer} from "../Timer"
 import { FaArrowRight, FaStopwatch } from "react-icons/fa";
 import {createPlayerWithNewTime, savePlayerTimes, rankCompetitors} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";

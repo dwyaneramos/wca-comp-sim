@@ -83,15 +83,10 @@ const SearchBar = ({setCompetitors, competitors, disableApp}) => {
   const [highlightedCuberIndex, setCuberIndex] = useState(0)
 
 
-  const Search = async (searchInput) => {
-    const results = await searchCubers(input, competitors)
-    setSearchResults(results)
-  }
-
   useEffect(() => {
     const t = setTimeout(() => {
       if (input) {
-        Search(input)
+        searchCubers(input, competitors, setSearchResults)
       } else {
         setSearchResults([])
       }
@@ -133,7 +128,7 @@ const SearchBar = ({setCompetitors, competitors, disableApp}) => {
       <div className = "flex flex-row justify-center">
         <input  onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
               className = "bg-gray-100 border-2 border-gray-300 rounded-md text-xl p-2 w-2xs sm:w-sm"/>
-        <IoIosSearch size={35} className = "absolute ml-60 sm:ml-85 mt-1"/>
+        <IoIosSearch size={33} className = "absolute ml-60 sm:ml-85 mt-2"/>
       </div>
 
       <div className = {`absolute flex mt-15 w-70 sm:w-full flex-col bg-gray-100 my-2 ${resultsBorder}`}>

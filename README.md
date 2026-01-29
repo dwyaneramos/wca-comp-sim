@@ -46,6 +46,8 @@ Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubi
 
 - You can represent a country that has no official results (meaning free NRs :D)
 
+- DNF chance for competitors is 50% for BLD events and 2% for sighted events
+
 - There are some cases where a person's PR is faster than the NR, yet due to how the WCA API works, that PR is the NR. A good example is NZ's Andrew Feng, who has a 3x3 PR Avg of 5.49 but an NR Avg of 5.64. The NZ avg in this case would be 5.49
 
 ## Tech Stack / Dependencices
