@@ -69,13 +69,9 @@ export const createSimCuber = async (cuber, event, numSolves) => {
     throw new Error(`Insufficient official results to do simulations for ${cuber.name}`)
 
   }
-
-  const mean = officialTimes.reduce((acc, curr) => acc + curr, 0) / officialTimes.length;
-
-
   let times = []
   for (let i = 0; i < numSolves; i++) {
-    const time = genRandomTime(mean, event);
+    const time = genRandomTime(officialTimes, event);
     times.push(time)
   }
   times = times;
@@ -88,7 +84,7 @@ export const createSimCuber = async (cuber, event, numSolves) => {
 }
 
 
-export const genRandomTime = (mean, event) => {
+export const genRandomTime = (officialTimes, event) => {
   const eventStdDevFactor = {
     "sprint": 0.3,
     "med": 0.08,
@@ -98,39 +94,16 @@ export const genRandomTime = (mean, event) => {
   }
 
 
-  const eventInfo = {
-    "222":   { category: "sprint", bias: 1.00 },
-    "333":   { category: "sprint", bias: 1.10  },
-    "444":   { category: "med",    bias: 1.00 },
-    "555":   { category: "big",    bias: 1.00 },
-    "666":   { category: "big",    bias: 1.00 },
-    "777":   { category: "big",    bias: 1.00 },
-
-    "333oh": { category: "sprint", bias: 1.20 },
-
-    "333bf": { category: "bld",    bias: 1.00 },
-    "444bf": { category: "bld",    bias: 1.00 },
-    "555bf": { category: "bld",    bias: 1.00 },
-
-    "clock": { category: "sprint", bias: 1.00 },
-    "minx":  { category: "big",    bias: 1.00 },
-    "pyram": { category: "sprint", bias: 1.00 },
-    "skewb": { category: "sprint", bias: 1.00 },
-  };
+  const mean = officialTimes.reduce((acc, curr) => acc + curr, 0) / officialTimes.length;
+  const variance = officialTimes.reduce((sum, val) => sum + (val - mean) ** 2, 0) / (officialTimes.length - 1)
 
   const dnfChance = eventInfo[event] == "bld" ? 0.5: 0.03 
   const roll = Math.random()
   if (roll <= dnfChance) {
     return DNF
   }
-  
-  const stdDev = eventStdDevFactor[eventInfo[event].category] * mean
-
-  const time = randLogNormal(mean, stdDev) * eventInfo[event].bias
+  const time = randLogNormal(mean, variance) 
   return time
-  //const stdDev = 0.8
-  //const time = z * stdDev + mean;
-  //return time
 }
 
 const randNormal = (mean) => {
@@ -145,9 +118,8 @@ const randNormal = (mean) => {
 
 }
 
-const randLogNormal = (mean, stdDev) => {
+const randLogNormal = (mean, variance) => {
   // convert desired mean/std to log-space params
-  const variance = stdDev ** 2;
   const mu = Math.log(mean ** 2 / Math.sqrt(variance + mean ** 2));
   const sigma = Math.sqrt(Math.log(1 + variance / mean ** 2));
 
