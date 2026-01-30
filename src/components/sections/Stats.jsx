@@ -185,11 +185,39 @@ const ResetButton = ({resetStats}) => {
   )
 }
 
+const PodiumCount = ({eventStats}) => {
+  const medalSize = "text-md"
+  return (
+  <div className = "flex flex-col items-center">
+    <div className = "flex flex-row bg-gray-100 gap-5 p-2 items-center justify-center rounded-md">
+      <div className = "flex flex-col items-center ">
+        <span className={`${medalSize} text-gray-600`}>Gold</span> 
+        <span className="text-xl">{eventStats.podiumCount[0]}</span>
+      </div>
+
+      <div className = "flex flex-col items-center ">
+        <span className={`${medalSize}  text-gray-600`}>Silver</span> 
+        <span className="text-xl">{eventStats.podiumCount[1]}</span>
+      </div>
+
+      <div className = "flex flex-col items-center ">
+        <span className = {`${medalSize}  text-gray-600`}>Bronze</span> 
+        <span className = "text-xl">{eventStats.podiumCount[2]}</span>
+      </div>
+      
+    </div>
+
+  </div>
+
+  )
+}
+
 const CompSummaryStats = ({eventStats, event, times}) => {
   const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
   const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
 
-  const moXAo5 = eventStats.tenRecentAvgs.length == 0 ? "N/A" : formatTime(eventStats.tenRecentAvgs.reduce((acc, curr) => acc + curr, 0 ) / eventStats.tenRecentAvgs.length)
+  const moXAo5 = eventStats.tenRecentAvgs.length == 0 ? "N/A" :
+    eventStats.tenRecentAvgs.includes(DNF) ? "DNF" : formatTime(eventStats.tenRecentAvgs.reduce((acc, curr) => acc + curr, 0 ) / eventStats.tenRecentAvgs.length)
   
   const mean = times.map((res) => res.time).reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
@@ -205,28 +233,9 @@ const CompSummaryStats = ({eventStats, event, times}) => {
         <p>{eventStats.solves.filter((solve) => solve.time != DNF).length} solves</p>
       </div>
 
-      <div className = "flex flex-col items-center">
-        <h2 className = "text-gray-600">Podium Count</h2>
-        <div className = "flex flex-row bg-gray-100 gap-5 p-2 items-center justify-center rounded-md">
-          <div className = "flex flex-col items-center ">
-            <span className="text-3xl">🥇</span> 
-            <span className="text-xl">{eventStats.podiumCount[0]}</span>
-          </div>
+      <PodiumCount eventStats={eventStats}/>
 
-          <div className = "flex flex-col items-center ">
-            <span className="text-3xl">🥈</span> 
-            <span className="text-xl">{eventStats.podiumCount[1]}</span>
-          </div>
-
-          <div className = "flex flex-col items-center ">
-            <span className = "text-3xl">🥉</span> 
-            <span className = "text-xl">{eventStats.podiumCount[2]}</span>
-          </div>
-          
-        </div>
-
-      </div>
-
+      
       <div className = "">
         <h2 className = "text-gray-600">Mo{Math.min(10, eventStats.tenRecentAvgs.length)}Ao5</h2>
         <p>{moXAo5}</p>
