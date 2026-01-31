@@ -8,9 +8,9 @@ import {PLAYER_ID} from "../utils/constants.js"
 export const SelectCubers = ({changePage, setCompetitors, competitors, disableApp}) => {
 
   return (
-    <div className= {`flex content-center h-screen justify-center items-center pt-10 ${disableApp ? "blur-xs pointer-events-none": ""}`}>
-      <div className ="flex items-center flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
-                        w-[95vw] overflow-x-hidden  sm:w-3xl h-200">
+    <div className= {`flex content-center h-screen justify-center   ${disableApp ? "blur-xs pointer-events-none": ""}`}>
+      <div className ="flex flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
+                        w-[95vw] overflow-x-hidden mt-20 sm:w-3xl h-190">
           <h1 className="text-2xl pb-3 pt-15">Add your competitors</h1>
           <SearchBar setCompetitors = {setCompetitors} competitors = {competitors} disableApp ={disableApp}/>
           <button onClick={() => changePage("Game")} type="" className=" bg-green-500 py-2 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
@@ -114,7 +114,7 @@ const SearchBar = ({setCompetitors, competitors, disableApp}) => {
       setCuberIndex((highlightedCuberIndex + 1) % searchResults.length)
     } else if (char === "ArrowUp") {
       setCuberIndex(highlightedCuberIndex == 0 ? searchResults.length - 1 : highlightedCuberIndex - 1)
-    } else if (char === "Enter") {
+    } else if (char === "Enter" && searchResults.length > 0) {
       addPlayer(searchResults[highlightedCuberIndex])
     } else if (char === "Escape") {
       setInput("")
