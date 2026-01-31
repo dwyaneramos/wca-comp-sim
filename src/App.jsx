@@ -52,17 +52,8 @@ function App() {
             "Stats" : Stats}
   const [disableUpdatePopup, setDisableUpdatePopup] = useLocalStorage("disableUpdatePopup", false)
   const [showUpdatePopup, setShowUpdatePopup] = useState(disableUpdatePopup ? false : true)
-  const [disableApp, setDisableApp] = useState(false);
 
-  useEffect(() => {
-    if (showUpdatePopup || error) {
-      setDisableApp(true)
-    } else {
-      setDisableApp(false)
-    }
-  }, [showUpdatePopup, error])
-
-
+  const disableApp = showUpdatePopup || error 
 
 
   const [stats, setStats] = useLocalStorage("stats", startingStats)
@@ -74,6 +65,7 @@ function App() {
   }
 
   const changePage = async (page) => {
+    setShowUpdatePopup(false)
     if (page === "Game") {
         try {
           const simmedCompetitors = await Simulate()
