@@ -72,9 +72,9 @@ export const Game = (props) => {
     solveNumRef.current = solveNum;
 
     if (solveNum == numSolvesInRound) {
-      setViewOtherTimes(true);
+      setViewOtherTimes(true)
+      setViewPotentialAvg(true)
       setEndOfRound(true)
-
     } else {
       setScramble(genScramble(event));
     }
