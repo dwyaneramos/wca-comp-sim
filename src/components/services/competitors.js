@@ -134,12 +134,21 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
                       [...eventStats.prSinHistory, {time: bestSingleThatRound, date: currDate, idx : eventStats.prSinHistory[eventStats.prSinHistory.length - 1].idx + 1}])
     
     // Save BO3/5 instead of Avg of 5 for BLD events
-    console.log(Math.min(player.time))
     const avgToSubmit = BLD_EVENTS.includes(event) ? Math.min(...player.times) : player.avg 
-    const newTenRecentAvgs = eventStats.tenRecentAvgs.length == 0 ? [{time : avgToSubmit, date: currDate, idx : 1}] :
+
+    let newTenRecentAvgs = eventStats.tenRecentAvgs
+
+    if (newTenRecentAvgs.length > 0 && typeof newTenRecentAvgs[0] !== "object") {
+      newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
+    }
+    
+    const lastIdx = eventStats.tenRecentAvgs[eventStats.tenRecentAvgs.length - 1].idx
+    newTenRecentAvgs = eventStats.tenRecentAvgs.length == 0 ? [{time : avgToSubmit, date: currDate, idx : 1}] :
                             eventStats.tenRecentAvgs.length >= 10 ? [...(eventStats.tenRecentAvgs.slice(1)), 
-                              {time: avgToSubmit, date: currDate, idx : eventStats.tenRecentAvgs[eventStats.tenRecentAvgs.length - 1].idx + 1}] : 
-                            [...eventStats.tenRecentAvgs, {time: avgToSubmit, date: currDate, idx : eventStats.tenRecentAvgs[eventStats.tenRecentAvgs.length - 1].idx + 1}]
+                              {time: avgToSubmit, date: currDate, idx : lastIdx + 1}] : 
+                            [...eventStats.tenRecentAvgs, {time: avgToSubmit, date: currDate, idx : lastIdx + 1 }]
+    
+
 
     let newPodiumCount = [...eventStats.podiumCount] 
     if (rank >= 1 && rank <= 3) {
