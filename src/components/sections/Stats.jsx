@@ -118,10 +118,11 @@ export const Stats = (props) => {
 
    return (
     <section className="mt-12 p-5 flex items-center flex-col gap-2">
-      <h1 className = "bg-white w-2xl p-3 m-3 border-gray-200 
+      <h1 className = "bg-white w-2xl p-3 mt-4 m-1 border-gray-200 
         drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">
         Competition Stats for {EVENT_NAME_LOOKUP[event]}</h1>
-      <div className="flex flex-row items-center gap-3 drop-shadow-md rounded-lg border-2 bg-white border-gray-200 py-2 px-3">
+      
+      <div className="flex flex-row items-center gap-3 drop-shadow-md rounded-lg mb-1 border-2 bg-white border-gray-200 py-2 px-3">
         <h1 className="text-xl font-medium">Change Event</h1> 
         <SelectEventDropdown defaultEvent={event} setEvent={setEvent}/>
       </div>
@@ -279,30 +280,3 @@ const TopResultsSection = ({type, topTimes}) => {
 }
 
 
-const Top5Section = ({type, topTimes}) => {
-  const rankColors = {0 : "bg-[#ebcc34]",
-                      1 : "bg-[#9e9e9e]",
-                      2 : "bg-[#f2a750]",
-                      3 : "bg-gray-100",
-                      4 : "bg-gray-100"}
-
-
-  return (
-    <div className = "w-3xs flex pt-3 flex-col items-center h-85 bg-white rounded-md border-2 border-gray-200 mb-5">
-      <h1 className = "text-xl mb-3">Top 5 {type}:</h1>
-      
-      <div className = "flex flex-col gap-2">
-        
-        {topTimes.map((time, idx) => {
-          return (
-            <div key={idx} className={`flex place-content-between text-md rounded-xl  w-50 p-2 ${rankColors[idx]}`}>
-              <span className = {`${rankColors[idx]} rounded-[100px] mr-2`}>{idx + 1}</span> 
-              <span>{time.toFixed(2)}</span>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-
-}
