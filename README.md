@@ -2,6 +2,12 @@
 
 Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubing-comp-round-sim) before, but decided to make a website in order to learn React/JavaScript while also making it more accessible to more people and devices.
 
+## Highlights
+
+- Search functionality to make entering competitors easy
+- Comprehensive stats page
+- Live results shown identically to official WCA software
+
 ## How to run this on your computer?
 
 ### Website
@@ -74,7 +80,8 @@ This website is not at all associated with the WCA nor WST.
 - [X] Use keypresses to make entering cubers more convenient
 - [X] Search with WCA IDs
 - [X] Select nationality
-- [ ] Search functionality for nationality
+- [X] Search functionality for nationality
+- [ ] Mobile View
 
 ### Game Page
 
@@ -96,7 +103,8 @@ This website is not at all associated with the WCA nor WST.
 - [X] Implement Mo3
 - [X] Be able to start inspection while input bar is focused
 - [X] Indicate if a time is a record
-- [ ] Calculate StdDev properly instead of it depending on cuber's recent mean of solves
+- [X] Calculate StdDev properly instead of it depending on cuber's recent mean of solves
+- [ ] Mobile View
 
 ### Stats Page
 
@@ -111,4 +119,8 @@ This website is not at all associated with the WCA nor WST.
 - [X] Change colours for 4th/5th results
 - [X] Be able to reset results
 - [X] Show dates of times
+- [ ] Mobile View
+- [ ] Show graph of recent AVGS/BO5s
+- [ ] Show BEST Mo10Ao5
+- [ ] Show Mo10Bo5 for BLD events
 - [ ] Have a confirm popup for resetting times

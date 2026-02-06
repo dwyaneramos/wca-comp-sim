@@ -183,17 +183,17 @@ export const Game = (props) => {
   return (
     <section className = {`flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
       {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
-      <h1 className="text-3xl pt-20 px-20 text-center">{scramble}</h1> 
+      <h1 className="text-2xl md:text-3xl pt-20 px-20 text-center">{scramble}</h1> 
 
 
-      <div className = "flex flex-row gap-2 mt-10 mb-2">
+      <div className = "flex flex-row gap-2 md:mt-10 mb-2">
 
         <button type="" className={`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"} rounded-md p-1`}
           disabled={endOfRound} onClick={()=>setInspection(prev => !prev)}>
           <FaStopwatch size={30} color = {`${endOfRound ? "#374151" : "white"}`}/>
         </button>
 
-        <input type="text"  className ="border-2 border-gray-400 rounded-md w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
+        <input type="text"  className ="border-2 border-gray-400 rounded-md w-3xs md:w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
           name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
 
         <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
@@ -206,7 +206,7 @@ export const Game = (props) => {
         
 
         <button type="" disabled={!endOfRound} 
-          className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"} mb-2 w-sm p-2 rounded-md `} 
+          className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"} mb-2 w-xs md:w-sm p-2 rounded-md `} 
 
           onClick = {() => resetRound()}>Rematch</button>
 
@@ -226,10 +226,14 @@ export const Game = (props) => {
       <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
 
       <div className="overflow-y-scroll h-[50vh]">
+        {/*
+
+
         <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
           competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}
           setRecords = {setRecords} records = {records}/>
         {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
+        */}
       </div>
     </section>
   )
@@ -257,18 +261,25 @@ const DisplayCuberTimes = ({solveNum, canViewOtherTimes, competitors, canViewPot
 
 const TimeHeaders = ({numSolvesInRound}) => {
   let solves = new Array(numSolvesInRound); for (let i = 1; i <= numSolvesInRound; i++) solves[i - 1] = i
-
+  
+  const isMobile = window.screen.width < 768
+  console.log(isMobile, "RAH")
   return (
-     <div className = {`grid w-3xl text-center ${numSolvesInRound == 3 ? `grid-cols-7` : `grid-cols-9`} border-2 border-gray-200 rounded-md p-2 items-center`}>
+     <div className = {`grid w-full md:w-3xl place-content-around text-center grid-cols-5 ${numSolvesInRound == 3 ? `md:grid-cols-7` : `md:grid-cols-9`} border-2 border-gray-200 rounded-md p-2 items-center`}>
       <h1>Rank</h1>
       <h1 className="col-span-2 text-left">Competitor</h1>
+        {isMobile &&
+            <h1>
+             Best
+            </h1>
+        }
 
-      {solves.map((s) => {
-        return (
-          <h1 key ={s}>Solve {s}</h1>
-        )
-      })}
-      <h1>Average: </h1>
+        {!isMobile && solves.map((s) => {
+          return (
+            <h1 key ={s}>Solve {s}</h1>
+          )
+        })}
+      <h1>Average </h1>
     </div>
   )
 }
@@ -350,6 +361,34 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   const isAvgRecord = solveNum == numSolvesInRound ? checkIfRecord(cuber.avg, records, cuber.country, "avg") : false
   const avgColour = recordColorLookup[isAvgRecord]
 
+  const cuberTimesToDisplay = cuber.id === PLAYER_ID ?  
+        cuber.times.map((time, idx) => {
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
+          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
+
+                 return (
+            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum ? false : true}
+              className = {`text-center ${recordColorLookup[isRecord]} ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
+              {timeToDisplay}
+            </button>
+          )
+
+
+        })
+
+        :
+
+        cuber.times.map((time, idx) => {
+          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
+          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
+
+         
+          return (
+            <div key = {idx} className = {`text-center ${recordColorLookup[isRecord]}`}>
+              {timeToDisplay}
+            </div>
+          )
+        })
 
   return (
     <div className = {`grid w-3xl ${numSolvesInRound == 3 ? "grid-cols-7" : "grid-cols-9"} border-2 border-gray-200 rounded-md items-center pr-2`}>
@@ -364,41 +403,10 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
 
 
       {/* Display Times */}
+      {cuberTimesToDisplay}
 
 
 
-      {/* Player's times*/}
-      {cuber.id === PLAYER_ID &&
-
-        cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
-
-                 return (
-            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum ? false : true}
-              className = {`text-center ${recordColorLookup[isRecord]} ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
-              {timeToDisplay}
-            </button>
-          )
-
-
-        })
-      }
-
-      {/* Competitors' times*/}
-      {cuber.id !== PLAYER_ID && 
-        cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
-
-         
-          return (
-            <div key = {idx} className = {`text-center ${recordColorLookup[isRecord]}`}>
-              {timeToDisplay}
-            </div>
-          )
-        })
-      }
 
       {/* Display BPA/WPA/AVG */}
 

@@ -1,24 +1,85 @@
 import {useState, useEffect} from "react";
+import {countryToFlag, countries} from "../services/nationality.js"
 import { IoIosSearch } from "react-icons/io";
 import { IoPersonAddOutline } from "react-icons/io5";
 import {searchCubers} from "../services/searchCubers.js"
 import {addCompetitor} from "../services/competitors.js"
 import {PLAYER_ID} from "../utils/constants.js"
+import Select from "react-select"
 
-export const SelectCubers = ({changePage, setCompetitors, competitors, disableApp}) => {
+export const SelectCubers = ({changePage, setCompetitors, competitors, disableApp, setEvent, event, setNationality, nationality}) => {
 
   return (
-    <div className= {`flex content-center h-screen justify-center   ${disableApp ? "blur-xs pointer-events-none": ""}`}>
-      <div className ="flex flex-col mx-auto gap-5 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
-                        w-[95vw] overflow-x-hidden mt-20 sm:w-3xl h-190">
-          <h1 className="text-2xl pb-3 pt-15">Add your competitors</h1>
+    <div className= {`flex content-center justify-center   ${disableApp ? "blur-xs pointer-events-none": ""}`}>
+      <div className ="flex flex-col mx-auto gap-2 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
+                        w-[95vw] h-full overflow-x-hidden pb-10 mt-20 sm:w-3xl ">
+        <h1 className="text-2xl pt-15 font-medium">Configure Settings</h1>
+        <div className="w-lg relative">
+          <div className="absolute z-2 right-0">
+            <h2 className="text-center text-xl font-medium mb-1">Event:</h2>
+            <SelectEventDropdown setEvent = {setEvent} defaultEvent={event}/> 
+          </div>
+          <div className="absolute z-2 left-0">
+            <h2 className="text-center text-xl font-medium mb-1">Representing:</h2>
+            <NationalityDropdown defaultNationality={nationality} setNationality = {setNationality}/>
+          </div>
+        </div>
+
+
+          <h1 className="text-xl pt-20 font-medium">Add your competitors</h1>
           <SearchBar setCompetitors = {setCompetitors} competitors = {competitors} disableApp ={disableApp}/>
-          <button onClick={() => changePage("Game")} type="" className=" bg-green-500 py-2 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
+
+          <button onClick={() => changePage("Game")} type="" className=" bg-green-500 py-2 px-10 my-6 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
         
       <DisplayCompetitors competitors = {competitors} setCompetitors = {setCompetitors}/>
 
       </div>
     </div>
+  )
+}
+const NationalityDropdown = ({defaultNationality, setNationality}) => {
+  const options =  Object.entries(countries).map(([id, c]) => ({value: id, label: `${c.flag} ${c.name}`}))
+  return (
+  <Select options={options} onChange={(option) => setNationality(option.value)}
+    defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}}
+    classNames={{
+        control: ({ isFocused }) => `w-3xs h-10`,
+      
+      }}/>
+  )
+}
+
+
+
+const SelectEventDropdown = ({setEvent, defaultEvent }) => {
+  const wcaEvents = [
+    { label: "3x3x3 Cube", value: "333" },
+    { label: "2x2x2 Cube", value: "222" },
+    { label: "4x4x4 Cube", value: "444" },
+    { label: "5x5x5 Cube", value: "555" },
+    { label: "6x6x6 Cube", value: "666" },
+    { label: "7x7x7 Cube", value: "777" },
+    { label: "3x3x3 Blindfolded", value: "333bf" },
+    { label: "3x3x3 Fewest Moves", value: "333fm" },
+    { label: "3x3x3 One-Handed", value: "333oh" },
+    { label: "Clock", value: "clock" },
+    { label: "Megaminx", value: "minx" },
+    { label: "Pyraminx", value: "pyram" },
+    { label: "Skewb", value: "skewb" },
+    { label: "Square-1", value: "sq1" },
+    { label: "4x4x4 Blindfolded", value: "444bf" },
+    { label: "5x5x5 Blindfolded", value: "555bf" },
+  ];
+  return (
+    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
+      defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}}
+      classNames = {{
+          control: ({isFocused}) => `w-55 h-10`,
+        }}
+
+    />
+
+  
   )
 }
 
@@ -36,7 +97,7 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
       <h2 className ="text-lg text-gray-500 text-center border-b-2 border-gray-300 pb-5 mb-5">{competitors.length - 1} registered</h2>
 
       {
-        competitors.length > 0 &&
+        competitors.length > 1 &&
       <div className = "flex  gap-2 justify-center pb-5  overflow-y-scroll 
             content-start flex-wrap flex-row h-90">
 
@@ -61,8 +122,8 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
       }
 
       {
-        competitors.length == 0 && 
-          <div className = "flex items-center flex-col pt-10">
+        competitors.length == 1 && 
+          <div className = "flex items-center justify-center flex-col h-90">
             <IoPersonAddOutline size={50} color={"gray"}/>
             <h1 className = "text-gray-500 text-lg pt-3">No competitors added</h1>
           </div>
@@ -125,9 +186,10 @@ const SearchBar = ({setCompetitors, competitors, disableApp}) => {
   const resultsBorder = searchResults.length > 0 ? "border-2 border-gray-200" : ""
   return (
     <div onBlur={()=>{setInput("");}} className = "relative w-sm z-1 flex justify-center " onKeyDown = {(e) => handleKeyInput(e)}>
+
       <div className = "flex flex-row justify-center">
-        <input  onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input}
-              className = "bg-gray-100 border-2 border-gray-300 rounded-md text-xl p-2 w-2xs sm:w-sm"/>
+        <input  onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input} placeholder={"Search by name or WCA ID"}
+              className = "bg-white border-2 border-gray-300 rounded-md text-xl p-2 w-2xs sm:w-sm"/>
         <IoIosSearch size={33} className = "absolute ml-60 sm:ml-85 mt-2"/>
       </div>
 

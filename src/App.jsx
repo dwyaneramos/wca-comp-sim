@@ -26,7 +26,7 @@ export function useLocalStorage(key, initialValue) {
 
 const Watermark = () => {
   return (
-    <div className = "flex flex-row gap-5 items-center absolute bottom-0 right-0 p-5 text-2xl text-gray-400">
+    <div className = "flex flex-row gap-5 items-center sticky md:fixed bottom-0 right-0 p-5 text-2xl text-gray-400">
       <h1>
         Website by Dwyane Ramos
       </h1>
@@ -101,8 +101,8 @@ function App() {
         popupColor = {"red-500"} setDisableUpdatePopup = {setDisableUpdatePopup}/>}
 
       <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} 
-        competitors = {competitors} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}
-        nationality={nationality} disableApp={disableApp}/>
+        competitors = {competitors} setEvent = {setEvent} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}
+        nationality={nationality} setNationality={setNationality} disableApp={disableApp}/>
       <Watermark/>
     </>
   )
