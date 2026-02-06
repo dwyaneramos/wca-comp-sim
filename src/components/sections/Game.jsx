@@ -270,7 +270,7 @@ const TimeHeaders = ({numSolvesInRound}) => {
       <h1>Rank</h1>
       <h1 className="col-span-2 text-left">Competitor</h1>
         {isMobile &&
-            <h1>
+            <h1 className="text-left pl-3">
              Best
             </h1>
         }
@@ -304,12 +304,12 @@ const EditTimePopup = ({cuber, idx, onClick}) => {
     <div className = "bg-white border-2 border-gray-200 flex gap-2 justify-center items-center flex-col
       w-100 h-50 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
       <h1>Edit Time</h1>
-      <input className="bg-gray-100 text-center w-50 p-3 rounded-md" type=""
+      <input className="bg-gray-100 text-center w-50 p-3 mb-3 rounded-md" type=""
         name="edit time input" value={newTime} onChange={(e)=>setNewTime(e.target.value)}/>
       <div className = "flex flex-row gap-2">
-        <button type="" onClick={() => togglePenalty(ogTime, newTime, "DNF", setNewTime)} className ="bg-green-500 p-2 w-20 rounded-md text-white cursor-pointer">DNF</button>
-        <button type="" onClick={()=> onClick(newTime, idx)} className ="bg-green-500 p-2 w-20 rounded-md text-white cursor-pointer">Confirm</button>
-        <button type="" onClick={() => togglePenalty(ogTime, newTime, "+2", setNewTime)} className ="bg-green-500 p-2 w-20 rounded-md text-white cursor-pointer">+2</button>
+        <button type="" onClick={() => togglePenalty(ogTime, newTime, "DNF", setNewTime)} className ="bg-red-400 p-2 w-20 rounded-md text-white cursor-pointer">DNF</button>
+        <button type="" onClick={()=> onClick(newTime, idx)} className ="bg-green-500 p-2 w-30 rounded-md text-white cursor-pointer">Confirm</button>
+        <button type="" onClick={() => togglePenalty(ogTime, newTime, "+2", setNewTime)} className ="bg-red-400 p-2 w-20 rounded-md text-white cursor-pointer">+2</button>
       </div>
       
     </div>
@@ -384,7 +384,7 @@ const CuberTimesToDisplay = ({cuber, canViewOtherTimes, records, recordColorLook
           recordColorLookup={recordColorLookup} setShowPopup={setShowPopup} setShowTimesOnMobile={setShowTimesOnMobile}/>
           
         }
-        <button onClick={()=>setShowTimesOnMobile(cuber)} disabled={showTimesOnMobile} className = {`cursor-pointer text-center ${recordColorLookup[isRecord]}`}>
+        <button onClick={()=>setShowTimesOnMobile(cuber)} disabled={showTimesOnMobile} className = {`pl-3 cursor-pointer text-center ${recordColorLookup[isRecord]}`}>
           {formatTime(timeToDisplay)}
         </button>
       </div>
@@ -392,32 +392,19 @@ const CuberTimesToDisplay = ({cuber, canViewOtherTimes, records, recordColorLook
     ) 
   } else {
     {/*Non mobile screens*/}
-    timesToDisplay = cuber.id === PLAYER_ID ?  
+    return (
         cuber.times.map((time, idx) => {
           const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
           const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
 
                  return (
-            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum ? false : true}
+            <button key = {idx} onClick={()=>setShowPopup({cuber: cuber, solveIdx : idx})} disabled = {idx + 1 <= solveNum && cuber.id === PLAYER_ID ? false : true}
               className = {`text-center ${recordColorLookup[isRecord]} ${cuber.id == PLAYER_ID && idx < solveNum ? "hover:text-gray-600 cursor-pointer": ""}`}>
               {timeToDisplay}
             </button>
           )
-
-
         })
-
-        :
-
-        cuber.times.map((time, idx) => {
-          const timeToDisplay = idx + 1 <= solveNum && (canViewOtherTimes || cuber.id === PLAYER_ID) ? formatTime(time) : "#####"
-          const isRecord = idx + 1 <= solveNum ? checkIfRecord(time, records, cuber.country, "sin") : false;
-          return (
-            <div key = {idx} className = {`text-center ${recordColorLookup[isRecord]}`}>
-              {timeToDisplay}
-            </div>
-          )
-        })
+    )
 
   }
 
