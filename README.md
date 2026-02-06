@@ -105,7 +105,6 @@ This website is not at all associated with the WCA nor WST.
 - [X] Indicate if a time is a record
 - [X] Calculate StdDev properly instead of it depending on cuber's recent mean of solves
 - [ ] Mobile View
-- [ ] Record View
 
 ### Stats Page
 
@@ -123,5 +122,5 @@ This website is not at all associated with the WCA nor WST.
 - [ ] Mobile View
 - [ ] Show graph of recent AVGS/BO5s
 - [ ] Show BEST Mo10Ao5
-- [ ] Show Mo10Bo5 for BLD events
+- [X] Show Mo10Bo5 for BLD events
 - [ ] Have a confirm popup for resetting times

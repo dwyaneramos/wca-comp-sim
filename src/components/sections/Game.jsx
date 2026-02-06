@@ -46,7 +46,6 @@ export const Game = (props) => {
   const [endOfRound, setEndOfRound] = useState(false);
   const endOfRoundRef = useRef(endOfRound)
   const [inspectionOn, setInspection] = useState(false);
-  const [disableStreamView, setStreamView] = useState(true);
 
   const [records, setRecords] = useState(null)
   const ogRecordsRef = useRef(null)
@@ -182,74 +181,62 @@ export const Game = (props) => {
   }, [sortedCompetitors]);
 
   return (
-    <section className = {`grid  items-center pt-15 ${disableStreamView ? "grid-cols-3" : "grid-cols-2" } gap-3
-                          w-screen h-screen bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
-      {disableStreamView && <div/>}
-      <div className="flex flex-col items-center gap-3">
+    <section className = {`flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
+      {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
+      <h1 className="text-2xl md:text-3xl pt-20 px-20 text-center">{scramble}</h1> 
+
+
+      <div className = "flex flex-row gap-2 md:mt-10 mb-2">
+
+        <button type="" className={`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"} rounded-md p-1`}
+          disabled={endOfRound} onClick={()=>setInspection(prev => !prev)}>
+          <FaStopwatch size={30} color = {`${endOfRound ? "#374151" : "white"}`}/>
+        </button>
+
+        <input type="text"  className ="border-2 border-gray-400 rounded-md w-3xs md:w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
+          name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
+
+        <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
+          className = {`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
+          <FaArrowRight color = {`${endOfRound ? "#374151" : "white"}`}/>
+        </button>
+      </div>
+
+
         
-        {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
 
-        <h1 className="text-2xl md:text-3xl pt-20 text-center">{scramble}</h1> 
+        <button type="" disabled={!endOfRound} 
+          className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"} mb-2 w-xs md:w-sm p-2 rounded-md `} 
 
-        <div className = "flex flex-row gap-2 md:mt-10 mb-2">
+          onClick = {() => resetRound()}>Rematch</button>
 
-          <button type="" className={`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"} rounded-md p-1`}
-            disabled={endOfRound} onClick={()=>setInspection(prev => !prev)}>
-            <FaStopwatch size={30} color = {`${endOfRound ? "#374151" : "white"}`}/>
-          </button>
-
-          <input type="text"  className ="border-2 border-gray-400 rounded-md w-3xs md:w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
-            name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
-
-          <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
-            className = {`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
-            <FaArrowRight color = {`${endOfRound ? "#374151" : "white"}`}/>
-          </button>
-        </div>
-
-          
-
-          <button type="" disabled={!endOfRound} 
-            className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"} mb-2 w-xs md:w-sm p-2 rounded-md `} 
-
-            onClick = {() => resetRound()}>Rematch</button>
-
-         
-          
-          <div className="flex gap-3 flex-col col-span-2 relative">
-            <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
-          
-
-
-            <div className="overflow-y-scroll h-[50vh]">
-              <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
-                competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}
-                setRecords = {setRecords} records = {records}/>
-              {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
-            </div>
-
-
-          
-            <div className = {`absolute -right-75 ${disableStreamView ? "ml-10" : "ml-0"} flex flex-col h-70 
-                            items-start border-gray-200 bg-gray-100 border-3 rounded-md w-70 py-3 pl-3 gap-5`}>
-              <h1 className="underline font-medium text-xl">Display Options</h1>
-              {competitors.length > 1 &&
-                <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
-              }
-
-              <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg} text = {"Hide BPAs/WPAs"}/>
-
-              {competitors.length > 1 &&
-                <Toggle disabled = {endOfRound} variable = {areCubersRanked} setterFunc = {setCubersRanked} text = {"Hide provisional rankings"}/>
-              }
-              <div className="hidden xl:block">
-                
-                <Toggle disabled = {endOfRound} variable = {disableStreamView} setterFunc = {setStreamView} text = {"Stream Layout"}/>
-              </div>
-            </div>
+      <div className="grid grid-cols-4 gap-3">
+        <div/>
+        
+        <div className="flex gap-3 flex-col col-span-2">
+          <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
+          <div className="overflow-y-scroll h-[50vh]">
+            <DisplayCuberTimes solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
+              competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}
+              setRecords = {setRecords} records = {records}/>
+            {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
           </div>
-
         </div>
+
+        <div className = "flex flex-col h-70 items-start border-gray-200 bg-gray-100 border-3 rounded-md w-70 py-3 pl-3 gap-5">
+          <h1 className="underline font-medium text-xl">Display Options</h1>
+          {competitors.length > 1 &&
+            <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
+          }
+
+          <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg} text = {"Hide BPAs/WPAs"}/>
+
+          {competitors.length > 1 &&
+            <Toggle disabled = {endOfRound} variable = {areCubersRanked} setterFunc = {setCubersRanked} text = {"Hide provisional rankings"}/>
+          }
+        </div>
+      </div>
+      
     </section>
   )
 } 
@@ -303,7 +290,7 @@ const Toggle = ({disabled, variable, setterFunc, text}) => {
 
 
 
-    <div className = "flex flex-row text-md justify-start items-start gap-3">
+    <div className = "flex flex-row text-md justify-center items-center gap-3">
       <button type="" disabled = {disabled} className={` ${variable ? "bg-gray-300 " : "bg-green-300"} relative  w-14 rounded-3xl h-7`} onClick = {() => setterFunc(!variable)}>
         <div className = {`${variable ? "left-1" : "left-[55%]"} transition-all duration-200 absolute rounded-[99px] top-1 w-5 h-5  bg-white`}/>
       </button>

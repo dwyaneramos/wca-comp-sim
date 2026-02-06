@@ -13,18 +13,7 @@ export const SelectCubers = ({changePage, setCompetitors, competitors, disableAp
     <div className= {`flex content-center justify-center   ${disableApp ? "blur-xs pointer-events-none": ""}`}>
       <div className ="flex flex-col mx-auto gap-2 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
                         w-[95vw] h-full overflow-x-hidden pb-10 mt-20 sm:w-3xl ">
-        <h1 className="text-2xl pt-15 font-medium">Configure Settings</h1>
-        <div className="w-lg relative">
-          <div className="absolute z-2 right-0">
-            <h2 className="text-center text-xl font-medium mb-1">Event:</h2>
-            <SelectEventDropdown setEvent = {setEvent} defaultEvent={event}/> 
-          </div>
-          <div className="absolute z-2 left-0">
-            <h2 className="text-center text-xl font-medium mb-1">Representing:</h2>
-            <NationalityDropdown defaultNationality={nationality} setNationality = {setNationality}/>
-          </div>
-        </div>
-
+       
 
           <h1 className="text-xl pt-20 font-medium">Add your competitors</h1>
           <SearchBar setCompetitors = {setCompetitors} competitors = {competitors} disableApp ={disableApp}/>
@@ -37,52 +26,6 @@ export const SelectCubers = ({changePage, setCompetitors, competitors, disableAp
     </div>
   )
 }
-const NationalityDropdown = ({defaultNationality, setNationality}) => {
-  const options =  Object.entries(countries).map(([id, c]) => ({value: id, label: `${c.flag} ${c.name}`}))
-  return (
-  <Select options={options} onChange={(option) => setNationality(option.value)}
-    defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}}
-    classNames={{
-        control: ({ isFocused }) => `w-3xs h-10`,
-      
-      }}/>
-  )
-}
-
-
-
-const SelectEventDropdown = ({setEvent, defaultEvent }) => {
-  const wcaEvents = [
-    { label: "3x3x3 Cube", value: "333" },
-    { label: "2x2x2 Cube", value: "222" },
-    { label: "4x4x4 Cube", value: "444" },
-    { label: "5x5x5 Cube", value: "555" },
-    { label: "6x6x6 Cube", value: "666" },
-    { label: "7x7x7 Cube", value: "777" },
-    { label: "3x3x3 Blindfolded", value: "333bf" },
-    { label: "3x3x3 Fewest Moves", value: "333fm" },
-    { label: "3x3x3 One-Handed", value: "333oh" },
-    { label: "Clock", value: "clock" },
-    { label: "Megaminx", value: "minx" },
-    { label: "Pyraminx", value: "pyram" },
-    { label: "Skewb", value: "skewb" },
-    { label: "Square-1", value: "sq1" },
-    { label: "4x4x4 Blindfolded", value: "444bf" },
-    { label: "5x5x5 Blindfolded", value: "555bf" },
-  ];
-  return (
-    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
-      defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}}
-      classNames = {{
-          control: ({isFocused}) => `w-55 h-10`,
-        }}
-
-    />
-
-  
-  )
-}
-
 const DisplayCompetitors = ({competitors, setCompetitors}) => {
   
   const removeCuber = (cuber) => {

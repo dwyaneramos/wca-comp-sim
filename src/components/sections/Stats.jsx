@@ -3,7 +3,7 @@ import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
 import {genSuffix, formatTime } from "../utils/helper.js"
 import {defaultStats} from "../services/competitors.js"
-import {DNF} from "../utils/constants.js"
+import {DNF, EVENT_AVERAGE_TYPE, EVENT_NAME_LOOKUP} from "../utils/constants.js"
 
 const NUM_RECENT_SOLVES = 25 
 
@@ -81,25 +81,6 @@ const SolvesLineGraph = (props) => {
 export const Stats = (props) => {
   const event = props.event
   const setStats = props.setStats
-  const eventNameLookup = {
-  "333": "3x3x3 Cube",
-  "222": "2x2x2 Cube",
-  "444": "4x4x4 Cube",
-  "555": "5x5x5 Cube",
-  "666": "6x6x6 Cube",
-  "777": "7x7x7 Cube",
-  "333bf": "3x3x3 Blindfolded",
-  "333fm": "3x3x3 Fewest Moves",
-  "333oh": "3x3x3 One-Handed",
-  "clock": "Clock",
-  "minx": "Megaminx",
-  "pyram": "Pyraminx",
-  "skewb": "Skewb",
-  "sq1": "Square-1",
-  "444bf": "4x4x4 Blindfolded",
-  "555bf": "5x5x5 Blindfolded",
-  "333mbf": "3x3x3 Multi-Blind"
-}
   const stats = props.stats 
   const eventStats = stats[event]
   const displayableData = [
@@ -117,6 +98,10 @@ export const Stats = (props) => {
     {
       data : eventStats.prSinHistory,
       title: "History of PR Singles"
+    },
+    {
+      data: eventStats.tenRecentAvgs,
+      title: "Most recent " + Math.min(10, eventStats.tenRecentAvgs.length) + " averages"
     }
   ]
   const [dataForGraphIndex, setDataForGraphIndex] = useState(0)
@@ -133,7 +118,7 @@ export const Stats = (props) => {
     <section className="mt-12 p-5 flex items-center flex-col gap-2">
       <h1 className = "bg-white w-2xl p-3 m-3 border-gray-200 
         drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">
-        Competition Stats for {eventNameLookup[event]}</h1>
+        Competition Stats for {EVENT_NAME_LOOKUP[event]}</h1>
       <div className="grid grid-cols-5 gap-2 auto-rows-max w-full">
           
         <span className="col-span-1">
@@ -215,9 +200,11 @@ const PodiumCount = ({eventStats}) => {
 const CompSummaryStats = ({eventStats, event, times}) => {
   const roundedAvgPlacing = Math.round(eventStats.avgPlacing)
   const roundedAvgCompetitors = Math.round(eventStats.avgCompetitorsInRound)
-
+  
+  const averageType = EVENT_AVERAGE_TYPE[event] 
   const moXAo5 = eventStats.tenRecentAvgs.length == 0 ? "N/A" :
-    eventStats.tenRecentAvgs.includes(DNF) ? "DNF" : formatTime(eventStats.tenRecentAvgs.reduce((acc, curr) => acc + curr, 0 ) / eventStats.tenRecentAvgs.length)
+    eventStats.tenRecentAvgs.includes(DNF) ? "DNF" : 
+      formatTime(eventStats.tenRecentAvgs.map((res)=>res.time).reduce((acc, curr) => acc + curr, 0 ) / eventStats.tenRecentAvgs.length)
   
   const mean = times.map((res) => res.time).reduce((acc, curr) => acc + curr, 0) / times.length 
   console.log(mean)
@@ -237,7 +224,7 @@ const CompSummaryStats = ({eventStats, event, times}) => {
 
       
       <div className = "">
-        <h2 className = "text-gray-600">Mo{Math.min(10, eventStats.tenRecentAvgs.length)}Ao5</h2>
+        <h2 className = "text-gray-600">Mo{Math.min(10, eventStats.tenRecentAvgs.length)}{averageType}</h2>
         <p>{moXAo5}</p>
       </div>
 
