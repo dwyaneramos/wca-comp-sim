@@ -1,10 +1,10 @@
 import {useState, useEffect} from "react"
+import {SelectEventDropdown} from "../Dropdown.jsx"
 import {Chart as ChartJS} from "chart.js/auto"
 import {Bar, Line} from "react-chartjs-2"
 import {genSuffix, formatTime } from "../utils/helper.js"
 import {defaultStats} from "../services/competitors.js"
 import {DNF, EVENT_AVERAGE_TYPE, EVENT_NAME_LOOKUP} from "../utils/constants.js"
-import Select from "react-select"
 
 const NUM_RECENT_SOLVES = 25 
 
@@ -78,39 +78,6 @@ const SolvesLineGraph = (props) => {
 
   )
 }
-
-const SelectEventDropdown = ({setEvent, defaultEvent }) => {
-  const wcaEvents = [
-    { label: "3x3x3 Cube", value: "333" },
-    { label: "2x2x2 Cube", value: "222" },
-    { label: "4x4x4 Cube", value: "444" },
-    { label: "5x5x5 Cube", value: "555" },
-    { label: "6x6x6 Cube", value: "666" },
-    { label: "7x7x7 Cube", value: "777" },
-    { label: "3x3x3 Blindfolded", value: "333bf" },
-    { label: "3x3x3 Fewest Moves", value: "333fm" },
-    { label: "3x3x3 One-Handed", value: "333oh" },
-    { label: "Clock", value: "clock" },
-    { label: "Megaminx", value: "minx" },
-    { label: "Pyraminx", value: "pyram" },
-    { label: "Skewb", value: "skewb" },
-    { label: "Square-1", value: "sq1" },
-    { label: "4x4x4 Blindfolded", value: "444bf" },
-    { label: "5x5x5 Blindfolded", value: "555bf" },
-  ];
-  return (
-    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
-      defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}} menuPortalTarget={document.body}
-      classNames = {{
-          control: ({isFocused}) => `w-55 h-10`,
-        }}
-
-    />
-
-  
-  )
-}
-
 
 export const Stats = (props) => {
   const event = props.event
