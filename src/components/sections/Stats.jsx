@@ -57,7 +57,7 @@ const SolvesLineGraph = (props) => {
               label: (data) => {
                 const value = data.raw.y 
                 const date = data.raw.date
-                return [ `Time: ${value.toFixed(2)}`, 
+                return [ `Time: ${formatTime(value)}`, 
                          `Date: ${date}`];
                 }
               }
@@ -87,7 +87,7 @@ export const Stats = (props) => {
 
     {
       data : eventStats.solves,
-     title: "Most recent " + Math.min(25, eventStats.solves.length) + " solves"
+      title: "Most recent " + Math.min(25, eventStats.solves.length) + " solves"
     },
 
     {
@@ -101,7 +101,7 @@ export const Stats = (props) => {
     },
     {
       data: eventStats.tenRecentAvgs,
-      title: "Most recent " + Math.min(10, eventStats.tenRecentAvgs.length) + " averages"
+      title: `Most recent ${Math.min(10, eventStats.tenRecentAvgs.length)} ${EVENT_AVERAGE_TYPE[event]}s`
     }
   ]
   const [dataForGraphIndex, setDataForGraphIndex] = useState(0)
@@ -247,7 +247,7 @@ const TopResultsSection = ({type, topTimes}) => {
       <h1 className = "text-xl mb-5 text-center font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
-        <h2 className = "bg-green-400 drop-shadow-lg py-3 lg:w-45 w-30 text-center rounded-lg text-white font-semibold text-6xl">
+        <h2 className = "bg-green-400 drop-shadow-lg py-3 px-2 text-center rounded-lg text-white font-semibold text-6xl">
           {formatTime(topTimes[0])}
         </h2>
         <h3 className = "font-semibold mb-4 text-gray-600 ">Personal Best</h3>

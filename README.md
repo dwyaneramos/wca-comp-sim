@@ -120,7 +120,7 @@ This website is not at all associated with the WCA nor WST.
 - [X] Be able to reset results
 - [X] Show dates of times
 - [ ] Mobile View
-- [ ] Show graph of recent AVGS/BO5s
+- [X] Show graph of recent AVGS/BO5s
 - [ ] Show BEST Mo10Ao5
 - [X] Show Mo10Bo5 for BLD events
 - [ ] Have a confirm popup for resetting times
