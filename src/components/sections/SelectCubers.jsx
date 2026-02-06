@@ -104,7 +104,7 @@ const DisplayCompetitors = ({competitors, setCompetitors}) => {
         {competitors.map((cuber) => {
           if (cuber.id !== PLAYER_ID) {
               return (
-                <div key = {cuber.id} className = "flex flex-row h-15 bg-gray-100 w-2xs rounded-md px-1 hover:bg-gray-200 py-1   border-2 border-gray-300 "> 
+                <div key = {cuber.id} className = "flex flex-row h-17 bg-gray-100 w-2xs rounded-md p-2 hover:bg-gray-200   border-2 border-gray-300 "> 
 
                   <div className = "flex flex-col w-full">
                     
@@ -189,7 +189,7 @@ const SearchBar = ({setCompetitors, competitors, disableApp}) => {
 
       <div className = "flex flex-row justify-center">
         <input  onChange={(e) => setInput(e.target.value)} type="text" name="search bar" value={input} placeholder={"Search by name or WCA ID"}
-              className = "bg-white border-2 border-gray-300 rounded-md text-xl p-2 w-2xs sm:w-sm"/>
+              className = "bg-white border-2 border-gray-300 rounded-md text-md p-2 w-2xs sm:w-sm"/>
         <IoIosSearch size={33} className = "absolute ml-60 sm:ml-85 mt-2"/>
       </div>
 
