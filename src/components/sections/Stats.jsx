@@ -4,6 +4,7 @@ import {Bar, Line} from "react-chartjs-2"
 import {genSuffix, formatTime } from "../utils/helper.js"
 import {defaultStats} from "../services/competitors.js"
 import {DNF, EVENT_AVERAGE_TYPE, EVENT_NAME_LOOKUP} from "../utils/constants.js"
+import Select from "react-select"
 
 const NUM_RECENT_SOLVES = 25 
 
@@ -78,10 +79,44 @@ const SolvesLineGraph = (props) => {
   )
 }
 
+const SelectEventDropdown = ({setEvent, defaultEvent }) => {
+  const wcaEvents = [
+    { label: "3x3x3 Cube", value: "333" },
+    { label: "2x2x2 Cube", value: "222" },
+    { label: "4x4x4 Cube", value: "444" },
+    { label: "5x5x5 Cube", value: "555" },
+    { label: "6x6x6 Cube", value: "666" },
+    { label: "7x7x7 Cube", value: "777" },
+    { label: "3x3x3 Blindfolded", value: "333bf" },
+    { label: "3x3x3 Fewest Moves", value: "333fm" },
+    { label: "3x3x3 One-Handed", value: "333oh" },
+    { label: "Clock", value: "clock" },
+    { label: "Megaminx", value: "minx" },
+    { label: "Pyraminx", value: "pyram" },
+    { label: "Skewb", value: "skewb" },
+    { label: "Square-1", value: "sq1" },
+    { label: "4x4x4 Blindfolded", value: "444bf" },
+    { label: "5x5x5 Blindfolded", value: "555bf" },
+  ];
+  return (
+    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
+      defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}} menuPortalTarget={document.body}
+      classNames = {{
+          control: ({isFocused}) => `w-55 h-10`,
+        }}
+
+    />
+
+  
+  )
+}
+
+
 export const Stats = (props) => {
   const event = props.event
   const setStats = props.setStats
   const stats = props.stats 
+  const setEvent = props.setEvent
   const eventStats = stats[event]
   const displayableData = [
 
@@ -119,6 +154,10 @@ export const Stats = (props) => {
       <h1 className = "bg-white w-2xl p-3 m-3 border-gray-200 
         drop-shadow-md border-2 text-center font-medium text-3xl rounded-lg">
         Competition Stats for {EVENT_NAME_LOOKUP[event]}</h1>
+      <div className="flex flex-row items-center gap-3 drop-shadow-md rounded-lg border-2 bg-white border-gray-200 py-2 px-3">
+        <h1 className="text-xl font-medium">Change Event</h1> 
+        <SelectEventDropdown defaultEvent={event} setEvent={setEvent}/>
+      </div>
       <div className="grid grid-cols-5 gap-2 auto-rows-max w-full">
           
         <span className="col-span-1">
