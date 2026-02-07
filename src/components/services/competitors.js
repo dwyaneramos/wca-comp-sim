@@ -142,11 +142,11 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
       newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
     }
 
-    const lastIdx = eventStats.tenRecentAvgs.length == 1 ? 1 : eventStats.tenRecentAvgs[eventStats.tenRecentAvgs.length - 1].idx
-    newTenRecentAvgs = eventStats.tenRecentAvgs.length == 0 ? [{time : avgToSubmit, date: currDate, idx : 1}] :
-                            eventStats.tenRecentAvgs.length >= 10 ? [...(eventStats.tenRecentAvgs.slice(1)), 
+    const lastIdx = newTenRecentAvgs.length == 0 ? 1 : newTenRecentAvgs[newTenRecentAvgs.length - 1].idx
+    newTenRecentAvgs = newTenRecentAvgs.length == 0 ? [{time : avgToSubmit, date: currDate, idx : 1}] :
+                            newTenRecentAvgs.length >= 10 ? [...(newTenRecentAvgs.slice(1)), 
                               {time: avgToSubmit, date: currDate, idx : lastIdx + 1}] : 
-                            [...eventStats.tenRecentAvgs, {time: avgToSubmit, date: currDate, idx : lastIdx + 1}]
+                            [...newTenRecentAvgs, {time: avgToSubmit, date: currDate, idx : lastIdx + 1}]
     
 
 
