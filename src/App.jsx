@@ -6,7 +6,7 @@ import {SelectCubers} from './components/sections/SelectCubers'
 import {Game} from './components/sections/Game'
 import {Stats} from './components/sections/Stats'
 import {NavBar} from './components/NavBar'
-import {simulateAllCompetitors, addUser, startingStats} from './components/services/competitors.js'
+import {simulateAllCompetitors, addUser, startingStats, defaultStats} from './components/services/competitors.js'
 import { FaGithub } from "react-icons/fa";
 import { Popup } from "./components/Popup.jsx"
 
@@ -85,24 +85,38 @@ function App() {
     
   }, [disableUpdatePopup])
   
-  {/*used to update ten recent avgs format*/}
+
+
   useEffect(() => {
+    {/*update ten recent avgs format*/}
     setStats(prev => {
-    let newTenRecentAvgs = prev[event].tenRecentAvgs;
+      let newTenRecentAvgs = prev[event].tenRecentAvgs;
 
-    if (newTenRecentAvgs.length > 0 && typeof newTenRecentAvgs[0] !== "object") {
-      newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
-    }
+      if (newTenRecentAvgs.length > 0 && typeof newTenRecentAvgs[0] !== "object") {
+        newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
+      }
 
-    return {
-          ...prev,
-          [event] : {
-          ...prev[event],
-            tenRecentAvgs : newTenRecentAvgs
+      return {
+            ...prev,
+            [event] : {
+            ...prev[event],
+              tenRecentAvgs : newTenRecentAvgs
+            }
+            
           }
-          
-        }
 
+      })
+    
+    {/*adds new stats to people who used older ver of website*/}
+    setStats(prev => {
+      const statsTemplate = defaultStats();
+      return {
+        ...prev,
+        [event] : {
+          ...statsTemplate,
+          ...prev[event]
+        }
+      }
     })
       }, [event])
     
