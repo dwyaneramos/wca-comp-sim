@@ -1,9 +1,8 @@
 import {useState, useEffect} from "react";
-
+import {MOBILE_BREAKPOINT} from "./utils/constants.js"
 
 export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEvent, setNationality, defaultNationality}) => {
-  const isSmall = window.innerWidth < 500
-  
+  const isSmall = window.screen.width <= MOBILE_BREAKPOINT 
 
   return (
     <div className = "flex flex-col bg-white drop-shadow-sm sm:px-30 text-lg py-3 fixed top-0 w-screen z-100">

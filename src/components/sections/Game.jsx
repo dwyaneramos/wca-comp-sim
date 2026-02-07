@@ -6,7 +6,7 @@ import { FaArrowRight, FaStopwatch, FaCamera } from "react-icons/fa";
 import {createPlayerWithNewTime, savePlayerTimes, rankCompetitors} from "../services/competitors.js"
 import { randomScrambleForEvent } from "cubing/scramble";
 import {fetchRecords, checkIfRecord, updateRecords} from "../services/records.js"
-import {PLAYER_ID, DNF, MO3_EVENTS, BLD_EVENTS} from "../utils/constants.js"
+import {PLAYER_ID, DNF, MO3_EVENTS, BIG_EVENTS, BLD_EVENTS, MOBILE_BREAKPOINT} from "../utils/constants.js"
 
 
 const genScramble = async (event) => {
@@ -176,66 +176,71 @@ export const Game = ({competitors, setCompetitors, event, setStats, stats, setPo
   }, [sortedCompetitors]);
 
   return (
-    <section className = {`flex flex-col pt-15 items-center gap-3  w-screen h-screen bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
+    <section className = {`flex flex-col pt-15 items-center gap-3  w-full h-full bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
+      {/*Inspection screen*/}
       {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
-      <h1 className="text-2xl md:text-3xl pt-20 px-20 text-center">{scramble}</h1> 
+      <div className="sticky top-15 bg-white pb-5 z-2 flex items-center flex-col mb-5">
+        
+        {/*Scramble*/}
+        <h1 className={`${BIG_EVENTS.includes(event) ? "text-lg" : "text-2xl"} md:text-3xl pt-10 pb-5 sm:pt-20 px-20 text-center`}>{scramble}</h1> 
 
 
-      <div className = {`${showTimesOnMobile ? "pointer-events-none" : ""} flex flex-row gap-2 md:mt-10 mb-2`}>
-        {/*Inspection Timer*/}
-        <button type="" className={`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"} rounded-md p-1`}
-          disabled={endOfRound} onClick={()=>setInspection(prev => !prev)}>
-          <FaStopwatch size={30} color = {`${endOfRound ? "#374151" : "white"}`}/>
-        </button>
+        <div className = {`${showTimesOnMobile ? "pointer-events-none" : ""} flex flex-row gap-2 md:mt-10 mb-2`}>
+          {/*Inspection Timer*/}
+          <button type="" className={`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"} rounded-md p-1`}
+            disabled={endOfRound} onClick={()=>setInspection(prev => !prev)}>
+            <FaStopwatch size={30} color = {`${endOfRound ? "#374151" : "white"}`}/>
+          </button>
 
-        {/*Time input*/}
-        <input type="text"  className ="border-2 border-gray-400 rounded-md w-3xs md:w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
-          name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
+          {/*Time input*/}
+          <input type="text"  className ="border-2 border-gray-400 rounded-md w-3xs md:w-md h-10  px-2 " onKeyPress={(e)=>{if(e.key=="Enter" && !endOfRound) submitTime(timeInput)}}
+            name="time" value={timeInput} onChange={(e) => setTime(e.target.value.trim())} />
 
-        {/*Submit button*/}
-        <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
-          className = {`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
-          <FaArrowRight color = {`${endOfRound ? "#374151" : "white"}`}/>
-        </button>
+          {/*Submit button*/}
+          <button disabled={endOfRound} onClick={() => submitTime(timeInput)} type="" 
+            className = {`${endOfRound ?  "bg-gray-300" : "bg-green-500 cursor-pointer"}   w-10 h-10 flex justify-center items-center rounded-md`}>
+            <FaArrowRight color = {`${endOfRound ? "#374151" : "white"}`}/>
+          </button>
+        </div>
+
+
+          
+
+        {/*Rematch*/}
+        <button type="" disabled={!endOfRound} 
+          className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"}
+                      ${showTimesOnMobile ? "pointer-events-none" : ""} mb-2 w-xs md:w-sm p-2 rounded-md `} 
+
+          onClick = {() => resetRound()}>Rematch</button>
+
       </div>
+              
+        <div className="flex gap-3 flex-col sticky">
+            {/*Display Options TODO: DISABLE THIS SOON VIA SHOWING TIMES*/}
+          <div className="border-gray-200 bg-gray-100 border-3 p-3 rounded-md text-center ">
+            <h1 className="underline font-medium text-xl pb-3">Display Options</h1>
+            <div className = "flex flex-col sm:flex-row items-start sm:place-content-around gap-5">
+              {competitors.length > 1 &&
+                <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
+              }
 
+              <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg} text = {"Hide BPAs/WPAs"}/>
 
-        
+              {competitors.length > 1 &&
+                <Toggle disabled = {endOfRound} variable = {areCubersRanked} setterFunc = {setCubersRanked} text = {"Hide provisional rankings"}/>
+              }
+            </div>
+          </div>
 
-      {/*Rematch*/}
-      <button type="" disabled={!endOfRound} 
-        className = {`${endOfRound ? "cursor-pointer bg-green-500 text-white" : "bg-gray-200 text-gray-700"}
-                    ${showTimesOnMobile ? "pointer-events-none" : ""} mb-2 w-xs md:w-sm p-2 rounded-md `} 
-
-        onClick = {() => resetRound()}>Rematch</button>
-
-      <div className="grid grid-cols-4 gap-3">
-        <div className="hidden md:block"/>
-        
-        <div className="flex gap-3 flex-col col-span-2">
+            {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
           <TimeHeaders numSolvesInRound = {numSolvesInRound}/>
-          <div className="overflow-y-scroll h-[50vh] w-screen sm:w-full">
+          <div className="overflow-y-auto h-full sm:h-[50vh] w-full sm:w-full">
             <ResultsTable solveNum = {solveNum} canViewOtherTimes = {canViewOtherTimes}
               competitors = {sortedCompetitors} canViewPotentialAvg = {canViewPotentialAvg} setShowPopup = {setShowPopup} numSolvesInRound = {numSolvesInRound}
               setRecords = {setRecords} records = {records} setShowTimesOnMobile={setShowTimesOnMobile} showTimesOnMobile={showTimesOnMobile}/>
-            {showPopup.cuber !== null && <EditTimePopup cuber = {showPopup.cuber} idx = {showPopup.solveIdx} onClick={editTime}/>}
           </div>
         </div>
 
-        {/*Display Options TODO: DISABLE THIS SOON VIA SHOWING TIMES*/}
-        <div className = "hidden flex flex-col h-70 items-start border-gray-200 bg-gray-100 border-3 rounded-md w-70 py-3 pl-3 gap-5">
-          <h1 className="underline font-medium text-xl">Display Options</h1>
-          {competitors.length > 1 &&
-            <Toggle disabled = {endOfRound} variable = {canViewOtherTimes} setterFunc = {setViewOtherTimes} text = {"Hide other times"}/>
-          }
-
-          <Toggle disabled = {endOfRound} variable = {canViewPotentialAvg} setterFunc = {setViewPotentialAvg} text = {"Hide BPAs/WPAs"}/>
-
-          {competitors.length > 1 &&
-            <Toggle disabled = {endOfRound} variable = {areCubersRanked} setterFunc = {setCubersRanked} text = {"Hide provisional rankings"}/>
-          }
-        </div>
-      </div>
       
     </section>
   )
@@ -245,7 +250,7 @@ export const Game = ({competitors, setCompetitors, event, setStats, stats, setPo
 
 const ResultsTable = ({solveNum, canViewOtherTimes, competitors, canViewPotentialAvg, setShowPopup, numSolvesInRound, setRecords, records, setShowTimesOnMobile, showTimesOnMobile}) => {
   return (
-    <div className="flex flex-col gap-2 mb-10">
+    <div className="flex flex-col bg-white gap-2 mb-10">
       {competitors.map((cuber, idx) => {
 
         return (
@@ -266,7 +271,8 @@ const TimeHeaders = ({numSolvesInRound}) => {
   
   const isMobile = window.screen.width < 768
   return (
-     <div className = {`grid w-screen sm:w-full md:w-3xl place-content-around text-center grid-cols-5 ${numSolvesInRound == 3 ? `md:grid-cols-7` : `md:grid-cols-9`} border-2 border-gray-200 rounded-md p-2 items-center`}>
+     <div className = {`sticky top-83 bg-white grid w-full sm:w-full md:w-3xl place-content-around text-center 
+                      grid-cols-5 ${numSolvesInRound == 3 ? `md:grid-cols-7` : `md:grid-cols-9`} border-2 border-gray-200 rounded-md p-2 items-center`}>
       <h1>Rank</h1>
       <h1 className="col-span-2 text-left">Competitor</h1>
         {isMobile &&
@@ -302,7 +308,7 @@ const EditTimePopup = ({cuber, idx, onClick}) => {
   const [ogTime] = useState(formatTime(cuber.times[idx]))
   return (
     <div className = "bg-white border-2 border-gray-200 flex gap-2 justify-center items-center flex-col
-      w-100 h-50 absolute right-0 left-0 mx-auto top-0 bottom-0 my-auto">
+      w-100 h-50 fixed right-0 left-0 mx-auto top-100 z-100 sm:top-0 sm:bottom-0 my-auto">
       <h1>Edit Time</h1>
       <input className="bg-gray-100 text-center w-50 p-3 mb-3 rounded-md" type=""
         name="edit time input" value={newTime} onChange={(e)=>setNewTime(e.target.value)}/>
@@ -340,7 +346,7 @@ const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
 const MobileTimesDisplay = ({cuber, solveNum, records, recordColorLookup, setShowPopup, setShowTimesOnMobile, showTimesOnMobile}) => {
   const canEdit = cuber.id === PLAYER_ID
   return (
-    <div className="fixed text-center flex flex-col px-3 pt-15 bg-white border-3 border-gray-200 top-50 right-0 left-0 mx-auto h-100 w-[95vw]">
+    <div className="fixed text-center flex flex-col px-3 pt-15 bg-white border-3 border-gray-200 top-100 right-0 left-0 mx-auto h-100 w-[95vw]">
       <h1 className="text-xl mb-3">{`${cuber.name}'s times`}</h1>
       <button type="" onClick={()=>{setShowTimesOnMobile(null); setShowPopup({cuber: null, solveIdx : null})}} className = "absolute right-2
         top-2 cursor-pointer hover:bg-gray-100 p-3 text-2xl rounded-md border-2 border-gray-200">
@@ -370,7 +376,6 @@ const MobileTimesDisplay = ({cuber, solveNum, records, recordColorLookup, setSho
 
 const CuberTimesToDisplay = ({cuber, canViewOtherTimes, records, recordColorLookup, solveNum, setShowPopup, setShowTimesOnMobile, showTimesOnMobile}) => {
   
-  const MOBILE_BREAKPOINT = 640
   let timesToDisplay = null
 
 
@@ -409,7 +414,7 @@ const CuberTimesToDisplay = ({cuber, canViewOtherTimes, records, recordColorLook
   }
 
   return timesToDisplay
-
+ 
   
 
 }
@@ -437,7 +442,7 @@ const PlayerRow = ({cuber, solveNum, canViewOtherTimes, canViewPotentialAvg, set
   const avgColour = recordColorLookup[isAvgRecord]
 
   return (
-    <div className = {`grid w-screen sm:w-3xl grid-cols-5 ${numSolvesInRound == 3 ? "sm:grid-cols-7" : "sm:grid-cols-9"} border-2 border-gray-200 rounded-md items-center pr-2`}>
+    <div className = {`grid w-full sm:w-3xl grid-cols-5 ${numSolvesInRound == 3 ? "sm:grid-cols-7" : "sm:grid-cols-9"} border-2 border-gray-200 rounded-md items-center pr-2`}>
 
       <h1 className = "text-xl text-center">{rank + 1}</h1>
 

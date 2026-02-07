@@ -15,7 +15,11 @@ export const EVENTS = ["333",
                "sq1",  
                "444bf",
                "555bf"]
+export const BIG_EVENTS = [
+  "444", "555", "666", "777", "444bf", "555bf"
+]
 
+export const MOBILE_BREAKPOINT = 640
 export const EVENT_NAME_LOOKUP = {
   "333": "3x3x3 Cube",
   "222": "2x2x2 Cube",
