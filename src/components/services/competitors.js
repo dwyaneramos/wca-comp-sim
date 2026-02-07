@@ -138,10 +138,6 @@ export const savePlayerTimes = (player, event, prevStats, rank, competitorsInRou
 
     let newTenRecentAvgs = eventStats.tenRecentAvgs
 
-    if (newTenRecentAvgs.length > 0 && typeof newTenRecentAvgs[0] !== "object") {
-      newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
-    }
-
     const lastIdx = newTenRecentAvgs.length == 0 ? 1 : newTenRecentAvgs[newTenRecentAvgs.length - 1].idx
     newTenRecentAvgs = newTenRecentAvgs.length == 0 ? [{time : avgToSubmit, date: currDate, idx : 1}] :
                             newTenRecentAvgs.length >= 10 ? [...(newTenRecentAvgs.slice(1)), 
