@@ -84,6 +84,27 @@ function App() {
     console.log(disableUpdatePopup)
     
   }, [disableUpdatePopup])
+  
+  {/*used to update ten recent avgs format*/}
+  useEffect(() => {
+    setStats(prev => {
+    let newTenRecentAvgs = prev[event].tenRecentAvgs;
+
+    if (newTenRecentAvgs.length > 0 && typeof newTenRecentAvgs[0] !== "object") {
+      newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
+    }
+
+    return {
+          ...prev,
+          [event] : {
+            tenRecentAvgs : newTenRecentAvgs
+          }
+          
+        }
+
+    })
+      }, [event])
+    
 
   const CurrentPage = lookup[page]
 
