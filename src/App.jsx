@@ -97,6 +97,7 @@ function App() {
     return {
           ...prev,
           [event] : {
+          ...prev[event],
             tenRecentAvgs : newTenRecentAvgs
           }
           
