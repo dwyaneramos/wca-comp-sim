@@ -138,9 +138,10 @@ const MobileStatsLayout = ({event, setEvent, eventStats, displayableData, setDat
   return (
     <section className="mt-12 p-5 flex items-center flex-col gap-2">
 
-      <div className="mt-3 mb-2 w-sm sm:w-2xl text-xl sm:text-2xl p-3 flex flex-row bg-white border-gray-200 drop-shadow-md border-2 text-center items-center gap-3 justify-center font-medium rounded-lg">
-        <h1 className="text-3xl">Stats for </h1> 
-        <SelectEventDropdown defaultEvent={event} setEvent={setEvent} width={"w-50"} height={"h-15"}/>      </div>
+      <div className="mt-3 mb-2 w-full sm:w-2xl text-xl sm:text-2xl p-3 flex flex-row bg-white border-gray-200 drop-shadow-md border-2 text-center items-center gap-3 justify-center font-medium rounded-lg">
+        <h1 className="text-2xl">Stats for </h1> 
+        <SelectEventDropdown defaultEvent={event} setEvent={setEvent} width={"w-50"} height={"h-15"}/>      
+      </div>
       
           
         <SolvesLineGraph dataForGraph ={displayableData[dataForGraphIndex]} height={"h-50"} />
@@ -293,17 +294,21 @@ const CompSummaryStats = ({eventStats, event, times}) => {
 }
 
 const TopResultsSection = ({type, topTimes}) => {
+  let topTimesWithPlaceHolders = [...topTimes]
+  while (topTimesWithPlaceHolders.length < 5) {
+    topTimesWithPlaceHolders.push("N/A")
+  }
   return (
     <div className = "white p-2 pb-5 h-full w-150 sm:w-full rounded-md drop-shadow-md border-2 border-gray-200 bg-white">
       <h1 className = "text-xl mb-5 text-center font-medium text-gray-600 pl-2 pt-2">Top 5 {type}</h1>
 
       <div className = "flex flex-col items-center gap-2">
         <h2 className = "bg-green-400 drop-shadow-lg py-3 px-2 text-center rounded-lg text-white font-semibold text-3xl sm:text-6xl">
-          {formatTime(topTimes[0])}
+          {formatTime(topTimesWithPlaceHolders[0])}
         </h2>
         <h3 className = "font-semibold mb-4 text-gray-600 ">Personal Best</h3>
 
-        {(topTimes.slice(1, 5)).map((time, idx) => {
+        {(topTimesWithPlaceHolders.slice(1, 5)).map((time, idx) => {
           return (
             <div key = {idx} className = "flex place-content-between 
               py-1 px-2 w-35 sm:w-40 bg-gray-100 border-2 border-gray-100 rounded-lg text-xl">
@@ -312,7 +317,7 @@ const TopResultsSection = ({type, topTimes}) => {
               </span>
 
               <span className = "">
-                {formatTime(time)} 
+                {`${time === "N/A" ? "N/A" : formatTime(time)}`} 
               </span>
             </div>
           )
