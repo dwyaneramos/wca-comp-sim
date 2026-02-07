@@ -17,7 +17,7 @@ export const SelectCubers = ({changePage, setCompetitors, competitors, disableAp
         <div className="flex flex-col items-center md:flex-row gap-3">
           <div>
             <h2 className="text-center text-xl font-medium mb-1">Event:</h2>
-            <SelectEventDropdown setEvent = {setEvent} defaultEvent={event}/> 
+            <SelectEventDropdown setEvent = {setEvent} defaultEvent={event} width={"w-55"} height={"h-10"}/> 
           </div>
           <div>
             <h2 className="text-center text-xl font-medium mb-1">Representing:</h2>

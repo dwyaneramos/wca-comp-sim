@@ -13,8 +13,8 @@ export const NavBar = ({changePage, disabledEventDropdown, setEvent, defaultEven
             <div className="flex flex-row gap-2">
               
               <h1 className = "text-lg py-2 font-bold">WCA Comp Sim</h1>
-              <a href="" className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
-              <a href="" onClick={()=>changePage("")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
+              <a href="#" onClick={()=>changePage("Home")}  className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Home</a>
+              <a href="#" onClick={()=>changePage("Stats")} className="py-1 hover:bg-gray-200 transition py-2 px-3 rounded-md">Stats</a>
             </div>
         </div>
 

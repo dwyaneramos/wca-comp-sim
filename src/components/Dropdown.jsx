@@ -1,7 +1,7 @@
 import Select from "react-select"
 import {countryToFlag, countries} from "./services/nationality.js"
 
-export const SelectEventDropdown = ({setEvent, defaultEvent }) => {
+export const SelectEventDropdown = ({setEvent, defaultEvent, width, height}) => {
   const wcaEvents = [
     { label: "3x3x3 Cube", value: "333" },
     { label: "2x2x2 Cube", value: "222" },
@@ -25,7 +25,7 @@ export const SelectEventDropdown = ({setEvent, defaultEvent }) => {
       defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}} menuPortalTarget={document.body}
 
       classNames = {{
-          control: ({isFocused}) => `w-55 h-10`,
+          control: ({isFocused}) => `${width} ${height}`,
         }}
 
     />
