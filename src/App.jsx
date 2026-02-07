@@ -132,7 +132,7 @@ function App() {
       {error && <Popup popupHeader={"ERROR"} popupMsg ={error} setPopupOn={setError} popupColor = {"red-500"}/>}
 
       {showUpdatePopup && <Popup popupHeader={"ATTENTION"} 
-        popupMsg={"There has been changes to the way competitors are represented. If you've last used this website since Jan 22nd, please delete all competitors and start fresh to avoid any bugs"W:Watermark. Thank you for using my website :)"}
+        popupMsg={"There has been changes to the way competitors are represented. If you've last used this website since Jan 22nd, please delete all competitors and start fresh to avoid any bugs. Thank you for using my website :)"}
         setPopupOn={setShowUpdatePopup}
         popupColor = {"red-500"} setDisableUpdatePopup = {setDisableUpdatePopup}/>}
 
