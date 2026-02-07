@@ -78,7 +78,6 @@ export const createSimCuber = async (cuber, event, numSolves) => {
   const timesWOLastSolve = times.slice(0, -1);
   const avg = genPlayerAvg(times, numSolves);
   const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolves);
-
   return createCuber(cuber.id, cuber.name, times, cuber.country, bpa, wpa, avg)
 
 }
@@ -102,11 +101,33 @@ export const genRandomTime = (officialTimes, event) => {
   if (roll <= dnfChance) {
     return DNF
   }
-  const time = randLogNormal(mean, variance) 
-  return time
+  
+  {/* Using the Marsaglia method only works if for (mean**2 / variance) > 3*/}
+  if ((mean ** 2 / variance) <= (1/3)) { 
+    return randLogNormal(mean, variance)
+  } else {
+    return randGamma(mean, variance)
+  }
 }
 
-const randNormal = (mean) => {
+const randGamma = (mean, variance) => {
+  const gammaA = mean ** 2 / variance 
+  const gammaT = variance / mean 
+
+  const d = gammaA - (1/3)
+  const c = 1 / (Math.sqrt(9 * d))
+  
+  while (true) {
+    const u = Math.random()
+    const n = randNormal()
+    const v = (1 + c * n) ** 3 
+    if (v > 0 && (Math.log(u) < (n ** 2 / 2 + d - d * v + d * Math.log(v)))) {
+      return d * v * gammaT
+    }
+  }
+}
+
+const randNormal = () => {
   let u = 0;
   let v = 0;
 
@@ -123,7 +144,7 @@ const randLogNormal = (mean, variance) => {
   const mu = Math.log(mean ** 2 / Math.sqrt(variance + mean ** 2));
   const sigma = Math.sqrt(Math.log(1 + variance / mean ** 2));
 
-  return Math.exp(mu + sigma * randNormal(mean));
+  return Math.exp(mu + sigma * randNormal());
 };
 
 export const fetchTimes = async (cuber, event) => {
