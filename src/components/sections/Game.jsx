@@ -103,7 +103,6 @@ export const Game = ({competitors, setCompetitors, event, setStats, stats, setPo
           return createPlayerWithNewTime(c, idx + 1, time, numSolvesInRound, playerNationality)
           
         }))
-      console.log(showTimesOnMobile, "HHHHH")
       setShowPopup({cuber : null, solveIdx : null})
       setShowTimesOnMobile(null)
     } else {
@@ -179,7 +178,7 @@ export const Game = ({competitors, setCompetitors, event, setStats, stats, setPo
     <section className = {`flex flex-col pt-15 items-center gap-3  w-full h-full bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
       {/*Inspection screen*/}
       {inspectionOn && <InspectionTimer setInspection = {setInspection}/> }
-      <div className="sticky top-15 bg-white pb-5 z-2 flex items-center flex-col mb-5">
+      <div className="sticky top-15 bg-white pb-5 mb-5 sm:pb-0 sm:mb-0 z-2 flex items-center flex-col ">
         
         {/*Scramble*/}
         <h1 className={`${BIG_EVENTS.includes(event) ? "text-lg" : "text-2xl"} md:text-3xl pt-10 pb-5 sm:pt-20 px-20 text-center`}>{scramble}</h1> 
@@ -308,7 +307,7 @@ const EditTimePopup = ({cuber, idx, onClick}) => {
   const [ogTime] = useState(formatTime(cuber.times[idx]))
   return (
     <div className = "bg-white border-2 border-gray-200 flex gap-2 justify-center items-center flex-col
-      w-100 h-50 fixed right-0 left-0 mx-auto top-100 z-100 sm:top-0 sm:bottom-0 my-auto">
+      w-100 h-50 fixed right-0 left-0 mx-auto top-83 sm:top-100 z-100 sm:top-0 sm:bottom-0 my-auto">
       <h1>Edit Time</h1>
       <input className="bg-gray-100 text-center w-50 p-3 mb-3 rounded-md" type=""
         name="edit time input" value={newTime} onChange={(e)=>setNewTime(e.target.value)}/>
@@ -346,7 +345,7 @@ const togglePenalty = (ogTime, newTime, penalty, setNewTime) => {
 const MobileTimesDisplay = ({cuber, solveNum, records, recordColorLookup, setShowPopup, setShowTimesOnMobile, showTimesOnMobile}) => {
   const canEdit = cuber.id === PLAYER_ID
   return (
-    <div className="fixed text-center flex flex-col px-3 pt-15 bg-white border-3 border-gray-200 top-100 right-0 left-0 mx-auto h-100 w-[95vw]">
+    <div className="fixed text-center flex flex-col px-3 pt-5 bg-white border-3 border-gray-200 top-85 right-0 left-0 mx-auto h-100 w-[95vw]">
       <h1 className="text-xl mb-3">{`${cuber.name}'s times`}</h1>
       <button type="" onClick={()=>{setShowTimesOnMobile(null); setShowPopup({cuber: null, solveIdx : null})}} className = "absolute right-2
         top-2 cursor-pointer hover:bg-gray-100 p-3 text-2xl rounded-md border-2 border-gray-200">
