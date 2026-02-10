@@ -6,6 +6,7 @@ Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubi
 
 - Search functionality to make entering competitors easy
 - Comprehensive stats page
+- Responsive design making it accessible across all devices
 - Live results shown identically to official WCA software
 
 ## How to run this on your computer?
@@ -38,7 +39,7 @@ Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubi
 
 ## Additional Notes
 
-- FMC and MBLD have yet to be properly implemented
+- FMC and MBLD will not be implemented
 
 - You must click on the search result (or Enter) to add a particular cuber.
 
@@ -52,7 +53,7 @@ Kia Ora guys! I actually made this [project](https://github.com/dwyaneramos/cubi
 
 - You can represent a country that has no official results (meaning free NRs :D)
 
-- DNF chance for competitors is 50% for BLD events and 2% for sighted events
+- DNF chance for competitors is 50% for BLD events and 2% for sighted events regardless of their official DNF rate
 
 - There are some cases where a person's PR is faster than the NR, yet due to how the WCA API works, that PR is the NR. A good example is NZ's Andrew Feng, who has a 3x3 PR Avg of 5.49 but an NR Avg of 5.64. The NZ avg in this case would be 5.49
 
@@ -81,7 +82,7 @@ This website is not at all associated with the WCA nor WST.
 - [X] Search with WCA IDs
 - [X] Select nationality
 - [X] Search functionality for nationality
-- [ ] Mobile View
+- [X] Mobile View
 
 ### Game Page
 
@@ -120,7 +121,7 @@ This website is not at all associated with the WCA nor WST.
 - [X] Change colours for 4th/5th results
 - [X] Be able to reset results
 - [X] Show dates of times
-- [ ] Mobile View
+- [X] Mobile View
 - [X] Show graph of recent AVGS/BO5s
 - [ ] Show BEST Mo10Ao5
 - [X] Show Mo10Bo5 for BLD events
