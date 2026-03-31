@@ -20,8 +20,6 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
   const numSolvesInRound = MO3_EVENTS.includes(event) ? 3 : 5
   const setErrorPopup = setPopup
   const playerNationality = nationality
-  const [disableApp, setDisableApp] = useState(false);
-
   const [solveNum, setSolveNum] = useState(0)
   const solveNumRef = useRef(solveNum);
 
@@ -39,6 +37,7 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
   const [endOfRound, setEndOfRound] = useState(false);
   const endOfRoundRef = useRef(endOfRound)
   const [inspectionOn, setInspection] = useState(false);
+  const inspectionOnRef = useRef(inspectionOn);
 
   const [records, setRecords] = useState(null)
   const ogRecordsRef = useRef(null)
@@ -52,6 +51,8 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
     }
     fetchAllRecords();
   }, [event]);
+
+  useEffect(() => { inspectionOnRef.current = inspectionOn }, [inspectionOn])
 
   useEffect(() => {
     endOfRoundRef.current = endOfRound
@@ -141,11 +142,12 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (disableApp) {
+      if (e.key === " " && !endOfRoundRef.current) setInspection(prev => !prev);
+
+      if (inspectionOnRef.current) {
         e.preventDefault()
         return
       }
-      if (e.key === " " && !endOfRoundRef.current) setInspection(prev => !prev);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -171,7 +173,7 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
   }, [sortedCompetitors]);
 
   return (
-    <section className={`flex flex-col pt-15 items-center gap-3  w-full h-full bg-white ${disableApp ? "pointer-events-none blur-xs" : ""}`}>
+    <section className={"flex flex-col pt-15 items-center gap-3  w-full h-full bg-white"}>
       {/*Inspection screen*/}
       {inspectionOn && <InspectionTimer setInspection={setInspection} />}
       <div className="sticky top-15 bg-white pb-5 mb-5 sm:pb-0 sm:mb-0 z-2 flex items-center flex-col ">
