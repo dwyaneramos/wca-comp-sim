@@ -3,3 +3,18 @@
 body {
   background-color: #ededed;
 }
+
+@keyframes toast{
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-toast {
+  animation: toast 0.5s ease-out;
+}

@@ -6,7 +6,7 @@ import { Stats } from './components/sections/Stats'
 import { NavBar } from './components/NavBar'
 import { simulateAllCompetitors, addUser, startingStats, defaultStats } from './services/competitors.js'
 import { FaGithub } from "react-icons/fa";
-import { Popup } from "./components/Popup.jsx"
+import { Toast } from './components/Toast.jsx'
 
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
@@ -50,11 +50,6 @@ function App() {
     "Game": Game,
     "Stats": Stats
   }
-  const [disableUpdatePopup, setDisableUpdatePopup] = useLocalStorage("disableUpdatePopup", false)
-  const [showUpdatePopup, setShowUpdatePopup] = useState(disableUpdatePopup ? false : true)
-
-  const disableApp = showUpdatePopup || error
-
 
   const [stats, setStats] = useLocalStorage("stats", startingStats)
 
@@ -65,10 +60,9 @@ function App() {
   }
 
   const changePage = async (page) => {
-    setShowUpdatePopup(false)
     if (page === "Game") {
       try {
-        const simmedCompetitors = await Simulate()
+        await Simulate()
         setDisabledEventDropdown(true)
         setPage("Game")
       } catch (err) {
@@ -80,10 +74,6 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    console.log(disableUpdatePopup)
-
-  }, [disableUpdatePopup])
 
 
 
@@ -129,16 +119,11 @@ function App() {
       <NavBar changePage={changePage} disabledEventDropdown={disabledEventDropdown} setEvent={setEvent}
         defaultEvent={event} setNationality={setNationality} defaultNationality={nationality} />
 
-      {error && <Popup popupHeader={"ERROR"} popupMsg={error} setPopupOn={setError} popupColor={"red-500"} />}
-
-      {showUpdatePopup && <Popup popupHeader={"ATTENTION"}
-        popupMsg={"There has been changes to the way competitors are represented. If you've last used this website since Jan 22nd, please delete all competitors and start fresh to avoid any bugs. Thank you for using my website :)"}
-        setPopupOn={setShowUpdatePopup}
-        popupColor={"red-500"} setDisableUpdatePopup={setDisableUpdatePopup} />}
+      {error && <Toast text={error} type={"error"} setShowToast={setError} />}
 
       <CurrentPage changePage={changePage} setPopup={setError} setCompetitors={setCompetitors}
         competitors={competitors} setEvent={setEvent} event={event} setStats={setStats} stats={stats} resetCompetitors={Simulate}
-        nationality={nationality} setNationality={setNationality} disableApp={disableApp} />
+        nationality={nationality} setNationality={setNationality} />
     </>
   )
 

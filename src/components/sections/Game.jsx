@@ -16,15 +16,11 @@ const genScramble = async (event) => {
 
 
 
-export const Game = ({ competitors, setCompetitors, event, setStats, stats, setPopup, resetCompetitors, nationality, disableApp }) => {
+export const Game = ({ competitors, setCompetitors, event, setStats, stats, setPopup, resetCompetitors, nationality }) => {
   const numSolvesInRound = MO3_EVENTS.includes(event) ? 3 : 5
   const setErrorPopup = setPopup
   const playerNationality = nationality
-  const disableAppRef = useRef(disableApp)
-
-  useEffect(() => {
-    disableAppRef.current = disableApp;
-  }, [disableApp]);
+  const [disableApp, setDisableApp] = useState(false);
 
   const [solveNum, setSolveNum] = useState(0)
   const solveNumRef = useRef(solveNum);
@@ -145,7 +141,7 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (disableAppRef.current) {
+      if (disableApp) {
         e.preventDefault()
         return
       }

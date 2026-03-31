@@ -6,10 +6,10 @@ import { addCompetitor } from "../../services/competitors.js"
 import { PLAYER_ID } from "../../utils/constants.js"
 import { SelectEventDropdown, NationalityDropdown } from "../Dropdown.jsx"
 
-export const SelectCubers = ({ changePage, setCompetitors, competitors, disableApp, setEvent, event, setNationality, nationality }) => {
+export const SelectCubers = ({ changePage, setCompetitors, competitors, setEvent, event, setNationality, nationality }) => {
 
   return (
-    <div className={`flex content-center justify-center   ${disableApp ? "blur-xs pointer-events-none" : ""}`}>
+    <div className={`flex content-center justify-center`}>
       <div className="flex flex-col mx-auto gap-2 bg-gray-100 items-center rounded-xl  border-2 border-gray-200
                         w-[95vw] h-full overflow-x-hidden pb-10 mt-20 sm:w-3xl ">
         <h1 className="text-2xl pt-15 font-medium">Configure Settings</h1>
@@ -26,7 +26,7 @@ export const SelectCubers = ({ changePage, setCompetitors, competitors, disableA
 
 
         <h1 className="text-xl pt-5 font-medium">Add your competitors</h1>
-        <SearchBar setCompetitors={setCompetitors} competitors={competitors} disableApp={disableApp} />
+        <SearchBar setCompetitors={setCompetitors} competitors={competitors} />
 
         <button onClick={() => changePage("Game")} type="" className=" bg-green-500 py-2 px-10 my-6 cursor-pointer px-6 rounded-lg text-white text-lg">Start</button>
 
@@ -92,7 +92,7 @@ const DisplayCompetitors = ({ competitors, setCompetitors }) => {
 
 
 
-const SearchBar = ({ setCompetitors, competitors, disableApp }) => {
+const SearchBar = ({ setCompetitors, competitors }) => {
   const [input, setInput] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [highlightedCuberIndex, setCuberIndex] = useState(0)
@@ -121,9 +121,6 @@ const SearchBar = ({ setCompetitors, competitors, disableApp }) => {
 
 
   const handleKeyInput = (e) => {
-    if (disableApp) {
-      e.preventDefault()
-    }
     const char = e.key
     if (char === "ArrowDown") {
       setCuberIndex((highlightedCuberIndex + 1) % searchResults.length)
