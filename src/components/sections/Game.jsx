@@ -173,10 +173,10 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
   }, [sortedCompetitors]);
 
   return (
-    <section className={"flex flex-col pt-15 items-center gap-3  w-full h-full bg-white"}>
+    <section className={`flex flex-col pt-15 items-center gap-3  w-full h-full bg-white `}>
       {/*Inspection screen*/}
       {inspectionOn && <InspectionTimer setInspection={setInspection} />}
-      <div className="sticky top-15 bg-white pb-5 mb-5 sm:pb-0 sm:mb-0 z-2 flex items-center flex-col ">
+      <div className={`sticky top-15 bg-white pb-5 mb-5 sm:pb-0 sm:mb-0 z-2 flex items-center flex-col  ${showPopup.cuber !== null ? "blur pointer-events-none" : ""} `}>
 
         {/*Scramble*/}
         <h1 className={`${BIG_EVENTS.includes(event) ? "text-lg" : "text-2xl"} md:text-3xl pt-10 pb-5 sm:pt-20 px-20 text-center`}>{scramble}</h1>
@@ -212,9 +212,9 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
 
       </div>
 
-      <div className="flex gap-3 flex-col sticky">
+      <div className="flex gap-3 flex-col sticky ">
         {/*Display Options TODO: DISABLE THIS SOON VIA SHOWING TIMES*/}
-        <div className="border-gray-200 bg-gray-100 border-3 p-3 rounded-md text-center ">
+        <div className={`border-gray-200 bg-gray-100 border-3 p-3 rounded-md text-center   ${showPopup.cuber !== null ? "blur pointer-events-none" : ""} `}>
           <h1 className="underline font-medium text-xl pb-3">Display Options</h1>
           <div className="flex flex-col sm:flex-row items-start sm:place-content-around gap-5">
             {competitors.length > 1 &&
@@ -230,8 +230,10 @@ export const Game = ({ competitors, setCompetitors, event, setStats, stats, setP
         </div>
 
         {showPopup.cuber !== null && <EditTimePopup cuber={showPopup.cuber} idx={showPopup.solveIdx} onClick={editTime} />}
-        <TimeHeaders numSolvesInRound={numSolvesInRound} />
-        <div className="overflow-y-auto h-full sm:h-[50vh] w-full sm:w-full">
+        <div className={`  ${showPopup.cuber !== null ? "blur pointer-events-none" : ""}`}>
+          <TimeHeaders numSolvesInRound={numSolvesInRound} />
+        </div>
+        <div className={`overflow-y-auto h-full sm:h-[50vh] w-full sm:w-full  ${showPopup.cuber !== null ? "blur pointer-events-none" : ""}`}>
           <ResultsTable solveNum={solveNum} canViewOtherTimes={canViewOtherTimes}
             competitors={sortedCompetitors} canViewPotentialAvg={canViewPotentialAvg} setShowPopup={setShowPopup} numSolvesInRound={numSolvesInRound}
             setRecords={setRecords} records={records} setShowTimesOnMobile={setShowTimesOnMobile} showTimesOnMobile={showTimesOnMobile} />

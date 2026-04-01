@@ -10,6 +10,7 @@ export const Toast = ({ text, type, setShowToast }) => {
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
   const delayBeforeExit = 500
+  const timeElapsedBeforeExit = 5
 
   useEffect(() => {
 
@@ -23,7 +24,7 @@ export const Toast = ({ text, type, setShowToast }) => {
   useEffect(() => {
 
 
-    if (timeElapsed > 2) {
+    if (timeElapsed > timeElapsedBeforeExit) {
       setIsExiting(true)
       console.log(timeElapsed, isExiting)
       setTimeout(() => setShowToast(null), delayBeforeExit)
