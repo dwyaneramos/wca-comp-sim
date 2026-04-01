@@ -1,7 +1,7 @@
 import Select from "react-select"
-import {countryToFlag, countries} from "./services/nationality.js"
+import { countryToFlag, countries } from "../services/nationality.js"
 
-export const SelectEventDropdown = ({setEvent, defaultEvent, width, height}) => {
+export const SelectEventDropdown = ({ setEvent, defaultEvent, width, height }) => {
   const wcaEvents = [
     { label: "3x3x3 Cube", value: "333" },
     { label: "2x2x2 Cube", value: "222" },
@@ -21,28 +21,28 @@ export const SelectEventDropdown = ({setEvent, defaultEvent, width, height}) => 
     { label: "5x5x5 Blindfolded", value: "555bf" },
   ];
   return (
-    <Select options = {wcaEvents} onChange = {(event) => setEvent(event.value)}
-      defaultValue = {{value : defaultEvent, label : wcaEvents.find((e) => e.value === defaultEvent).label}} menuPortalTarget={document.body}
+    <Select options={wcaEvents} onChange={(event) => setEvent(event.value)}
+      defaultValue={{ value: defaultEvent, label: wcaEvents.find((e) => e.value === defaultEvent).label }} menuPortalTarget={document.body}
 
-      classNames = {{
-          control: ({isFocused}) => `${width} ${height}`,
-        }}
+      classNames={{
+        control: ({ isFocused }) => `${width} ${height}`,
+      }}
 
     />
 
-  
+
   )
 }
 
-export const NationalityDropdown = ({defaultNationality, setNationality}) => {
-  const options =  Object.entries(countries).map(([id, c]) => ({value: id, label: `${c.flag} ${c.name}`}))
+export const NationalityDropdown = ({ defaultNationality, setNationality }) => {
+  const options = Object.entries(countries).map(([id, c]) => ({ value: id, label: `${c.flag} ${c.name}` }))
   return (
-  <Select options={options} onChange={(option) => setNationality(option.value)}
-    defaultValue={{value : defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}`}} menuPortalTarget={document.body}
+    <Select options={options} onChange={(option) => setNationality(option.value)}
+      defaultValue={{ value: defaultNationality, label: `${countryToFlag(defaultNationality)} ${countries[defaultNationality].name}` }} menuPortalTarget={document.body}
 
-    classNames={{
+      classNames={{
         control: ({ isFocused }) => `w-3xs h-10`,
-      
-      }}/>
+
+      }} />
   )
 }

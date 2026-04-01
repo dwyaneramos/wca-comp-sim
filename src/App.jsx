@@ -1,14 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './index.css'
-import {SelectCubers} from './components/sections/SelectCubers'
-import {Game} from './components/sections/Game'
-import {Stats} from './components/sections/Stats'
-import {NavBar} from './components/NavBar'
-import {simulateAllCompetitors, addUser, startingStats, defaultStats} from './components/services/competitors.js'
+import { SelectCubers } from './components/sections/SelectCubers'
+import { Game } from './components/sections/Game'
+import { Stats } from './components/sections/Stats'
+import { NavBar } from './components/NavBar'
+import { simulateAllCompetitors, addUser, startingStats, defaultStats } from './services/competitors.js'
 import { FaGithub } from "react-icons/fa";
-import { Popup } from "./components/Popup.jsx"
+import { Toast } from './components/Toast.jsx'
 
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
@@ -26,12 +24,12 @@ export function useLocalStorage(key, initialValue) {
 
 const Watermark = () => {
   return (
-    <div className = "flex flex-row gap-5 items-center sticky bottom-0 right-0 p-5 text-2xl text-gray-400">
+    <div className="flex flex-row gap-5 items-center sticky bottom-0 right-0 p-5 text-2xl text-gray-400">
       <h1>
         Website by Dwyane Ramos
       </h1>
       <a target="_blank" href="https://github.com/dwyaneramos/wca-comp-sim">
-        <FaGithub color={"gray-400"} size={40}/>
+        <FaGithub color={"gray-400"} size={40} />
       </a>
     </div>
 
@@ -40,21 +38,18 @@ const Watermark = () => {
 
 function App() {
 
- 
+
   const [page, setPage] = useState("Home")
   const [error, setError] = useState(null);
-  const [ disabledEventDropdown, setDisabledEventDropdown] = useState(false)
+  const [disabledEventDropdown, setDisabledEventDropdown] = useState(false)
   const [event, setEvent] = useLocalStorage("event", "333")
   const [nationality, setNationality] = useLocalStorage("nationality", "NZ")
   const [competitors, setCompetitors] = useLocalStorage("competitors", addUser([]))
-  const lookup = {"Home" : SelectCubers,
-            "Game" : Game,
-            "Stats" : Stats}
-  const [disableUpdatePopup, setDisableUpdatePopup] = useLocalStorage("disableUpdatePopup", false)
-  const [showUpdatePopup, setShowUpdatePopup] = useState(disableUpdatePopup ? false : true)
-
-  const disableApp = showUpdatePopup || error 
-
+  const lookup = {
+    "Home": SelectCubers,
+    "Game": Game,
+    "Stats": Stats
+  }
 
   const [stats, setStats] = useLocalStorage("stats", startingStats)
 
@@ -65,80 +60,70 @@ function App() {
   }
 
   const changePage = async (page) => {
-    setShowUpdatePopup(false)
     if (page === "Game") {
-        try {
-          const simmedCompetitors = await Simulate()
-          setDisabledEventDropdown(true)
-          setPage("Game")
-        } catch (err) {
-          setError(err.message)
-        }
+      try {
+        await Simulate()
+        setDisabledEventDropdown(true)
+        setPage("Game")
+      } catch (err) {
+        setError(err.message)
+      }
     } else {
       setDisabledEventDropdown(false)
       setPage(page)
     }
   }
 
-  useEffect(() => {
-    console.log(disableUpdatePopup)
-    
-  }, [disableUpdatePopup])
-  
+
 
 
   useEffect(() => {
-    {/*update ten recent avgs format*/}
+    {/*update ten recent avgs format*/ }
     setStats(prev => {
       let newTenRecentAvgs = prev[event].tenRecentAvgs;
 
       if (newTenRecentAvgs.length > 0 && typeof newTenRecentAvgs[0] !== "object") {
-        newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({time: time, date: "N/A", idx : idx + 1}))
+        newTenRecentAvgs = newTenRecentAvgs.map((time, idx) => ({ time: time, date: "N/A", idx: idx + 1 }))
       }
 
       return {
-            ...prev,
-            [event] : {
-            ...prev[event],
-              tenRecentAvgs : newTenRecentAvgs
-            }
-            
-          }
+        ...prev,
+        [event]: {
+          ...prev[event],
+          tenRecentAvgs: newTenRecentAvgs
+        }
 
-      })
-    
-    {/*adds new stats to people who used older ver of website*/}
+      }
+
+    })
+
+    {/*adds new stats to people who used older ver of website*/ }
     setStats(prev => {
       const statsTemplate = defaultStats();
       return {
         ...prev,
-        [event] : {
+        [event]: {
           ...statsTemplate,
           ...prev[event]
         }
       }
     })
-      }, [event])
-    
+  }, [event])
+
 
   const CurrentPage = lookup[page]
 
 
   return (
     <>
-      <NavBar changePage = {changePage} disabledEventDropdown = {disabledEventDropdown} setEvent = {setEvent}
-        defaultEvent = {event} setNationality = {setNationality} defaultNationality = {nationality}/>
+      <NavBar changePage={changePage} disabledEventDropdown={disabledEventDropdown} setEvent={setEvent}
+        defaultEvent={event} setNationality={setNationality} defaultNationality={nationality} />
 
-      {error && <Popup popupHeader={"ERROR"} popupMsg ={error} setPopupOn={setError} popupColor = {"red-500"}/>}
+      {error && <Toast text={error} type={"error"} setShowToast={setError} />}
 
-      {showUpdatePopup && <Popup popupHeader={"ATTENTION"} 
-        popupMsg={"There has been changes to the way competitors are represented. If you've last used this website since Jan 22nd, please delete all competitors and start fresh to avoid any bugs. Thank you for using my website :)"}
-        setPopupOn={setShowUpdatePopup}
-        popupColor = {"red-500"} setDisableUpdatePopup = {setDisableUpdatePopup}/>}
-
-      <CurrentPage changePage = {changePage} setPopup = {setError} setCompetitors = {setCompetitors} 
-        competitors = {competitors} setEvent = {setEvent} event={event} setStats={setStats} stats={stats} resetCompetitors = {Simulate}
-        nationality={nationality} setNationality={setNationality} disableApp={disableApp}/>
+      <CurrentPage changePage={changePage} setPopup={setError} setCompetitors={setCompetitors}
+        competitors={competitors} setEvent={setEvent} event={event} setStats={setStats} stats={stats} resetCompetitors={Simulate}
+        nationality={nationality} setNationality={setNationality} />
     </>
   )
 

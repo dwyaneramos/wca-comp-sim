@@ -1,14 +1,14 @@
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 
 
-export const InspectionTimer = ({setInspection}) => {
+export const InspectionTimer = ({ setInspection }) => {
   const [timeElapsed, setTimeElapsed] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeElapsed(prev => prev + 1)
     }, 1000)
-  
+
     return () => clearInterval(interval)
   }, [])
 
@@ -23,14 +23,14 @@ export const InspectionTimer = ({setInspection}) => {
     inspectionBG = "bg-red-900"
   }
 
-  
+
 
   return (
-    <button onClick={()=>setInspection(false)} className = 
+    <button onClick={() => setInspection(false)} className=
       {`transition-all duration-400 fixed  ${inspectionBG} border-gray-200 border-2 w-[105vw] h-screen z-100`}>
-      <div className = " text-[25vw] w-full h-full flex items-center justify-center">
+      <div className=" text-[25vw] w-full h-full flex items-center justify-center">
         {timeElapsed}
       </div>
-     </button> 
+    </button>
   )
 }

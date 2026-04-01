@@ -1,6 +1,6 @@
-import {DNF, INVALID_TIMES, BLD_EVENTS} from "../utils/constants.js"
+import { DNF, INVALID_TIMES, BLD_EVENTS } from "../utils/constants.js"
 
-export const createCuber = (id, name, times = [-1,-1,-1,-1,-1], country, bpa = null, wpa = null, avg = null) => {
+export const createCuber = (id, name, times = [-1, -1, -1, -1, -1], country, bpa = null, wpa = null, avg = null) => {
   return {
     id: id,
     name: name,
@@ -12,7 +12,7 @@ export const createCuber = (id, name, times = [-1,-1,-1,-1,-1], country, bpa = n
   }
 }
 
-export const createPlayer = (times = [-1,-1,-1,-1,-1], country = "NZ", bpa = null, wpa = null, avg = null) => {
+export const createPlayer = (times = [-1, -1, -1, -1, -1], country = "NZ", bpa = null, wpa = null, avg = null) => {
   return createCuber("Player", "Player", times, country, bpa, wpa, avg)
 
 }
@@ -32,34 +32,34 @@ const isDNFed = (times, numSolves) => {
 }
 
 export const genPlayerWPABPA = (timesWOLastSolve, numSolves) => {
-{/*
+  {/*
   Instead of a wpa and bpa for MO3 events, it will just be the average of the first 2 solves, hence why wpa and bpa are the same
 */}
   let bpa = -1;
   if (isDNFed(timesWOLastSolve, numSolves)) {
-      bpa = DNF;
+    bpa = DNF;
   } else {
 
-    bpa = numSolves == 5 ? ((timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.max(...timesWOLastSolve)) / 3) : 
-                                (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0) / 2);
+    bpa = numSolves == 5 ? ((timesWOLastSolve.reduce((acc, curr) => acc + curr, 0) - Math.max(...timesWOLastSolve)) / 3) :
+      (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0) / 2);
   }
-  
+
 
   let wpa = -1;
   if (timesWOLastSolve.includes(DNF)) {
     wpa = DNF
   } else {
-    
-    wpa = numSolves == 5 ? (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0 ) - Math.min(...timesWOLastSolve)) / 3 :
-                           bpa
+
+    wpa = numSolves == 5 ? (timesWOLastSolve.reduce((acc, curr) => acc + curr, 0) - Math.min(...timesWOLastSolve)) / 3 :
+      bpa
   }
-  return {bpa, wpa}
+  return { bpa, wpa }
 }
 
 export const genPlayerAvg = (times, numSolves) => {
-  const avg = isDNFed(times, numSolves) ? DNF : 
-              (numSolves == 5 ?  (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3 :
-                                (times.reduce((acc, curr) => acc + curr, 0) / 3))
+  const avg = isDNFed(times, numSolves) ? DNF :
+    (numSolves == 5 ? (times.reduce((acc, curr) => acc + curr, 0) - Math.min(...times) - Math.max(...times)) / 3 :
+      (times.reduce((acc, curr) => acc + curr, 0) / 3))
   return avg
 }
 
@@ -77,33 +77,24 @@ export const createSimCuber = async (cuber, event, numSolves) => {
   times = times;
   const timesWOLastSolve = times.slice(0, -1);
   const avg = genPlayerAvg(times, numSolves);
-  const {bpa, wpa} = genPlayerWPABPA(timesWOLastSolve, numSolves);
+  const { bpa, wpa } = genPlayerWPABPA(timesWOLastSolve, numSolves);
   return createCuber(cuber.id, cuber.name, times, cuber.country, bpa, wpa, avg)
 
 }
 
 
 export const genRandomTime = (officialTimes, event) => {
-  const eventStdDevFactor = {
-    "sprint": 0.3,
-    "med": 0.08,
-    "big": 0.1,
-    "bld": 0.15
-
-  }
-
-
   const mean = officialTimes.reduce((acc, curr) => acc + curr, 0) / officialTimes.length;
   const variance = officialTimes.reduce((sum, val) => sum + (val - mean) ** 2, 0) / (officialTimes.length - 1)
 
-  const dnfChance = BLD_EVENTS.includes(event) ? 0.5: 0.03 
+  const dnfChance = BLD_EVENTS.includes(event) ? 0.5 : 0.03
   const roll = Math.random()
   if (roll <= dnfChance) {
     return DNF
   }
-  
-  {/* Using the Marsaglia method only works if for (mean**2 / variance) > 3*/}
-  if ((mean ** 2 / variance) <= (1/3)) { 
+
+  {/* Using the Marsaglia method only works if for (mean**2 / variance) > 3*/ }
+  if ((mean ** 2 / variance) <= (1 / 3)) {
     return randLogNormal(mean, variance)
   } else {
     return randGamma(mean, variance)
@@ -111,16 +102,16 @@ export const genRandomTime = (officialTimes, event) => {
 }
 
 const randGamma = (mean, variance) => {
-  const gammaA = mean ** 2 / variance 
-  const gammaT = variance / mean 
+  const gammaA = mean ** 2 / variance
+  const gammaT = variance / mean
 
-  const d = gammaA - (1/3)
+  const d = gammaA - (1 / 3)
   const c = 1 / (Math.sqrt(9 * d))
-  
+
   while (true) {
     const u = Math.random()
     const n = randNormal()
-    const v = (1 + c * n) ** 3 
+    const v = (1 + c * n) ** 3
     if (v > 0 && (Math.log(u) < (n ** 2 / 2 + d - d * v + d * Math.log(v)))) {
       return d * v * gammaT
     }
@@ -158,7 +149,7 @@ export const fetchTimes = async (cuber, event) => {
       for (const [roundKey, round] of Object.entries(eventResults)) {
         for (const solve of round.solves) {
           if (!(INVALID_TIMES.includes(solve))) {
-            recentTimes.push(solve/100)
+            recentTimes.push(solve / 100)
           }
 
           if (recentTimes.length >= 50) {
@@ -169,15 +160,15 @@ export const fetchTimes = async (cuber, event) => {
     }
   }
   return recentTimes
-} 
+}
 
 
 
 
-  
-
-  
 
 
-  
+
+
+
+
 
