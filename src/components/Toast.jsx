@@ -9,7 +9,7 @@ const typeConfigLookup = {
 export const Toast = ({ text, type, setShowToast }) => {
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
-  const delayBeforeExit = 500
+  const delayBeforeExit = 300
   const timeElapsedBeforeExit = 5
 
   useEffect(() => {

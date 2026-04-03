@@ -16,7 +16,7 @@ body {
 }
 
 .animate-toast-enter {
-  animation: toast 0.5s ease-out;
+  animation: toast-enter 0.5s ease-out;
 }
 
 @keyframes toast-exit {
