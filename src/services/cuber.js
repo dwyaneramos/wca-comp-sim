@@ -139,7 +139,7 @@ const randLogNormal = (mean, variance) => {
 };
 
 export const fetchTimes = async (cuber, event) => {
-  const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons/" + cuber.id + ".json"
+  const apiLink = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/refs/heads/v1/persons/" + cuber.id + ".json"
   const res = await fetch(apiLink)
   const json = await res.json()
   let recentTimes = []
