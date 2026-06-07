@@ -5,25 +5,19 @@ const data = fs.readFileSync(dataURL);
 const dataJSON = JSON.parse(data)
 
 
-export const ExtractPlayers =  async () => {
-
-    
-
-  const apiLink = `https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons.json`;
+export const ExtractPlayers = async () => {
   let pageNum = 1;
-  let maxPageNum = 279;
+  let maxPageNum = 291;
   try {
-
     while (pageNum <= maxPageNum) {
-
-      const res = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/persons-page-${pageNum}.json`);
+      const res = await fetch(`https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/refs/heads/v1/persons-page-${pageNum}.json`);
       const json = await res.json();
       maxPageNum = Math.ceil(json.total / 1000)
       for (const cuber of json.items) {
         const dataToPush = {
-          "name" : cuber.name,
-          "id" : cuber.id,
-          "country" : cuber.country
+          "name": cuber.name,
+          "id": cuber.id,
+          "country": cuber.country
         }
         dataJSON.cubers.push(dataToPush)
         //console.log(dataToPush)
@@ -33,7 +27,7 @@ export const ExtractPlayers =  async () => {
 
 
       pageNum += 1;
-    } 
+    }
     fs.writeFileSync(dataURL, JSON.stringify(dataJSON, null, 2))
     console.log("Cuber extraction saved successfully to JSON")
   } catch (e) {
