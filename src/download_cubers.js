@@ -1,7 +1,8 @@
 import fs from "fs";
 
 const dataURL = "../public/cubers.json";
-const cubers = []
+const data = fs.readFileSync(dataURL);
+const dataJSON = JSON.parse(data)
 
 
 export const ExtractPlayers = async () => {
@@ -18,7 +19,7 @@ export const ExtractPlayers = async () => {
           "id": cuber.id,
           "country": cuber.country
         }
-        cubers.push(dataToPush)
+        dataJSON.cubers.push(dataToPush)
         //console.log(dataToPush)
 
       }
@@ -27,7 +28,7 @@ export const ExtractPlayers = async () => {
 
       pageNum += 1;
     }
-    fs.writeFileSync(dataURL, JSON.stringify(null, 2))
+    fs.writeFileSync(dataURL, JSON.stringify(dataJSON, null, 2))
     console.log("Cuber extraction saved successfully to JSON")
   } catch (e) {
     console.error("Error: ", e);
